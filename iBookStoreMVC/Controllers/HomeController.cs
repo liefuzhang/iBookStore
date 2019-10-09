@@ -10,16 +10,16 @@ namespace iBookStoreMVC.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IMembershipService _membershipService;
+        private readonly ICatalogService _catalogService;
 
-        public HomeController(IMembershipService membershipService)
+        public HomeController(ICatalogService catalogService)
         {
-            _membershipService = membershipService;
+            _catalogService = catalogService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var vm = await _membershipService.GetMembershipTypes();
+            var vm = await _catalogService.GetCatalogTypes();
 
             return View(vm);
         }

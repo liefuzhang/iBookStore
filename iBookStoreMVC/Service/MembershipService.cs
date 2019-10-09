@@ -9,31 +9,31 @@ using Newtonsoft.Json;
 
 namespace iBookStoreMVC.Service
 {
-    public class MembershipService : IMembershipService
+    public class CatalogService : ICatalogService
     {
         private readonly HttpClient _httpClient;
-        private readonly ILogger<MembershipService> _logger;
+        private readonly ILogger<CatalogService> _logger;
         private readonly IOptions<AppSettings> _settings;
         private readonly string _remoteServiceBaseUrl;
 
-        public MembershipService(HttpClient httpClient, ILogger<MembershipService> logger, IOptions<AppSettings> settings)
+        public CatalogService(HttpClient httpClient, ILogger<CatalogService> logger, IOptions<AppSettings> settings)
         {
             _httpClient = httpClient;
             _logger = logger;
             _settings = settings;
 
-            _remoteServiceBaseUrl = $"{_settings.Value.MembershipUrl}/api/v1/membership/";
+            _remoteServiceBaseUrl = $"{_settings.Value.CatalogUrl}/api/v1/catalog/";
         }
 
-        public async Task<IEnumerable<MembershipType>> GetMembershipTypes()
+        public async Task<IEnumerable<CatalogItem>> GetCatalogTypes()
         {
-            var url = API.Membership.GetMembershipTypes(_remoteServiceBaseUrl);
+            var url = API.Catalog.GetCatalogTypes(_remoteServiceBaseUrl);
 
             var responseString = await _httpClient.GetStringAsync(url);
 
-            var membershipTypes = JsonConvert.DeserializeObject<IEnumerable<MembershipType>>(responseString);
+            var catalogItems = JsonConvert.DeserializeObject<IEnumerable<CatalogItem>>(responseString);
 
-            return membershipTypes;
+            return catalogItems;
         }
     }
 }

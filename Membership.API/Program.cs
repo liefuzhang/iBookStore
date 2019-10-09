@@ -1,11 +1,11 @@
 ﻿using System;
-using Membership.API.Infrastructure;
+using Catalog.API.Infrastructure;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Membership.API
+namespace Catalog.API
 {
     public class Program
     {
@@ -19,7 +19,7 @@ namespace Membership.API
 
                 try
                 {
-                    var context = services.GetRequiredService<MembershipContext>();
+                    var context = services.GetRequiredService<CatalogContext>();
                     DbInitializer.Initialize(context);
                 }
                 catch (Exception ex)

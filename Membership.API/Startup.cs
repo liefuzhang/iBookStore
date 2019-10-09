@@ -1,4 +1,4 @@
-﻿using Membership.API.Infrastructure;
+﻿using Catalog.API.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Membership.API
+namespace Catalog.API
 {
     public class Startup
     {
@@ -30,7 +30,7 @@ namespace Membership.API
                         .AllowCredentials());
             });
 
-            services.AddDbContext<MembershipContext>(options =>
+            services.AddDbContext<CatalogContext>(options =>
                 options.UseSqlServer(Configuration["ConnectionString"]));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

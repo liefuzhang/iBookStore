@@ -2,6 +2,6 @@
 {
     public class AppSettings
     {
-        public string MembershipUrl { get; set; } 
+        public string CatalogUrl { get; set; } 
     }
 }

@@ -4,8 +4,8 @@ using iBookStoreMVC.ViewModels;
 
 namespace iBookStoreMVC.Service
 {
-    public interface IMembershipService
+    public interface ICatalogService
     {
-        Task<IEnumerable<MembershipType>> GetMembershipTypes();
+        Task<IEnumerable<CatalogItem>> GetCatalogTypes();
     }
 }

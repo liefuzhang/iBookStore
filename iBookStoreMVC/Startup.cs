@@ -33,7 +33,7 @@ namespace iBookStoreMVC
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddHttpClient<IMembershipService, MembershipService>();
+            services.AddHttpClient<ICatalogService, CatalogService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

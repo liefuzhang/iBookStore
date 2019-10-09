@@ -1,29 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Membership.API.Infrastructure;
-using Membership.API.Models;
+using Catalog.API.Infrastructure;
+using Catalog.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Membership.API.Controllers
+namespace Catalog.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class MembershipController : ControllerBase
+    public class CatalogController : ControllerBase
     {
-        private readonly MembershipContext _membershipContext;
+        private readonly CatalogContext _catalogContext;
 
-        public MembershipController(MembershipContext membershipContext)
+        public CatalogController(CatalogContext catalogContext)
         {
-            _membershipContext = membershipContext;
+            _catalogContext = catalogContext;
         }
 
-        // GET api/v1/[controller]/membershipTypes
+        // GET api/v1/[controller]/catalogItems
         [HttpGet]
-        [Route("membershipTypes")]
-        public async Task<IEnumerable<MembershipType>> MembershipTypes()
+        [Route("catalogItems")]
+        public async Task<IEnumerable<CatalogItem>> CatalogTypes()
         {
-            return await _membershipContext.MembershipTypes.ToListAsync();
+            return await _catalogContext.CatalogItems.ToListAsync();
         }
     }
 }

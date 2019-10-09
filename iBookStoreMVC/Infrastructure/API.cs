@@ -7,11 +7,11 @@ namespace iBookStoreMVC.Infrastructure
 {
     public static class API
     {
-        public static class Membership
+        public static class Catalog
         {
-            public static string GetMembershipTypes(string baseUrl)
+            public static string GetCatalogTypes(string baseUrl)
             {
-                return $"{baseUrl}membershipTypes";
+                return $"{baseUrl}catalogItems";
             }
         }
     }

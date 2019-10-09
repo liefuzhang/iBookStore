@@ -1,29 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Membership.API.Controllers;
-using Membership.API.Models;
+using Catalog.API.Controllers;
+using Catalog.API.Models;
 
-namespace Membership.API.Infrastructure
+namespace Catalog.API.Infrastructure
 {
     public static class DbInitializer
     {
-        public static void Initialize(MembershipContext context)
+        public static void Initialize(CatalogContext context)
         {
-            if (!context.MembershipTypes.Any())
+            if (!context.CatalogItems.Any())
             {
-                context.MembershipTypes.AddRange(GetPreconfiguredMembershipTypes());
+                context.CatalogItems.AddRange(GetPreconfiguredCatalogItems());
             }
 
             context.SaveChanges();
         }
 
-        private static IEnumerable<MembershipType> GetPreconfiguredMembershipTypes()
+        private static IEnumerable<CatalogItem> GetPreconfiguredCatalogItems()
         {
-            return new List<MembershipType>()
+            return new List<CatalogItem>()
             {
-                new MembershipType { Name = "Bronze", Description = "Basic access" },
-                new MembershipType { Name = "Silver", Description = "Basic access + access to all group classes" },
-                new MembershipType { Name = "Gold", Description = "Basic access + access to all group classes + ability to bring a gym buddy" }
+                new CatalogItem { Name = "Week Light", Description = "Australia's bestselling cookbook author and most trusted home cook" },
+                new CatalogItem { Name = "Sword of Kings", Description = "A fictional story" },
+                new CatalogItem { Name = "Pride and Prejudice", Description = "An 1813 romantic novel of manners" }
             };
         }
     }
