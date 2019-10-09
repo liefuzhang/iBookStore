@@ -1,0 +1,16 @@
+﻿@model IEnumerable<iBookStoreMVC.ViewModels.MembershipType>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h2 class="display-4">Choose your membership type</h2>
+    @foreach (var type in Model)
+    {
+        <div>
+            <div>@type.Name</div>
+            <div>@type.Description</div>
+        </div>
+    }
+</div>
