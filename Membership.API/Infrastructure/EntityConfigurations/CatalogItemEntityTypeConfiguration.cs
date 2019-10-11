@@ -8,16 +8,19 @@ namespace Catalog.API.Infrastructure.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<CatalogItem> builder)
         {
-            builder.ToTable("CatalogItem");
-
-            builder.HasKey(cp => cp.Id);
-
-            builder.Property(cp => cp.Name)
+            builder.Property(ci => ci.Name)
                 .IsRequired()
                 .HasMaxLength(50);
 
             builder.Property(ci => ci.Price)
                 .IsRequired();
+
+            builder.Property(ci => ci.Author)
+                .IsRequired();
+
+            builder.HasOne(ci => ci.Category)
+                .WithMany()
+                .HasForeignKey(ci => ci.CategoryId);
         }
     }
 }

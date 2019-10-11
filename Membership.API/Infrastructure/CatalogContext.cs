@@ -13,10 +13,12 @@ namespace Catalog.API.Infrastructure
         }
 
         public DbSet<CatalogItem> CatalogItems { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new CatalogItemEntityTypeConfiguration());
+            builder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
         }
     }
 
