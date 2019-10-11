@@ -1,0 +1,23 @@
+﻿@model IEnumerable<iBookStoreMVC.ViewModels.CatalogItem>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div>
+    <div class="h4 mb-4">Books in store</div>
+    <div class="row">
+        @foreach (var type in Model) {
+            <div class="col-3 p-5">
+                <div class="book-container" title="@type.Description">
+                    <img class="book-img" src="~/book_placeholder.jpg" />
+                    <div class="p-2">
+                        <div class="book-name">@type.Name</div>
+                        <div>@type.Author</div>
+                        <div>$@type.Price</div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

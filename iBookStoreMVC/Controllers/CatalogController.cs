@@ -8,11 +8,11 @@ using iBookStoreMVC.Service;
 
 namespace iBookStoreMVC.Controllers
 {
-    public class HomeController : Controller
+    public class CatalogController : Controller
     {
         private readonly ICatalogService _catalogService;
 
-        public HomeController(ICatalogService catalogService)
+        public CatalogController(ICatalogService catalogService)
         {
             _catalogService = catalogService;
         }
