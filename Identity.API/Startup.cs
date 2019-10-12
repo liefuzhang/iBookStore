@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using IdentityServer4.Services;
+using Identity.API.Configuration;
+using System.Reflection;
 
 namespace Identity.API
 {
@@ -36,30 +39,25 @@ namespace Identity.API
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             //// Adds IdentityServer
-            //services.AddIdentityServer(x => {
-            //    x.IssuerUri = "null";
-            //    x.Authentication.CookieLifetime = TimeSpan.FromHours(2);
-            //})
-            //.AddSigningCredential(Certificate.Get())
-            //.AddAspNetIdentity<ApplicationUser>()
-            //.AddConfigurationStore(options => {
-            //    options.ConfigureDbContext = builder => builder.UseSqlServer(connectionString,
-            //        sqlServerOptionsAction: sqlOptions => {
-            //            sqlOptions.MigrationsAssembly(migrationsAssembly);
-            //            //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
-            //            sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
-            //        });
-            //})
-            //.AddOperationalStore(options =>
-            //{
-            //    options.ConfigureDbContext = builder => builder.UseSqlServer(connectionString,
-            //        sqlServerOptionsAction: sqlOptions => {
-            //            sqlOptions.MigrationsAssembly(migrationsAssembly);
-            //                //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
-            //                sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
-            //        });
-            //})
-            //.Services.AddTransient<IProfileService, ProfileService>();
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+            services.AddIdentityServer()
+                .AddDeveloperSigningCredential()
+              // this adds the operational data from DB (codes, tokens, consents)
+              .AddOperationalStore(options => {
+                  options.ConfigureDbContext = builder => builder.UseSqlServer(Configuration["ConnectionString"],
+                        sqlServerOptionsAction: sqlOptions => {
+                            sqlOptions.MigrationsAssembly(migrationsAssembly);
+                            //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
+                            sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                        });
+                  // this enables automatic token cleanup. this is optional.
+                  options.EnableTokenCleanup = true;
+                  options.TokenCleanupInterval = 3600; // interval in seconds
+              })
+              .AddInMemoryIdentityResources(Config.GetIdentityResources())
+              .AddInMemoryApiResources(Config.GetApiResources())
+              .AddInMemoryClients(Config.GetClients(Configuration))
+              .AddAspNetIdentity<ApplicationUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,6 +69,7 @@ namespace Identity.API
                 app.UseHsts();
             }
 
+            app.UseIdentityServer();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
