@@ -31,6 +31,7 @@ namespace iBookStoreMVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddHttpClient<ICatalogService, CatalogService>();
+            services.AddHttpClient<IBasketService, BasketService>();
 
             services.AddTransient<IIdentityParser<ApplicationUser>, IdentityParser>();
             
