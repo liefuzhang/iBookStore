@@ -27,7 +27,7 @@ namespace iBookStoreMVC.Service
 
         public async Task<IEnumerable<CatalogItem>> GetCatalogTypes()
         {
-            var url = API.Catalog.GetCatalogTypes(_remoteServiceBaseUrl);
+            var url = API.Catalog.GetCatalogItems(_remoteServiceBaseUrl);
 
             var responseString = await _httpClient.GetStringAsync(url);
 
