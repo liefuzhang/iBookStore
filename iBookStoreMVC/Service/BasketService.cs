@@ -24,7 +24,7 @@ namespace iBookStoreMVC.Service
         }
 
         public async Task AddItemToBasket(ApplicationUser user, int productId) {
-            var uri = API.Basket.AddItemToBasket(_remoteServiceBaseUrl);
+            var url = API.Basket.AddItemToBasket(_remoteServiceBaseUrl);
 
             var newItem = new {
                 CatalogItemId = productId,
@@ -34,7 +34,7 @@ namespace iBookStoreMVC.Service
 
             var basketContent = new StringContent(JsonConvert.SerializeObject(newItem), System.Text.Encoding.UTF8, "application/json");
 
-            await _httpClient.PostAsync(uri, basketContent);
+            await _httpClient.PostAsync(url, basketContent);
         }
     }
 }

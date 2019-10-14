@@ -12,7 +12,7 @@
 
         public decimal Price { get; set; }
 
-        public string PictureUri { get; set; }
+        public string PictureUrl { get; set; }
 
         public Category Category { get; set; }
 

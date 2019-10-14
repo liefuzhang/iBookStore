@@ -19,7 +19,7 @@ namespace iBookStoreMVC.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var vm = await _catalogService.GetCatalogTypes();
+            var vm = await _catalogService.GetCatalogItems();
 
             return View(vm);
         }

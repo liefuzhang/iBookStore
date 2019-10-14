@@ -21,9 +21,16 @@ namespace Catalog.API.Controllers
         // GET api/v1/[controller]/catalogItems
         [HttpGet]
         [Route("catalogItems")]
-        public async Task<IEnumerable<CatalogItem>> CatalogTypes()
+        public async Task<IEnumerable<CatalogItem>> CatalogItems()
         {
             return await _catalogContext.CatalogItems.ToListAsync();
+        }
+
+        // GET api/v1/[controller]/items/{id}
+        [HttpGet]
+        [Route("items/{id}")]
+        public async Task<CatalogItem> CatalogItem(int id) {
+            return await _catalogContext.CatalogItems.FindAsync(id);
         }
     }
 }
