@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Identity.API.Models;
 using Identity.API.Models.AccountViewModels;
+using Identity.API.Services;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.API.Controllers
@@ -13,12 +16,14 @@ namespace Identity.API.Controllers
     public class AccountController : Controller
     {
         private readonly IIdentityServerInteractionService _interaction;
+        private readonly ILoginService<ApplicationUser> _loginService;
         private readonly IClientStore _clientStore;
 
         public AccountController(IIdentityServerInteractionService interaction,
-            IClientStore clientStore) {
+            IClientStore clientStore, ILoginService<ApplicationUser> loginService) {
             _interaction = interaction;
             _clientStore = clientStore;
+            _loginService = loginService;
         }
 
         /// <summary>
@@ -37,6 +42,57 @@ namespace Identity.API.Controllers
             };
 
             ViewData["ReturnUrl"] = returnUrl;
+
+            return View(vm);
+        }
+
+        /// <summary>
+        /// Handle postback from username/password login
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model) {
+            if (ModelState.IsValid) {
+                var user = await _loginService.FindByUsername(model.Email);
+
+                if (await _loginService.ValidateCredentials(user, model.Password)) {
+                    var props = new AuthenticationProperties {
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddHours(2),
+                        AllowRefresh = true,
+                        RedirectUri = model.ReturnUrl
+                    };
+
+                    if (model.RememberMe) {
+                        props = new AuthenticationProperties {
+                            IsPersistent = true,
+                            ExpiresUtc = DateTimeOffset.UtcNow.AddYears(10)
+                        };
+                    };
+
+                    await _loginService.SignInAsync(user, props);
+
+                    // make sure the returnUrl is still valid, and if yes - redirect back to authorize endpoint
+                    if (_interaction.IsValidReturnUrl(model.ReturnUrl)) {
+                        return Redirect(model.ReturnUrl);
+                    }
+
+                    return Redirect("~/");
+                }
+
+                ModelState.AddModelError("", "Invalid username or password.");
+            }
+
+            // something went wrong, show form with error
+            var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
+
+            var vm = new LoginViewModel {
+                ReturnUrl = model.ReturnUrl,
+                Email = context?.LoginHint,
+            };
+            vm.Email = model.Email;
+            vm.RememberMe = model.RememberMe;
+
+            ViewData["ReturnUrl"] = model.ReturnUrl;
 
             return View(vm);
         }

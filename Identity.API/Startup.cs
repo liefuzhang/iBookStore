@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using IdentityServer4.Services;
 using Identity.API.Configuration;
 using System.Reflection;
+using Identity.API.Services;
 
 namespace Identity.API
 {
@@ -37,6 +38,8 @@ namespace Identity.API
                 .AddDefaultTokenProviders();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddTransient<ILoginService<ApplicationUser>, EFLoginService>();
 
             //// Adds IdentityServer
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
