@@ -1,9 +1,20 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@using iBookStoreMVC.Service
+@using Identity.API.Models
+@using Microsoft.AspNetCore.Identity
+@inject IIdentityParser<ApplicationUser> UserManager
 
-<section class="col-4">
-    <div class="identity-container">
-        <a asp-area="" asp-controller="Account" asp-action="SignIn">
-            Login
-        </a>
-    </div>
-</section>
+@if (User.FindFirst(x => x.Type == "preferred_username") != null) {
+    <section class="col-4">
+        <div class="identity-container">
+            <div class="identity-name">Hello, @User.FindFirst(x => x.Type == "preferred_username").Value</div>
+        </div>
+    </section>
+} else {
+    <section class="col-4">
+        <div class="identity-container">
+            <a asp-area="" asp-controller="Account" asp-action="SignIn">
+                Login
+            </a>
+        </div>
+    </section>
+}

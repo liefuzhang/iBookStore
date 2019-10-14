@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using iBookStoreMVC.Service;
+using Identity.API.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -31,6 +32,8 @@ namespace iBookStoreMVC
 
             services.AddHttpClient<ICatalogService, CatalogService>();
 
+            services.AddTransient<IIdentityParser<ApplicationUser>, IdentityParser>();
+            
             services.AddCustomAuthentication(Configuration);
         }
 
@@ -56,7 +59,7 @@ namespace iBookStoreMVC
             });
         }
     }
-       
+
     public static class CustomExtensionMethods
     {
         public static IServiceCollection AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration) {

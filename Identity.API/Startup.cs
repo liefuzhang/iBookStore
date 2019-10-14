@@ -60,7 +60,8 @@ namespace Identity.API
               .AddInMemoryIdentityResources(Config.GetIdentityResources())
               .AddInMemoryApiResources(Config.GetApiResources())
               .AddInMemoryClients(Config.GetClients(Configuration))
-              .AddAspNetIdentity<ApplicationUser>();
+              .AddAspNetIdentity<ApplicationUser>()
+              .Services.AddTransient<IProfileService, ProfileService>(); ;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
