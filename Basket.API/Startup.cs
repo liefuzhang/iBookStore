@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using Basket.API.Infrastructure;
 using Basket.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -45,6 +46,9 @@ namespace Basket.API
             services.AddDistributedMemoryCache();
 
             ConfigureAuthService(services);
+
+            services.AddTransient<IIdentityService, IdentityService>();
+            services.AddTransient<IBasketRepository, BasketRepository>();
         }
 
         private void ConfigureAuthService(IServiceCollection services) {
