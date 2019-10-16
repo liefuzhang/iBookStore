@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using iBookStoreMVC.Infrastructure;
 using iBookStoreMVC.Service;
 using Identity.API.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -30,12 +31,11 @@ namespace iBookStoreMVC
             services.Configure<AppSettings>(Configuration);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            services.AddHttpClient<ICatalogService, CatalogService>();
-            services.AddHttpClient<IBasketService, BasketService>();
+            
+            services.AddHttpClientServices(Configuration);
 
             services.AddTransient<IIdentityParser<ApplicationUser>, IdentityParser>();
-            
+
             services.AddCustomAuthentication(Configuration);
         }
 
@@ -90,12 +90,28 @@ namespace iBookStoreMVC
                 options.Scope.Add("openid");
                 //options.Scope.Add("profile");
                 //options.Scope.Add("orders");
-                //options.Scope.Add("basket");
+                options.Scope.Add("basket");
                 //options.Scope.Add("marketing");
                 //options.Scope.Add("locations");
                 //options.Scope.Add("webshoppingagg");
                 //options.Scope.Add("orders.signalrhub");
             });
+
+            return services;
+        }
+
+        // Adds all Http client services (like Service-Agents) using resilient Http requests based on HttpClient factory and Polly's policies 
+        public static IServiceCollection AddHttpClientServices(this IServiceCollection services, IConfiguration configuration) {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            //register delegating handlers
+            services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
+
+            //add http client services
+            services.AddHttpClient<ICatalogService, CatalogService>();
+            services.AddHttpClient<IBasketService, BasketService>()
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5)) //Sample. Default lifetime is 2 minutes
+                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 
             return services;
         }

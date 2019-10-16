@@ -24,10 +24,12 @@ namespace Basket.API.Controllers
         public BasketController(
             ILogger<BasketController> logger,
             IBasketRepository repository,
-            IIdentityService identityService) {
+            IIdentityService identityService, 
+            ICatalogService catalogService) {
             _logger = logger;
             _repository = repository;
             _identityService = identityService;
+            _catalogService = catalogService;
         }
 
         // POST api/v1/[controller]/items

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Basket.API.Infrastructure;
 using Basket.API.Services;
+using iBookStoreMVC;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,6 +29,8 @@ namespace Basket.API
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
+            services.Configure<AppSettings>(Configuration);
+
             services.AddCors(options => {
                 options.AddPolicy("CorsPolicy",
                     builder => builder
