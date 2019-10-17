@@ -66,3 +66,24 @@ body {
     width: 160px;
     height: 160px;
 }
+
+.basket-status-image img {
+    max-width: 40px;
+    max-height: 40px;
+}
+
+.basket-status-badge {
+    position: absolute;
+    left: 57px;
+    bottom: -6px;
+}
+
+.basket-title {
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.basket-image {
+    max-width: 120px;
+    max-height: 120px;
+}

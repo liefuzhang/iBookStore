@@ -10,20 +10,20 @@
    asp-action="Index">
     @if (ViewBag.IsBasketInoperative == true)
     {
-    <div class="basket-status-image">
-        <img src="~/images/cart-inoperative.png" />
-    </div>
-    <div class="basket-status-badge-inoperative">
-        X
-    </div>
+        <div class="basket-status-image">
+            <img src="~/images/cart-inoperative.png" />
+        </div>
+        <div class="basket-status-badge-inoperative">
+            X
+        </div>
     }
     else
     {
-    <div class="basket-status-image">
-        <img src="~/images/cart.png" />
-    </div>
-    <div class="basket-status-badge">
-        @Model.ItemsCount
-    </div>
+        <div class="basket-status-image">
+            <img src="~/images/cart.png" />
+        </div>
+        <div class="basket-status-badge">
+            @Model.ItemsCount
+        </div>
     }
 </a>

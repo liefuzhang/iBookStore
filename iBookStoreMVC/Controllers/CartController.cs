@@ -40,6 +40,7 @@ namespace iBookStoreMVC.Controllers
 
             return View();
         }
+
         public async Task<IActionResult> AddToCart(CatalogItem item) {
             try {
                 if (item?.Id != null) {

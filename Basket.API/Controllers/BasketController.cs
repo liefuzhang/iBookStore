@@ -24,8 +24,9 @@ namespace Basket.API.Controllers
         public BasketController(
             ILogger<BasketController> logger,
             IBasketRepository repository,
-            IIdentityService identityService, 
-            ICatalogService catalogService) {
+            IIdentityService identityService,
+            ICatalogService catalogService)
+        {
             _logger = logger;
             _repository = repository;
             _identityService = identityService;
@@ -35,18 +36,21 @@ namespace Basket.API.Controllers
         // POST api/v1/[controller]/items
         [HttpPost]
         [Route("items")]
-        public async Task<ActionResult> AddItemToBasket([FromBody] AddBasketItemRequest data) {
-            if (data == null || data.Quantity == 0) {
+        public async Task<ActionResult> AddItemToBasket([FromBody] AddBasketItemRequest data)
+        {
+            if (data == null || data.Quantity == 0)
+            {
                 return BadRequest("Invalid payload");
             }
 
             // Step 1: Get the item from catalog
             var item = await _catalogService.GetCatalogItemAsync(data.CatalogItemId);
-            
+
             // Step 2: Get current basket status
-            var currentBasket = (await _repository.GetBasketAsync(data.BasketId)) ?? new CustomerBasket(data.BasketId);
+            var currentBasket = await _repository.GetBasketAsync(data.BasketId) ?? new CustomerBasket(data.BasketId);
             // Step 3: Merge current status with new product
-            currentBasket.Items.Add(new BasketItem() {
+            currentBasket.Items.Add(new BasketItem()
+            {
                 UnitPrice = item.Price,
                 PictureUrl = item.PictureUrl,
                 ProductId = item.Id.ToString(),
@@ -59,6 +63,14 @@ namespace Basket.API.Controllers
             await _repository.UpdateBasketAsync(currentBasket);
 
             return Ok();
+        }
+
+        // GET api/vi/[controller]/{id}
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<CustomerBasket> GetBasketByIdAsync(string id)
+        {
+            return await _repository.GetBasketAsync(id) ?? new CustomerBasket(id);
         }
     }
 }

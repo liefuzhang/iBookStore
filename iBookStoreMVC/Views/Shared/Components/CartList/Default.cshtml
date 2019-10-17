@@ -4,17 +4,16 @@
     ViewData["Title"] = "My Cart";
 }
 
-<div class="container">
+<div class="container mt-5">
     @if (ViewBag.BasketInoperativeMsg != null) {
         <br />
         <div class="alert alert-warning" role="alert">
             &nbsp;@ViewBag.BasketInoperativeMsg
         </div>
     } else {
-        <article class="basket-titles row">
-            <br />
-            <section class="basket-title col-3">Product</section>
-            <section class="basket-title col-3 hidden-lg-down"></section>
+        <article class="basket-titles row mb-4">
+            <section class="basket-title col-3"></section>
+            <section class="basket-title col-3">Book</section>
             <section class="basket-title col-2">Price</section>
             <section class="basket-title col-2">Quantity</section>
             <section class="basket-title col-2">Cost</section>
@@ -23,28 +22,21 @@
         @for (int i = 0; i < Model.Items.Count; i++) {
             var item = Model.Items[i];
 
-            <article class="basket-items row">
-                <section class="basket-item basket-item--middle col-lg-3 hidden-lg-down">
-                    <img class="basket-image" src="@item.PictureUrl" />
+            <article class="basket-items row mt-3">
+                <section class="basket-item basket-item--middle col-lg-3">
+                    <img class="basket-image" src="~/images/book_placeholder.jpg" />
                 </section>
                 <section class="basket-item basket-item--middle col-3">@item.ProductName</section>
                 <section class="basket-item basket-item--middle col-2">$ @item.UnitPrice.ToString("N2")</section>
                 <section class="basket-item basket-item--middle col-2">
                     <input type="hidden" name="@("quantities[" + i +"].Key")" value="@item.Id" />
-                    <input type="number" class="basket-input" min="1" name="@("quantities[" + i +"].Value")" value="@item.Quantity" />
+                    <input type="number" class="basket-input col-9" min="1" name="@("quantities[" + i +"].Value")" value="@item.Quantity" />
                 </section>
                 <section class="basket-item basket-item--middle basket-item--mark col-2">$ @Math.Round(item.Quantity * item.UnitPrice, 2).ToString("N2")</section>
             </article>
-
-            <div class="basket-items--border row">
-                @if (item.OldUnitPrice != 0) {
-                    <div class="alert alert-warning basket-margin12" role="alert">&nbsp;Note that the price of this article changed in our Catalog. The old price when you originally added it to the basket was $ @item.OldUnitPrice </div>
-                }
-            </div>
-            <br />
         }
 
-        <div class="container">
+        <div>
             <article class="basket-titles basket-titles--clean row">
                 <section class="basket-title col-10"></section>
                 <section class="basket-title col-2">Total</section>
@@ -55,14 +47,14 @@
                 <section class="basket-item basket-item--mark col-2">$ @Model.Total()</section>
             </article>
 
-            <article class="basket-items row">
+            <article class="basket-items row mt-5">
                 <section class="basket-item col-7"></section>
                 <section class="basket-item col-2">
-                    <button class="btn basket-checkout" name="name" value="" type="submit">[ Update ]</button>
+                    <button class="btn btn-primary basket-checkout" name="name" value="" type="submit">[ Update ]</button>
                 </section>
-                <section class="basket-item col-3">
+                <section class="basket-item col-2">
                     <input type="submit"
-                           class="btn basket-checkout"
+                           class="btn btn-primary basket-checkout"
                            value="[ Checkout ]" name="action" />
                 </section>
             </article>

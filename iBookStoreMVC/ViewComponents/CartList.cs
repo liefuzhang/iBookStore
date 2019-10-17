@@ -15,7 +15,7 @@ namespace iBookStoreMVC.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync(ApplicationUser user) {
             var vm = new Basket();
             try {
-                vm = await GetItemsAsync(user);
+                vm = await GetCartAsync(user);
                 return View(vm);
             } catch (/*BrokenCircuitException*/ Exception e) {
                 // Catch error when Basket.api is in circuit-opened mode                 
@@ -25,6 +25,6 @@ namespace iBookStoreMVC.ViewComponents
             return View(vm);
         }
 
-        private Task<Basket> GetItemsAsync(ApplicationUser user) => _cartSvc.GetBasket(user);
+        private Task<Basket> GetCartAsync(ApplicationUser user) => _cartSvc.GetBasket(user);
     }
 }
