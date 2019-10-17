@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
-using Identity.API.Models;
+using iBookStoreMVC.ViewModels;
 
 namespace iBookStoreMVC.Service
 {

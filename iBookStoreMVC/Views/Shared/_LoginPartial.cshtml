@@ -1,5 +1,5 @@
 ﻿@using iBookStoreMVC.Service
-@using Identity.API.Models
+@using iBookStoreMVC.ViewModels
 @using Microsoft.AspNetCore.Identity
 @inject IIdentityParser<ApplicationUser> UserManager
 
@@ -8,6 +8,10 @@
         <div class="identity-container">
             <div class="identity-name">Hello, @User.FindFirst(x => x.Type == "preferred_username").Value</div>
         </div>
+    </section>
+
+    <section class="col-2">
+        @await Component.InvokeAsync("Cart", new { user = UserManager.Parse(User) })
     </section>
 } else {
     <section class="col-4">

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using iBookStoreMVC.Infrastructure;
 using iBookStoreMVC.Service;
-using Identity.API.Models;
+using iBookStoreMVC.ViewModels;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;

@@ -1,0 +1,15 @@
+﻿@using iBookStoreMVC.Service
+@using iBookStoreMVC.ViewModels
+
+@model iBookStoreMVC.ViewModels.Basket
+@inject IIdentityParser<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "My Cart";
+}
+
+<form method="post" id="cartForm">
+    <div class="basket">
+        @await Component.InvokeAsync("CartList", new { user = UserManager.Parse(User) })
+    </div>
+</form>

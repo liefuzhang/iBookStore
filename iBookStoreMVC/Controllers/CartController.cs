@@ -7,7 +7,6 @@ using iBookStoreMVC.Models;
 using iBookStoreMVC.Service;
 using Microsoft.AspNetCore.Authorization;
 using iBookStoreMVC.ViewModels;
-using Identity.API.Models;
 using Microsoft.Extensions.Logging;
 
 namespace iBookStoreMVC.Controllers
@@ -28,6 +27,19 @@ namespace iBookStoreMVC.Controllers
             _logger = logger;
         }
 
+        public async Task<IActionResult> Index() {
+            try {
+                var user = _appUserParser.Parse(HttpContext.User);
+                var vm = await _basketSvc.GetBasket(user);
+
+                return View(vm);
+            } catch (Exception e) {
+                // Catch error when Basket.api is in circuit-opened mode                 
+                ViewBag.BasketInoperativeMsg = "Basket Service is inoperative, please try later on. (Business Msg Due to Circuit-Breaker)";
+            }
+
+            return View();
+        }
         public async Task<IActionResult> AddToCart(CatalogItem item) {
             try {
                 if (item?.Id != null) {
@@ -41,5 +53,6 @@ namespace iBookStoreMVC.Controllers
 
             return RedirectToAction("Index", "Catalog", new { errorMsg = "Basket Service is inoperative, please try later on. (Business Msg Due to Circuit-Breaker)" });
         }
+
     }
 }

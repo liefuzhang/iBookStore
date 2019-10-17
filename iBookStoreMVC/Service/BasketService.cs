@@ -1,10 +1,10 @@
 ﻿using iBookStoreMVC.Infrastructure;
-using Identity.API.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
+using iBookStoreMVC.ViewModels;
 
 namespace iBookStoreMVC.Service
 {
@@ -35,6 +35,17 @@ namespace iBookStoreMVC.Service
             var basketContent = new StringContent(JsonConvert.SerializeObject(newItem), System.Text.Encoding.UTF8, "application/json");
 
             await _httpClient.PostAsync(url, basketContent);
+        }
+
+        public async Task<Basket> GetBasket(ApplicationUser user)
+        {
+            var url = API.Basket.GetBasket(_remoteServiceBaseUrl, user.Id);
+
+            var responseString = await _httpClient.GetStringAsync(url);
+
+            return string.IsNullOrEmpty(responseString) ?
+                new Basket() { BuyerId = user.Id } :
+                JsonConvert.DeserializeObject<Basket>(responseString);
         }
     }
 }
