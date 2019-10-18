@@ -72,6 +72,11 @@ body {
     max-height: 40px;
 }
 
+.basket-status-image.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
 .basket-status-badge {
     position: absolute;
     left: 54px;
@@ -83,8 +88,8 @@ body {
     text-align: center;
     line-height: 20px;
     border-radius: 10px;
+    font-size: .9em;
 }
-
 .basket-title {
     font-weight: 600;
     font-size: 1.2rem;

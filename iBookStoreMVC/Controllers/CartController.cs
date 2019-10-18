@@ -48,7 +48,7 @@ namespace iBookStoreMVC.Controllers
                 var user = _appUserParser.Parse(HttpContext.User);
                 await _basketSvc.SetQuantities(user, quantities);
                 if (action == "Checkout") {
-                    //return RedirectToAction("Create", "Order");
+                    return RedirectToAction("Create", "Order");
                 }
             } catch (Exception e) {
                 // Catch error when Basket.api is in circuit-opened mode                 
