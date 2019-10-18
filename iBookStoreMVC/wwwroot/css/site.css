@@ -74,8 +74,15 @@ body {
 
 .basket-status-badge {
     position: absolute;
-    left: 57px;
-    bottom: -6px;
+    left: 54px;
+    bottom: -4px;
+    height: 20px;
+    width: 20px;
+    background: #e14c38;
+    color: white;
+    text-align: center;
+    line-height: 20px;
+    border-radius: 10px;
 }
 
 .basket-title {

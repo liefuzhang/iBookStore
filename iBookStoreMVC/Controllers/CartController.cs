@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,6 +34,22 @@ namespace iBookStoreMVC.Controllers
                 var vm = await _basketSvc.GetBasket(user);
 
                 return View(vm);
+            } catch (Exception e) {
+                // Catch error when Basket.api is in circuit-opened mode                 
+                ViewBag.BasketInoperativeMsg = "Basket Service is inoperative, please try later on. (Business Msg Due to Circuit-Breaker)";
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(Dictionary<string, int> quantities, string action) {
+            try {
+                var user = _appUserParser.Parse(HttpContext.User);
+                await _basketSvc.SetQuantities(user, quantities);
+                if (action == "Checkout") {
+                    //return RedirectToAction("Create", "Order");
+                }
             } catch (Exception e) {
                 // Catch error when Basket.api is in circuit-opened mode                 
                 ViewBag.BasketInoperativeMsg = "Basket Service is inoperative, please try later on. (Business Msg Due to Circuit-Breaker)";

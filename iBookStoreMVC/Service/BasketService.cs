@@ -1,4 +1,6 @@
-﻿using iBookStoreMVC.Infrastructure;
+﻿using System.Collections.Generic;
+using System.Linq;
+using iBookStoreMVC.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -44,8 +46,32 @@ namespace iBookStoreMVC.Service
             var responseString = await _httpClient.GetStringAsync(url);
 
             return string.IsNullOrEmpty(responseString) ?
-                new Basket() { BuyerId = user.Id } :
+                new Basket { BuyerId = user.Id } :
                 JsonConvert.DeserializeObject<Basket>(responseString);
+        }
+
+        public async Task<Basket> SetQuantities(ApplicationUser user, Dictionary<string, int> quantities)
+        {
+            var url = API.Basket.UpdateBasketItem(_remoteServiceBaseUrl);
+
+            var basketUpdate = new {
+                BasketId = user.Id,
+                Updates = quantities.Select(kvp=> new
+                {
+                    BasketItemId = kvp.Key,
+                    NewQuantity = kvp.Value
+                }).ToArray()
+            };
+
+            var basketContent = new StringContent(JsonConvert.SerializeObject(basketUpdate), System.Text.Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PutAsync(url, basketContent);
+
+            response.EnsureSuccessStatusCode();
+
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<Basket>(jsonResponse);
         }
     }
 }

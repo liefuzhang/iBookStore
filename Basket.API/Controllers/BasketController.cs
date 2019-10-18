@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Basket.API.Infrastructure;
@@ -63,6 +62,35 @@ namespace Basket.API.Controllers
             await _repository.UpdateBasketAsync(currentBasket);
 
             return Ok();
+        }
+
+        // PUT api/v1/[controller]/items
+        [HttpPut]
+        [Route("items")]
+        public async Task<ActionResult<CustomerBasket>> UpdateBasket([FromBody] UpdateBasketItemsRequest data) {
+            if (!data.Updates.Any()) {
+                return BadRequest("No updates sent");
+            }
+
+            // Retrieve the current basket
+            var currentBasket = await _repository.GetBasketAsync(data.BasketId);
+            if (currentBasket == null) {
+                return BadRequest($"Basket with id {data.BasketId} not found.");
+            }
+
+            // Update with new quantities
+            foreach (var update in data.Updates) {
+                var basketItem = currentBasket.Items.SingleOrDefault(item => item.Id == update.BasketItemId);
+                if (basketItem == null) {
+                    return BadRequest($"Basket item with id {update.BasketItemId} not found");
+                }
+                basketItem.Quantity = update.NewQuantity;
+            }
+
+            // Save the updated basket
+            await _repository.UpdateBasketAsync(currentBasket);
+
+            return currentBasket;
         }
 
         // GET api/vi/[controller]/{id}

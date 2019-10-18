@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace iBookStoreMVC.ViewComponents
 {
-    public class Cart : ViewComponent
+    public class CartViewComponent : ViewComponent
     {
-        private readonly IBasketService _cartSvc;
+        private readonly IBasketService _basketService;
 
-        public Cart(IBasketService cartSvc) => _cartSvc = cartSvc;
+        public CartViewComponent(IBasketService basketService) => _basketService = basketService;
 
         public async Task<IViewComponentResult> InvokeAsync(ApplicationUser user) {
             var vm = new CartComponentViewModel();
@@ -26,7 +26,7 @@ namespace iBookStoreMVC.ViewComponents
             return View(vm);
         }
         private async Task<int> ItemsCountInCartAsync(ApplicationUser user) {
-            var basket = await _cartSvc.GetBasket(user);
+            var basket = await _basketService.GetBasket(user);
             return basket.Items.Count;
         }
     }
