@@ -17,6 +17,7 @@ namespace Basket.API.Controllers
     {
         private readonly IBasketRepository _repository;
         private readonly ICatalogService _catalogService;
+        private readonly IOrderService _orderService;
         private readonly IIdentityService _identityService;
         private readonly ILogger<BasketController> _logger;
 
@@ -24,21 +25,20 @@ namespace Basket.API.Controllers
             ILogger<BasketController> logger,
             IBasketRepository repository,
             IIdentityService identityService,
-            ICatalogService catalogService)
-        {
+            ICatalogService catalogService,
+            IOrderService orderService) {
             _logger = logger;
             _repository = repository;
             _identityService = identityService;
             _catalogService = catalogService;
+            _orderService = orderService;
         }
 
         // POST api/v1/[controller]/items
         [HttpPost]
         [Route("items")]
-        public async Task<ActionResult> AddItemToBasket([FromBody] AddBasketItemRequest data)
-        {
-            if (data == null || data.Quantity == 0)
-            {
+        public async Task<ActionResult> AddItemToBasket([FromBody] AddBasketItemRequest data) {
+            if (data == null || data.Quantity == 0) {
                 return BadRequest("Invalid payload");
             }
 
@@ -48,8 +48,7 @@ namespace Basket.API.Controllers
             // Step 2: Get current basket status
             var currentBasket = await _repository.GetBasketAsync(data.BasketId) ?? new CustomerBasket(data.BasketId);
             // Step 3: Merge current status with new product
-            currentBasket.Items.Add(new BasketItem()
-            {
+            currentBasket.Items.Add(new BasketItem() {
                 UnitPrice = item.Price,
                 PictureUrl = item.PictureUrl,
                 ProductId = item.Id.ToString(),
@@ -96,9 +95,24 @@ namespace Basket.API.Controllers
         // GET api/vi/[controller]/{id}
         [HttpGet]
         [Route("{id}")]
-        public async Task<CustomerBasket> GetBasketByIdAsync(string id)
-        {
+        public async Task<CustomerBasket> GetBasketByIdAsync(string id) {
             return await _repository.GetBasketAsync(id) ?? new CustomerBasket(id);
+        }
+
+        [Route("draft/{basketId}")]
+        [HttpGet]
+        public async Task<ActionResult<OrderData>> GetOrderDraftAsync(string basketId) {
+            if (string.IsNullOrEmpty(basketId)) {
+                return BadRequest("Need a valid basketid");
+            }
+
+            // Get the basket data and build a order draft based on it
+            var currentBasket = await _repository.GetBasketAsync(basketId);
+            if (currentBasket == null) {
+                return BadRequest($"Basket with id {basketId} not found.");
+            }
+
+            return await _orderService.GetOrderDraftFromBasketAsync(currentBasket);
         }
     }
 }

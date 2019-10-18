@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using iBookStoreMVC.Models;
+using iBookStoreMVC.ViewModels.Annotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace iBookStoreMVC.ViewModels
@@ -15,7 +17,8 @@ namespace iBookStoreMVC.ViewModels
         public string Status { get; set; }
 
         public decimal Total { get; set; }
-        
+
+        [Required]
         public string City { get; set; }
 
         [Required]

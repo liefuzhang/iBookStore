@@ -9,5 +9,6 @@ namespace iBookStoreMVC.Service
         Task AddItemToBasket(ApplicationUser user, int productId);
         Task<Basket> GetBasket(ApplicationUser user);
         Task<Basket> SetQuantities(ApplicationUser user, Dictionary<string, int> quantities);
+        Task<Order> GetOrderDraft(string basketId);
     }
 }

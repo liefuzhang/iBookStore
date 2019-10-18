@@ -73,5 +73,16 @@ namespace iBookStoreMVC.Service
 
             return JsonConvert.DeserializeObject<Basket>(jsonResponse);
         }
+
+        public async Task<Order> GetOrderDraft(string basketId)
+        {
+            var url = API.Basket.GetOrderDraft(_remoteServiceBaseUrl, basketId);
+
+            var responseString = await _httpClient.GetStringAsync(url);
+
+            var response = JsonConvert.DeserializeObject<Order>(responseString);
+
+            return response;
+        }
     }
 }
