@@ -4,6 +4,6 @@ namespace iBookStoreMVC.Service
 {
     public interface IOrderingService
     {
-        string MapUserInfoIntoOrder(ApplicationUser user, Order order);
+        Order MapUserInfoIntoOrder(ApplicationUser user, Order order);
     }
 }
