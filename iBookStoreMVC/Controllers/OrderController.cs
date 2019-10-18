@@ -24,7 +24,7 @@ namespace iBookStoreMVC.Controllers
             var user = _appUserParser.Parse(HttpContext.User);
             var order = await _basketSvc.GetOrderDraft(user.Id);
             var vm = _orderSvc.MapUserInfoIntoOrder(user, order);
-            vm.CardExpirationShortFormat();
+            //vm.CardExpirationShortFormat();
 
             return View(vm);
         }

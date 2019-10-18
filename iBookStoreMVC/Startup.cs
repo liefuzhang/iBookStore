@@ -112,6 +112,9 @@ namespace iBookStoreMVC
             services.AddHttpClient<IBasketService, BasketService>()
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5)) //Sample. Default lifetime is 2 minutes
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+            services.AddHttpClient<IOrderingService, OrderingService>()
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5)) 
+                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 
             return services;
         }
