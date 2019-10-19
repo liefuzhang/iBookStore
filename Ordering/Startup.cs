@@ -9,10 +9,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Ordering.API.Infrastructure;
 using Ordering.API.Services;
 
 namespace Ordering
@@ -35,6 +37,9 @@ namespace Ordering
                         .AllowAnyHeader()
                         .AllowCredentials());
             });
+
+            services.AddDbContext<OrderingContext>(options =>
+                options.UseSqlServer(Configuration["ConnectionString"]));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

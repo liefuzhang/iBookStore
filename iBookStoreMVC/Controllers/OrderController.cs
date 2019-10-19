@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using iBookStoreMVC.Infrastructure;
 using iBookStoreMVC.Service;
 using iBookStoreMVC.ViewModels;
@@ -27,6 +28,24 @@ namespace iBookStoreMVC.Controllers
             vm.CardExpirationShortFormat();
 
             return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PlaceOrder(Order order) {
+            try {
+                if (ModelState.IsValid) {
+                    var user = _appUserParser.Parse(HttpContext.User);
+
+                    await _orderSvc.PlaceOrder(order);
+
+                    //Redirect to historic list.
+                    return RedirectToAction("Index");
+                }
+            } catch (Exception) {
+                ModelState.AddModelError("Error", "It was not possible to create a new order, please try later on. (Business Msg Due to Circuit-Breaker)");
+            }
+
+            return View("Create", order);
         }
     }
 }

@@ -23,7 +23,16 @@ namespace iBookStoreMVC.Service
             _logger = logger;
             _settings = settings;
 
-            _remoteServiceBaseUrl = $"{_settings.Value.CatalogUrl}/api/v1/order/";
+            _remoteServiceBaseUrl = $"{_settings.Value.OrderUrl}/api/v1/order";
+        }
+
+        public async Task PlaceOrder(Order order) {
+            var url = API.Order.PlaceOrder(_remoteServiceBaseUrl);
+            var orderContent = new StringContent(JsonConvert.SerializeObject(order), System.Text.Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(url, orderContent);
+
+            response.EnsureSuccessStatusCode();
         }
 
         public Order MapUserInfoIntoOrder(ApplicationUser user, Order order) {

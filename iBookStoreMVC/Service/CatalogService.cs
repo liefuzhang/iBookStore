@@ -22,7 +22,7 @@ namespace iBookStoreMVC.Service
             _logger = logger;
             _settings = settings;
 
-            _remoteServiceBaseUrl = $"{_settings.Value.CatalogUrl}/api/v1/catalog/";
+            _remoteServiceBaseUrl = $"{_settings.Value.CatalogUrl}/api/v1/catalog";
         }
 
         public async Task<IEnumerable<CatalogItem>> GetCatalogItems()

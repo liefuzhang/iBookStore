@@ -22,7 +22,14 @@ namespace iBookStoreMVC.Infrastructure
         {
             public static string GetCatalogItems(string baseUrl)
             {
-                return $"{baseUrl}catalogItems";
+                return $"{baseUrl}/catalogItems";
+            }
+        }
+
+        public static class Order
+        {
+            public static string PlaceOrder(string baseUrl) {
+                return $"{baseUrl}/placeOrder";
             }
         }
     }

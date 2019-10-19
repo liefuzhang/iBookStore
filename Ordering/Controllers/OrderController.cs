@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ordering.API.Extensions;
+using Ordering.API.Infrastructure;
 using Ordering.API.Models;
 using Ordering.API.Services;
 
@@ -16,9 +17,11 @@ namespace Ordering.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IIdentityService _identityService;
+        private readonly OrderingContext _orderingContext;
 
-        public OrderController(IIdentityService identityService) {
+        public OrderController(IIdentityService identityService, OrderingContext orderingContext) {
             _identityService = identityService;
+            _orderingContext = orderingContext;
         }
 
         // POST api/vi/[controller]/draft
@@ -32,6 +35,18 @@ namespace Ordering.Controllers
             }
 
             return OrderDraftDTO.FromOrder(order);
+        }
+
+        // POST api/vi/[controller]/placeOrder
+        [HttpPost]
+        [Route("placeOrder")]
+        public async Task PlaceOrder([FromBody] Order order) {
+            var userId = _identityService.GetUserIdentity();
+            var userName = User.FindFirst(x => x.Type == "unique_name").Value;
+
+            order.OrderItems.ForEach(oi => oi.Id = 0);
+            _orderingContext.Orders.Add(order);
+            await _orderingContext.SaveChangesAsync();
         }
     }
 }

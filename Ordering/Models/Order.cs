@@ -6,6 +6,7 @@ namespace Ordering.API.Models
 {
     public class Order
     {
+        public int Id { get; private set; }
         public string OrderNumber { get; private set; }
         public DateTime CreatedDate { get; private set; }
         public string Status { get; private set; }
