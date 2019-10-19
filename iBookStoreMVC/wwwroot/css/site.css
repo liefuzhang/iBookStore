@@ -99,3 +99,23 @@ body {
     max-width: 120px;
     max-height: 120px;
 }
+
+.field-validation-valid{
+    display: none;
+}
+
+.field-validation-error {
+    padding: 0.3rem;
+    display: inline-block;
+    margin: 10px 0 0;
+}
+
+.orders_new-image {
+    max-width: 100px;
+    max-height: 100px;
+}
+
+.orders_new-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+}

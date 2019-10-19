@@ -41,11 +41,14 @@ namespace Basket.API
             });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddHttpClient<ICatalogService, CatalogService>();
-            services.AddHttpClient<IOrderService, OrderService>();
+            services.AddHttpClient<IOrderService, OrderService>()
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 
             services.AddDistributedMemoryCache();
 

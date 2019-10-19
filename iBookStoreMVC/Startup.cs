@@ -89,7 +89,7 @@ namespace iBookStoreMVC
                 options.RequireHttpsMetadata = false;
                 options.Scope.Add("openid");
                 //options.Scope.Add("profile");
-                //options.Scope.Add("orders");
+                options.Scope.Add("ordering");
                 options.Scope.Add("basket");
                 //options.Scope.Add("marketing");
                 //options.Scope.Add("locations");

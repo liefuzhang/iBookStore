@@ -99,7 +99,7 @@ namespace Basket.API.Controllers
             return await _repository.GetBasketAsync(id) ?? new CustomerBasket(id);
         }
 
-        [Route("draft/{basketId}")]
+        [Route("orderDraft/{basketId}")]
         [HttpGet]
         public async Task<ActionResult<OrderData>> GetOrderDraftAsync(string basketId) {
             if (string.IsNullOrEmpty(basketId)) {

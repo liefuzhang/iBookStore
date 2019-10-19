@@ -22,6 +22,7 @@ namespace Identity.API.Configuration
             return new List<ApiResource>
             {
                 new ApiResource("basket", "Basket Service"),
+                new ApiResource("ordering", "Ordering Service"),
             };
         }
 
@@ -60,7 +61,7 @@ namespace Identity.API.Configuration
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.OfflineAccess,
-                        //"orders",
+                        "ordering",
                         "basket",
                         //"locations",
                         //"marketing",

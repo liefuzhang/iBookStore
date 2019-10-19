@@ -9,11 +9,11 @@ namespace iBookStoreMVC.Infrastructure
     {
         public static class Basket
         {
-            public static string AddItemToBasket(string baseUrl) => $"{baseUrl}items";
+            public static string AddItemToBasket(string baseUrl) => $"{baseUrl}/items";
 
             public static string GetBasket(string baseUrl, string basketId) => $"{baseUrl}/{basketId}";
 
-            public static string UpdateBasketItem(string baseUrl) => $"{baseUrl}items";
+            public static string UpdateBasketItem(string baseUrl) => $"{baseUrl}/items";
 
             public static string GetOrderDraft(string baseUrl, string basketId) => $"{baseUrl}/orderDraft/{basketId}";
         }
