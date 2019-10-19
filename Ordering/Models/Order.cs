@@ -7,9 +7,8 @@ namespace Ordering.API.Models
     public class Order
     {
         public int Id { get; private set; }
-        public string OrderNumber { get; private set; }
         public DateTime CreatedDate { get; private set; }
-        public string Status { get; private set; }
+        public OrderStatus Status { get; private set; } = OrderStatus.Submitted;
         public decimal Total { get; private set; }
         public string City { get; private set; }
 
@@ -36,12 +35,37 @@ namespace Ordering.API.Models
         public int CardTypeId { get; private set; }
 
         public string Buyer { get; private set; }
-
+        
         public List<OrderItem> OrderItems { get; } = new List<OrderItem>();
 
         public static Order NewDraft() {
             var order = new Order();
             order.IsDraft = true;
+            return order;
+        }
+
+        public static Order FromOrderDTO(OrderDTO orderDTO) {
+            var order = new Order {
+                CreatedDate = DateTime.Now,
+                Total = orderDTO.Total,
+                City = orderDTO.City,
+                Street = orderDTO.Street,
+                State = orderDTO.State,
+                Country = orderDTO.Country,
+                ZipCode = orderDTO.ZipCode,
+                CardNumber = orderDTO.CardNumber,
+                CardHolderName = orderDTO.CardHolderName,
+                CardExpiration = orderDTO.CardExpiration,
+                CardExpirationShort = orderDTO.CardExpirationShort,
+                CardSecurityNumber = orderDTO.CardSecurityNumber,
+                CardTypeId = orderDTO.CardTypeId,
+                Buyer = orderDTO.Buyer
+            };
+
+            foreach (var item in orderDTO.OrderItems) {
+                order.AddOrderItem(item.ProductId, item.ProductName, item.UnitPrice, item.PictureUrl, item.Units);
+            }
+
             return order;
         }
 

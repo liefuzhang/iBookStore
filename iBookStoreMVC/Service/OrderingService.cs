@@ -48,5 +48,15 @@ namespace iBookStoreMVC.Service
 
             return order;
         }
+
+        public async Task<List<Order>> GetMyOrders(ApplicationUser user) {
+            var url = API.Order.GetAllMyOrders(_remoteServiceBaseUrl);
+
+            var responseString = await _httpClient.GetStringAsync(url);
+
+            var response = JsonConvert.DeserializeObject<List<Order>>(responseString);
+
+            return response;
+        }
     }
 }

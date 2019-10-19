@@ -37,6 +37,7 @@ namespace iBookStoreMVC.Controllers
                     var user = _appUserParser.Parse(HttpContext.User);
 
                     await _orderSvc.PlaceOrder(order);
+                    await _basketSvc.ClearBasket(user.Id);
 
                     //Redirect to historic list.
                     return RedirectToAction("Index");
@@ -46,6 +47,12 @@ namespace iBookStoreMVC.Controllers
             }
 
             return View("Create", order);
+        }
+
+        public async Task<IActionResult> Index(Order item) {
+            var user = _appUserParser.Parse(HttpContext.User);
+            var vm = await _orderSvc.GetMyOrders(user);
+            return View(vm);
         }
     }
 }

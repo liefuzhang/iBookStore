@@ -84,5 +84,11 @@ namespace iBookStoreMVC.Service
 
             return response;
         }
+
+        public async Task ClearBasket(string basketId) {
+            var url = API.Basket.ClearBasket(_remoteServiceBaseUrl, basketId);
+
+            await _httpClient.DeleteAsync(url);
+        }
     }
 }

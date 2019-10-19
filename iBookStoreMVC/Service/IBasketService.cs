@@ -10,5 +10,6 @@ namespace iBookStoreMVC.Service
         Task<Basket> GetBasket(ApplicationUser user);
         Task<Basket> SetQuantities(ApplicationUser user, Dictionary<string, int> quantities);
         Task<Order> GetOrderDraft(string basketId);
+        Task ClearBasket(string basketId);
     }
 }

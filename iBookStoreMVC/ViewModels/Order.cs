@@ -53,8 +53,8 @@ namespace iBookStoreMVC.ViewModels
 
         public string Buyer { get; set; }
 
-        public List<SelectListItem> ActionCodeSelectList =>
-           GetActionCodesByCurrentState();
+        //public List<SelectListItem> ActionCodeSelectList =>
+        //   GetActionCodesByCurrentState();
 
         // See the property initializer syntax below. This
         // initializes the compiler generated field for this

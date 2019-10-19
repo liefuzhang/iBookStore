@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using iBookStoreMVC.ViewModels;
 
 namespace iBookStoreMVC.Service
@@ -7,5 +8,6 @@ namespace iBookStoreMVC.Service
     {
         Order MapUserInfoIntoOrder(ApplicationUser user, Order order);
         Task PlaceOrder(Order order);
+        Task<List<Order>> GetMyOrders(ApplicationUser user);
     }
 }

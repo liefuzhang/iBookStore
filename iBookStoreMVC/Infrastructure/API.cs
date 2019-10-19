@@ -16,6 +16,8 @@ namespace iBookStoreMVC.Infrastructure
             public static string UpdateBasketItem(string baseUrl) => $"{baseUrl}/items";
 
             public static string GetOrderDraft(string baseUrl, string basketId) => $"{baseUrl}/orderDraft/{basketId}";
+
+            internal static string ClearBasket(string baseUrl, string basketId) => $"{baseUrl}/{basketId}";
         }
 
         public static class Catalog
@@ -30,6 +32,10 @@ namespace iBookStoreMVC.Infrastructure
         {
             public static string PlaceOrder(string baseUrl) {
                 return $"{baseUrl}/placeOrder";
+            }
+
+            internal static string GetAllMyOrders(string baseUrl) {
+                return baseUrl;
             }
         }
     }

@@ -40,13 +40,26 @@ namespace Ordering.Controllers
         // POST api/vi/[controller]/placeOrder
         [HttpPost]
         [Route("placeOrder")]
-        public async Task PlaceOrder([FromBody] Order order) {
+        public async Task PlaceOrder([FromBody] OrderDTO orderDTO) {
             var userId = _identityService.GetUserIdentity();
             var userName = User.FindFirst(x => x.Type == "unique_name").Value;
 
-            order.OrderItems.ForEach(oi => oi.Id = 0);
-            _orderingContext.Orders.Add(order);
+
+            _orderingContext.Orders.Add(Order.FromOrderDTO(orderDTO));
             await _orderingContext.SaveChangesAsync();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<OrderSummary>>> GetOrdersAsync() {
+            var userid = _identityService.GetUserIdentity();
+            var orders = _orderingContext.Orders.Select(o => new OrderSummary {
+                CreatedDate = o.CreatedDate,
+                OrderNumber = o.Id,
+                Status = o.Status.ToString(),
+                Total = o.Total
+            });
+
+            return Ok(orders);
         }
     }
 }
