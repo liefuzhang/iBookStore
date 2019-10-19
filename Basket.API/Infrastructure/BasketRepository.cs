@@ -19,6 +19,10 @@ namespace Basket.API.Infrastructure
             _cache = cache;
         }
 
+        public async Task DeleteBasketAsync(string customerId) {
+            await _cache.RemoveAsync(customerId);
+        }
+
         public async Task<CustomerBasket> GetBasketAsync(string customerId) {
             var data = await _cache.GetStringAsync(customerId);
 

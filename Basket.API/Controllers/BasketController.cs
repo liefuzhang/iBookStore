@@ -99,6 +99,13 @@ namespace Basket.API.Controllers
             return await _repository.GetBasketAsync(id) ?? new CustomerBasket(id);
         }
 
+        // DELETE api/vi/[controller]/{id}
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task DeleteBasketByIdAsync(string id) {
+            await _repository.DeleteBasketAsync(id);
+        }
+
         [Route("orderDraft/{basketId}")]
         [HttpGet]
         public async Task<ActionResult<OrderData>> GetOrderDraftAsync(string basketId) {
