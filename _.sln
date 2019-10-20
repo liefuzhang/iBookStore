@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.API", "Identity.AP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basket.API", "Basket.API\Basket.API.csproj", "{3A9C7D66-E704-4C5D-87B8-A6F1DE84CE65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ordering.API", "Ordering\Ordering.API.csproj", "{85669437-2AE3-44DE-9D4D-563F11E7F11F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ordering.API", "Ordering.API\Ordering.API.csproj", "{321F5921-F941-4EC1-A436-6D697475D064}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{3A9C7D66-E704-4C5D-87B8-A6F1DE84CE65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A9C7D66-E704-4C5D-87B8-A6F1DE84CE65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A9C7D66-E704-4C5D-87B8-A6F1DE84CE65}.Release|Any CPU.Build.0 = Release|Any CPU
-		{85669437-2AE3-44DE-9D4D-563F11E7F11F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{85669437-2AE3-44DE-9D4D-563F11E7F11F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{85669437-2AE3-44DE-9D4D-563F11E7F11F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{85669437-2AE3-44DE-9D4D-563F11E7F11F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{321F5921-F941-4EC1-A436-6D697475D064}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{321F5921-F941-4EC1-A436-6D697475D064}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{321F5921-F941-4EC1-A436-6D697475D064}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{321F5921-F941-4EC1-A436-6D697475D064}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,8 +1,12 @@
-﻿@model iBookStoreMVC.ViewModels.Order
+﻿@using iBookStoreMVC.ViewModels
+@model iBookStoreMVC.ViewModels.Order
 
 @{
     ViewData["Title"] = "Order Detail";
 }
+
+@await Html.PartialAsync("_Header", new List<Header>() {
+    new Header() { Controller = "Order", Text = "<< Back to my orders" } })
 
 <h4>Order Detail</h4>
 <div class="orders_detail">

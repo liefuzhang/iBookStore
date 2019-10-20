@@ -1,8 +1,12 @@
-﻿@model iBookStoreMVC.ViewModels.Order
+﻿@using iBookStoreMVC.ViewModels
+@model iBookStoreMVC.ViewModels.Order
 
 @{
     ViewData["Title"] = "New Order";
 }
+
+@await Html.PartialAsync("_Header", new List<Header>() {
+    new Header() { Controller = "Cart", Text = "<< Back to cart" } })
 
 <div class="container">
     <form method="post" asp-controller="Order" asp-action="PlaceOrder">
