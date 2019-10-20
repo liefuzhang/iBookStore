@@ -50,8 +50,7 @@ namespace iBookStoreMVC.Controllers
         }
 
         public async Task<IActionResult> Index(Order item) {
-            var user = _appUserParser.Parse(HttpContext.User);
-            var vm = await _orderSvc.GetMyOrders(user);
+            var vm = await _orderSvc.GetMyOrders();
             return View(vm);
         }
 
@@ -60,6 +59,13 @@ namespace iBookStoreMVC.Controllers
 
             //Redirect to historic list.
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Detail(string orderId) {
+            var user = _appUserParser.Parse(HttpContext.User);
+
+            var order = await _orderSvc.GetOrder(orderId);
+            return View(order);
         }
     }
 }

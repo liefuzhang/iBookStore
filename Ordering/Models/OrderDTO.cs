@@ -41,5 +41,37 @@ namespace Ordering.API.Models
         public List<OrderItemDTO> OrderItems { get; } = new List<OrderItemDTO>();
 
         public Guid RequestId { get; set; }
+
+        public static OrderDTO FromOrder(Order order) {
+            var orderDTO = new OrderDTO {
+                OrderNumber = order.Id.ToString(),
+                CreatedDate = order.CreatedDate,
+                Status = order.Status.ToString(),
+                Total = order.Total,
+                City = order.City,
+                Street = order.Street,
+                State = order.State,
+                Country = order.Country,
+                ZipCode = order.ZipCode,
+                CardNumber = order.CardNumber,
+                CardExpiration = order.CardExpiration,
+                CardExpirationShort = order.CardExpirationShort,
+                CardSecurityNumber = order.CardSecurityNumber,
+                CardTypeId = order.CardTypeId,
+                Buyer = order.Buyer
+            };
+
+            foreach(var item in order.OrderItems) {
+                orderDTO.OrderItems.Add(new OrderItemDTO {
+                    ProductId = item.ProductId,
+                    ProductName = item.ProductName,
+                    PictureUrl = item.PictureUrl,
+                    UnitPrice = item.UnitPrice,
+                    Units = item.Units
+                });
+            }
+
+            return orderDTO;
+        }
     }
 }

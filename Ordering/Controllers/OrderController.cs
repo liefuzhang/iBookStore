@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Ordering.API.Extensions;
 using Ordering.API.Infrastructure;
 using Ordering.API.Models;
@@ -72,6 +73,20 @@ namespace Ordering.Controllers
             if (order != null)
                 order.SetCancelledStatus();
             await _orderingContext.SaveChangesAsync();
+        }
+
+        [Route("{orderId:int}")]
+        [HttpGet]
+        public async Task<ActionResult<OrderDTO>> GetOrderAsync(int orderId) {
+            try {
+                var order = await _orderingContext.Orders
+                    .Include(o => o.OrderItems)
+                    .SingleAsync(o => o.Id == orderId);
+
+                return Ok(OrderDTO.FromOrder(order));
+            } catch {
+                return NotFound();
+            }
         }
     }
 }

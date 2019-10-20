@@ -49,7 +49,7 @@ namespace iBookStoreMVC.Service
             return order;
         }
 
-        public async Task<List<Order>> GetMyOrders(ApplicationUser user) {
+        public async Task<List<Order>> GetMyOrders() {
             var url = API.Order.GetAllMyOrders(_remoteServiceBaseUrl);
 
             var responseString = await _httpClient.GetStringAsync(url);
@@ -74,6 +74,16 @@ namespace iBookStoreMVC.Service
             }
 
             response.EnsureSuccessStatusCode();
+        }
+
+        public async Task<Order> GetOrder(string id) {
+            var url = API.Order.GetOrder(_remoteServiceBaseUrl, id);
+
+            var responseString = await _httpClient.GetStringAsync(url);
+
+            var response = JsonConvert.DeserializeObject<Order>(responseString);
+
+            return response;
         }
     }
 }
