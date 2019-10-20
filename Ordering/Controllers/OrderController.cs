@@ -61,5 +61,17 @@ namespace Ordering.Controllers
 
             return Ok(orders);
         }
+
+        // POST api/vi/[controller]/cancelOrder
+        [HttpPost]
+        [Route("cancelOrder")]
+        public async Task CancelOrder([FromBody] OrderDTO orderDTO) {
+            var userId = _identityService.GetUserIdentity();
+
+            var order = _orderingContext.Orders.SingleOrDefault(o => o.Id.ToString() == orderDTO.OrderNumber);
+            if (order != null)
+                order.SetCancelledStatus();
+            await _orderingContext.SaveChangesAsync();
+        }
     }
 }

@@ -58,5 +58,22 @@ namespace iBookStoreMVC.Service
 
             return response;
         }
+
+        public async Task CancelOrder(string orderId) {
+            var order = new OrderCancelDTO() {
+                OrderNumber = orderId
+            };
+
+            var url = API.Order.CancelOrder(_remoteServiceBaseUrl);
+            var orderContent = new StringContent(JsonConvert.SerializeObject(order), System.Text.Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(url, orderContent);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError) {
+                throw new Exception("Error cancelling order, try later.");
+            }
+
+            response.EnsureSuccessStatusCode();
+        }
     }
 }

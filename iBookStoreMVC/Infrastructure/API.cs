@@ -34,8 +34,12 @@ namespace iBookStoreMVC.Infrastructure
                 return $"{baseUrl}/placeOrder";
             }
 
-            internal static string GetAllMyOrders(string baseUrl) {
+            public static string GetAllMyOrders(string baseUrl) {
                 return baseUrl;
+            }
+
+            public static string CancelOrder(string baseUrl) {
+                return $"{baseUrl}/cancelOrder";
             }
         }
     }

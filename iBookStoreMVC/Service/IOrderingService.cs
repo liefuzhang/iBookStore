@@ -9,5 +9,6 @@ namespace iBookStoreMVC.Service
         Order MapUserInfoIntoOrder(ApplicationUser user, Order order);
         Task PlaceOrder(Order order);
         Task<List<Order>> GetMyOrders(ApplicationUser user);
+        Task CancelOrder(string orderId);
     }
 }

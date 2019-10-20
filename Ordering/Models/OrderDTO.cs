@@ -8,7 +8,6 @@ namespace Ordering.API.Models
     public class OrderDTO
     {
         public string OrderNumber { get; set; }
-
         public DateTime CreatedDate { get; set; }
 
         public string Status { get; set; }

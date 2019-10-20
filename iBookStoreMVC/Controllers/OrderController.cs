@@ -54,5 +54,12 @@ namespace iBookStoreMVC.Controllers
             var vm = await _orderSvc.GetMyOrders(user);
             return View(vm);
         }
+
+        public async Task<IActionResult> Cancel(string orderId) {
+            await _orderSvc.CancelOrder(orderId);
+
+            //Redirect to historic list.
+            return RedirectToAction("Index");
+        }
     }
 }

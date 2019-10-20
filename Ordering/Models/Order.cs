@@ -90,5 +90,14 @@ namespace Ordering.API.Models
         public decimal GetTotal() {
             return OrderItems.Sum(oi => oi.Units * oi.UnitPrice);
         }
+
+        public void SetCancelledStatus() {
+            if (Status == OrderStatus.Paid ||
+                Status == OrderStatus.Shipped) {
+                throw new Exception("Cannot change status to Cancelled");
+            }
+
+            Status = OrderStatus.Cancelled;
+        }
     }
 }
