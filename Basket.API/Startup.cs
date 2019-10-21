@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Basket.API.Infrastructure;
 using Basket.API.Services;
-using iBookStoreMVC;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

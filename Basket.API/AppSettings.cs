@@ -1,4 +1,4 @@
-﻿namespace iBookStoreMVC
+﻿namespace Basket.API
 {
     public class AppSettings
     {

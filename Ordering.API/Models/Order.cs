@@ -35,7 +35,7 @@ namespace Ordering.API.Models
         public int CardTypeId { get; private set; }
 
         public string Buyer { get; private set; }
-        
+
         public List<OrderItem> OrderItems { get; } = new List<OrderItem>();
 
         public static Order NewDraft() {
@@ -74,8 +74,8 @@ namespace Ordering.API.Models
         // so any behavior (discounts, etc.) and validations are controlled by the AggregateRoot 
         // in order to maintain consistency between the whole Aggregate. 
         public void AddOrderItem(int productId, string productName, decimal unitPrice, string pictureUrl, int units = 1) {
-            var existingOrderForProduct = OrderItems.Where(o => o.ProductId == productId)
-                .SingleOrDefault();
+            var existingOrderForProduct = OrderItems
+                .SingleOrDefault(o => o.ProductId == productId);
 
             if (existingOrderForProduct != null) {
                 //if previous line exist modify it with higher discount and units..
@@ -98,6 +98,12 @@ namespace Ordering.API.Models
             }
 
             Status = OrderStatus.Cancelled;
+        }
+
+        public void SetAwaitingValidationStatus() {
+            if (Status == OrderStatus.Submitted) {
+                Status = OrderStatus.AwaitingValidation;
+            }
         }
     }
 }

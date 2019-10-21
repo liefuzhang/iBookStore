@@ -75,6 +75,16 @@ namespace Ordering.Controllers
             await _orderingContext.SaveChangesAsync();
         }
 
+        // POST api/vi/[controller]/setOrderAwaitingValidation
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("setOrderAwaitingValidation")]
+        public async Task SetOrderAwaitingValidation([FromBody] int orderId) {
+            var order = await _orderingContext.Orders.FindAsync(orderId);
+            order?.SetAwaitingValidationStatus();
+            await _orderingContext.SaveChangesAsync();
+        }
+
         [Route("{orderId:int}")]
         [HttpGet]
         public async Task<ActionResult<OrderDTO>> GetOrderAsync(int orderId) {
