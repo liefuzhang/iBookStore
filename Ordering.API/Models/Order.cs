@@ -46,7 +46,7 @@ namespace Ordering.API.Models
 
         public static Order FromOrderDTO(OrderDTO orderDTO) {
             var order = new Order {
-                CreatedDate = DateTime.Now,
+                CreatedDate = DateTime.UtcNow,
                 Total = orderDTO.Total,
                 City = orderDTO.City,
                 Street = orderDTO.Street,

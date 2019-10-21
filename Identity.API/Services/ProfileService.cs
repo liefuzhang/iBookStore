@@ -55,7 +55,7 @@ namespace Identity.API.Services
                 context.IsActive =
                     !user.LockoutEnabled ||
                     !user.LockoutEnd.HasValue ||
-                    user.LockoutEnd <= DateTime.Now;
+                    user.LockoutEnd <= DateTime.UtcNow;
             }
         }
 
