@@ -4,9 +4,11 @@ using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
+using EventBus;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Ordering.BackgroundTasks.IntegrationEvents;
 using Ordering.BackgroundTasks.Services;
 
 namespace Ordering.BackgroundTasks.Tasks
@@ -17,14 +19,16 @@ namespace Ordering.BackgroundTasks.Tasks
         private readonly ILogger<GracePeriodManagerService> _logger;
         private readonly BackgroundTaskSettings _settings;
         private readonly IOrderService _orderService;
+        private readonly IEventBus _eventBus;
 
         public GracePeriodManagerService(
             IOptions<BackgroundTaskSettings> settings,
             ILogger<GracePeriodManagerService> logger, 
-            IOrderService orderService) {
+            IOrderService orderService, IEventBus eventBus) {
             _settings = settings?.Value ?? throw new ArgumentNullException(nameof(settings));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _orderService = orderService;
+            _eventBus = eventBus;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
@@ -52,7 +56,12 @@ namespace Ordering.BackgroundTasks.Tasks
 
             foreach (var orderId in orderIds)
             {
-                _orderService.SetOrderAwaitingValidation(orderId);
+                //_orderService.SetOrderAwaitingValidation(orderId);
+
+                var confirmGracePeriodEvent = new GracePeriodConfirmedIntegrationEvent(orderId);
+                _logger.LogInformation("----- Publishing integration event: {IntegrationEventId} from {AppName} - ({@IntegrationEvent})", confirmGracePeriodEvent.Id, Program.AppName, confirmGracePeriodEvent);
+
+                _eventBus.Publish(confirmGracePeriodEvent);
             }
         }
 
