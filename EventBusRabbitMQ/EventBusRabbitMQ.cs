@@ -26,25 +26,24 @@ namespace EventBusRabbitMQ
 
         public void Subscribe<T, TH>() where T : IntegrationEvent where TH : IIntegrationEventHandler<T> {
             var factory = new ConnectionFactory() { HostName = "localhost" };
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel()) {
-                channel.ExchangeDeclare(exchange: BrokerName, type: ExchangeType.Direct);
+            var connection = factory.CreateConnection();
+            var channel = connection.CreateModel();
+            channel.ExchangeDeclare(exchange: BrokerName, type: ExchangeType.Direct);
 
-                var queueName = "Ordering";
-                channel.QueueDeclare(queue: queueName);
-                channel.QueueBind(queue: queueName,
-                    exchange: BrokerName,
-                    routingKey: typeof(T).Name);
-                
-                var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (model, ea) => {
-                    var body = ea.Body;
-                    var message = Encoding.UTF8.GetString(body);
-                };
-                channel.BasicConsume(queue: queueName,
-                    autoAck: false,
-                    consumer: consumer);
-            }
+            var queueName = "Ordering";
+            channel.QueueDeclare(queue: queueName);
+            channel.QueueBind(queue: queueName,
+                exchange: BrokerName,
+                routingKey: typeof(T).Name);
+
+            var consumer = new EventingBasicConsumer(channel);
+            consumer.Received += (model, ea) => {
+                var body = ea.Body;
+                var message = Encoding.UTF8.GetString(body);
+            };
+            channel.BasicConsume(queue: queueName,
+                autoAck: false,
+                consumer: consumer);
         }
 
         public void Unsubscribe<T, TH>() where T : IntegrationEvent where TH : IIntegrationEventHandler<T> {
