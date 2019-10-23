@@ -33,7 +33,10 @@ namespace Ordering.BackgroundTasks
 
             services.AddSingleton<IHostedService, GracePeriodManagerService>();
 
-            services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>();
+            services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp => {
+                var queueName = Configuration["MessageQueueName"];
+                return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

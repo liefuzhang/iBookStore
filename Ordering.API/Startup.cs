@@ -52,7 +52,10 @@ namespace Ordering
 
             services.AddTransient<IIdentityService, IdentityService>();
 
-            services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>();
+            services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp => {
+                var queueName = Configuration["MessageQueueName"];
+                return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
+            });
             services.AddScoped<GracePeriodConfirmedIntegrationEventHandler>();
         }
 

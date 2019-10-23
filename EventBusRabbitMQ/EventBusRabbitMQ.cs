@@ -16,9 +16,11 @@ namespace EventBusRabbitMQ
     {
         const string BrokerName = "ibookstore_event_bus";
         private IServiceProvider _serviceProvider;
+        private string _queueName;
 
-        public EventBusRabbitMQ(IServiceProvider serviceProvider) {
+        public EventBusRabbitMQ(IServiceProvider serviceProvider, string queueName) {
             _serviceProvider = serviceProvider;
+            _queueName = queueName;
         }
 
         public void Publish(IntegrationEvent @event) {
@@ -43,9 +45,8 @@ namespace EventBusRabbitMQ
             var channel = connection.CreateModel();
             channel.ExchangeDeclare(exchange: BrokerName, type: ExchangeType.Direct);
 
-            var queueName = "Ordering";
-            channel.QueueDeclare(queue: queueName);
-            channel.QueueBind(queue: queueName,
+            channel.QueueDeclare(queue: _queueName);
+            channel.QueueBind(queue: _queueName,
                 exchange: BrokerName,
                 routingKey: typeof(T).Name);
 
@@ -61,7 +62,7 @@ namespace EventBusRabbitMQ
                     await (Task)handlerType.GetMethod("Handle").Invoke(handler, new object[] { eventData });
                 }
             };
-            channel.BasicConsume(queue: queueName,
+            channel.BasicConsume(queue: _queueName,
                 autoAck: false,
                 consumer: consumer);
         }
