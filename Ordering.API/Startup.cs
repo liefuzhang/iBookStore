@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Ordering.API.Infrastructure;
+using Ordering.API.IntegrationEvents.EventHandling;
 using Ordering.API.IntegrationEvents.Events;
 using Ordering.API.Services;
 
@@ -52,6 +53,7 @@ namespace Ordering
             services.AddTransient<IIdentityService, IdentityService>();
 
             services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>();
+            services.AddScoped<GracePeriodConfirmedIntegrationEventHandler>();
         }
 
         private void ConfigureAuthService(IServiceCollection services) {
@@ -93,7 +95,7 @@ namespace Ordering
         private void ConfigureEventBus(IApplicationBuilder app) {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
 
-            eventBus.Subscribe<GracePeriodConfirmedIntegrationEvent, IIntegrationEventHandler<GracePeriodConfirmedIntegrationEvent>>();
+            eventBus.Subscribe<GracePeriodConfirmedIntegrationEvent, GracePeriodConfirmedIntegrationEventHandler>();
         }
     }
 }

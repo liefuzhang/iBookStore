@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 using EventBus;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -11,6 +15,11 @@ namespace EventBusRabbitMQ
     public class EventBusRabbitMQ : IEventBus, IDisposable
     {
         const string BrokerName = "ibookstore_event_bus";
+        private IServiceProvider _serviceProvider;
+
+        public EventBusRabbitMQ(IServiceProvider serviceProvider) {
+            _serviceProvider = serviceProvider;
+        }
 
         public void Publish(IntegrationEvent @event) {
             var factory = new ConnectionFactory() { HostName = "localhost" };
@@ -18,9 +27,13 @@ namespace EventBusRabbitMQ
             using (var channel = connection.CreateModel()) {
                 channel.ExchangeDeclare(exchange: BrokerName, type: ExchangeType.Direct);
 
+                var message = JsonConvert.SerializeObject(@event);
+                var body = Encoding.UTF8.GetBytes(message);
+
                 channel.BasicPublish(exchange: BrokerName,
                     routingKey: @event.GetType().Name,
-                    basicProperties: null);
+                    basicProperties: null,
+                    body: body);
             }
         }
 
@@ -37,9 +50,16 @@ namespace EventBusRabbitMQ
                 routingKey: typeof(T).Name);
 
             var consumer = new EventingBasicConsumer(channel);
-            consumer.Received += (model, ea) => {
+            consumer.Received += async (model, ea) => {
                 var body = ea.Body;
                 var message = Encoding.UTF8.GetString(body);
+                var eventData = JsonConvert.DeserializeObject(message, typeof(T));
+
+                var handlerType = typeof(TH);
+                using (var scope = _serviceProvider.CreateScope()) {
+                    var handler = scope.ServiceProvider.GetRequiredService(handlerType);
+                    await (Task)handlerType.GetMethod("Handle").Invoke(handler, new object[] { eventData });
+                }
             };
             channel.BasicConsume(queue: queueName,
                 autoAck: false,
