@@ -15,10 +15,12 @@ namespace Ordering.API.IntegrationEvents.EventHandling
     {
         private readonly OrderingContext _orderingContext;
         private readonly ICatalogService _catalogService;
+        private readonly IEventBus _eventBus;
 
-        public GracePeriodConfirmedIntegrationEventHandler(OrderingContext orderingContext, ICatalogService catalogService) {
+        public GracePeriodConfirmedIntegrationEventHandler(OrderingContext orderingContext, ICatalogService catalogService, IEventBus eventBus) {
             _orderingContext = orderingContext;
             _catalogService = catalogService;
+            _eventBus = eventBus;
         }
 
         public async Task Handle(GracePeriodConfirmedIntegrationEvent @event) {
@@ -34,8 +36,11 @@ namespace Ordering.API.IntegrationEvents.EventHandling
         {
             await Task.Delay(10 * 1000);
             if (await HasOrderItemsOnStock(order))
+            {
                 order.SetStockConfirmedStatus();
-            else
+                var orderStatusChangedToStockConfirmedIntegrationEvent = new OrderStatusChangedToStockConfirmedIntegrationEvent(order.Id);
+                _eventBus.Publish(orderStatusChangedToStockConfirmedIntegrationEvent);
+            } else
                 order.SetStockRejectedStatus();
 
             await _orderingContext.SaveChangesAsync();

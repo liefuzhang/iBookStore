@@ -8,20 +8,15 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Ordering.API;
-using Ordering.API.Infrastructure;
-using Ordering.API.IntegrationEvents.EventHandling;
-using Ordering.API.IntegrationEvents.Events;
-using Ordering.API.Services;
+using Payment.API.IntegrationEvents.EventHandling;
+using Payment.API.IntegrationEvents.Events;
 
-namespace Ordering
+namespace Payment.API
 {
     public class Startup
     {
@@ -44,41 +39,13 @@ namespace Ordering
                         .AllowCredentials());
             });
 
-            services.AddDbContext<OrderingContext>(options =>
-                options.UseSqlServer(Configuration["ConnectionString"]));
-
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            ConfigureAuthService(services);
-
-            services.AddTransient<IIdentityService, IdentityService>();
 
             services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp => {
                 var queueName = Configuration["MessageQueueName"];
                 return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
             });
-            services.AddHttpClient<ICatalogService, CatalogService>();
-            services.AddScoped<GracePeriodConfirmedIntegrationEventHandler>();
-            services.AddScoped<OrderPaymentFailedIntegrationEventHandler>();
-            services.AddScoped<OrderPaymentSucceededIntegrationEventHandler>();
-        }
-
-        private void ConfigureAuthService(IServiceCollection services) {
-            // prevent from mapping "sub" claim to nameidentifier.
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
-            var identityUrl = Configuration.GetValue<string>("IdentityUrl");
-
-            services.AddAuthentication(options => {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options => {
-                options.Authority = identityUrl;
-                options.RequireHttpsMetadata = false;
-                options.Audience = "ordering";
-            });
+            services.AddScoped<OrderStatusChangedToStockConfirmedIntegrationEventHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -94,8 +61,6 @@ namespace Ordering
 
             app.UseCors("CorsPolicy");
 
-            app.UseAuthentication();
-
             app.UseMvc();
 
             ConfigureEventBus(app);
@@ -104,9 +69,7 @@ namespace Ordering
         private void ConfigureEventBus(IApplicationBuilder app) {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
 
-            eventBus.Subscribe<GracePeriodConfirmedIntegrationEvent, GracePeriodConfirmedIntegrationEventHandler>();
-            eventBus.Subscribe<OrderPaymentFailedIntegrationEvent, OrderPaymentFailedIntegrationEventHandler>();
-            eventBus.Subscribe<OrderPaymentSucceededIntegrationEvent, OrderPaymentSucceededIntegrationEventHandler>();
+            eventBus.Subscribe<OrderStatusChangedToStockConfirmedIntegrationEvent, OrderStatusChangedToStockConfirmedIntegrationEventHandler>();
         }
     }
 }
