@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EventBus;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Ordering.API.Infrastructure;
 using Ordering.API.IntegrationEvents.Events;
 using Ordering.API.Models;
@@ -24,8 +25,10 @@ namespace Ordering.API.IntegrationEvents.EventHandling
         }
 
         public async Task Handle(GracePeriodConfirmedIntegrationEvent @event) {
-            var order = await _orderingContext.Orders.FindAsync(@event.OrderId);
-            order?.SetAwaitingValidationStatus();
+            var order = await _orderingContext.Orders
+                .Include(o => o.OrderItems)
+                .SingleAsync(o => o.Id == @event.OrderId);
+            order.SetAwaitingValidationStatus();
             await _orderingContext.SaveChangesAsync();
 
             // TODO move this job somewhere else

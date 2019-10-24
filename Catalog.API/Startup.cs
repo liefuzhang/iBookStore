@@ -1,4 +1,7 @@
 ﻿using Catalog.API.Infrastructure;
+using Catalog.API.IntegrationEvents.EventHandling;
+using Catalog.API.IntegrationEvents.Events;
+using EventBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +37,12 @@ namespace Catalog.API
                 options.UseSqlServer(Configuration["ConnectionString"]));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp => {
+                var queueName = Configuration["MessageQueueName"];
+                return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
+            });
+            services.AddScoped<OrderStatusChangedToPaidIntegrationEventHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +62,14 @@ namespace Catalog.API
 
             app.UseCors("CorsPolicy");
             app.UseMvc();
+
+            ConfigureEventBus(app);
+        }
+
+        private void ConfigureEventBus(IApplicationBuilder app) {
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+
+            eventBus.Subscribe<OrderStatusChangedToPaidIntegrationEvent, OrderStatusChangedToPaidIntegrationEventHandler>();
         }
     }
 }

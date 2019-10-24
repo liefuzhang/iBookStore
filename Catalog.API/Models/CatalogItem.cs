@@ -1,4 +1,6 @@
-﻿namespace Catalog.API.Models
+﻿using System;
+
+namespace Catalog.API.Models
 {
     public class CatalogItem
     {
@@ -20,5 +22,22 @@
 
         // Quantity in stock
         public int AvailableStock { get; set; }
+
+        public int RemoveStock(int quantityDesired)
+        {
+            if (AvailableStock == 0) {
+                throw new Exception($"Empty stock, product item {Name} is sold out");
+            }
+
+            if (quantityDesired <= 0) {
+                throw new Exception($"Item units desired should be greater than zero");
+            }
+
+            var removed = Math.Min(quantityDesired, this.AvailableStock);
+
+            AvailableStock -= removed;
+
+            return removed;
+        }
     }
 }
