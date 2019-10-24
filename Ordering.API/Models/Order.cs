@@ -105,5 +105,17 @@ namespace Ordering.API.Models
                 Status = OrderStatus.AwaitingValidation;
             }
         }
+
+        public void SetStockRejectedStatus() {
+            if (Status == OrderStatus.AwaitingValidation) {
+                Status = OrderStatus.StockRejected;
+            }
+        }
+
+        public void SetStockConfirmedStatus() {
+            if (Status == OrderStatus.AwaitingValidation) {
+                Status = OrderStatus.StockConfirmed;
+            }
+        }
     }
 }

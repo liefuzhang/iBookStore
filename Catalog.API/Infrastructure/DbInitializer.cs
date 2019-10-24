@@ -34,9 +34,9 @@ namespace Catalog.API.Infrastructure
         private static IEnumerable<CatalogItem> GetPreconfiguredCatalogItems(Dictionary<string, int> categoryLookup) {
             return new List<CatalogItem>()
             {
-                new CatalogItem { Name = "Week Light", Description = "Australia's bestselling cookbook author and most trusted home cook", CategoryId = categoryLookup["Classic"], Price = 22, Author = "Donna Hay"},
-                new CatalogItem { Name = "Sword of Kings", Description = "A fictional story", CategoryId = categoryLookup["Novel"], Price = 18.7m, Author = "Bernard Cornwell"},
-                new CatalogItem { Name = "Pride and Prejudice", Description = "An 1813 romantic novel of manners", CategoryId = categoryLookup["Novel"], Price = 11, Author = "Austin"}
+                new CatalogItem { Name = "Week Light", Description = "Australia's bestselling cookbook author and most trusted home cook", CategoryId = categoryLookup["Classic"], Price = 22, Author = "Donna Hay", AvailableStock = 10 },
+                new CatalogItem { Name = "Sword of Kings", Description = "A fictional story", CategoryId = categoryLookup["Novel"], Price = 18.7m, Author = "Bernard Cornwell", AvailableStock = 10 },
+                new CatalogItem { Name = "Pride and Prejudice", Description = "An 1813 romantic novel of manners", CategoryId = categoryLookup["Novel"], Price = 11, Author = "Austin", AvailableStock = 10 }
             };
         }
     }

@@ -17,5 +17,8 @@
         public Category Category { get; set; }
 
         public int CategoryId { get; set; }
+
+        // Quantity in stock
+        public int AvailableStock { get; set; }
     }
 }

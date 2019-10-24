@@ -12,6 +12,7 @@ namespace Ordering.API.Models
         StockConfirmed,
         Paid,
         Shipped,
-        Cancelled
+        Cancelled,
+        StockRejected
     }
 }
