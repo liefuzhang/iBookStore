@@ -23,7 +23,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:32334"
+      // needs two urls here for Program.Main to run on startup - when launch browser turned off
+      "applicationUrl": "http://localhost:32334;http://localhost:32335"
     }
   }
 }
