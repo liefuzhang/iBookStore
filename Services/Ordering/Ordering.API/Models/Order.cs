@@ -41,21 +41,18 @@ namespace Ordering.API.Models
         }
 
         public static Order FromOrderDTO(OrderDTO orderDTO) {
+            var address = new Address(orderDTO.Street, orderDTO.City, orderDTO.State, orderDTO.Country, orderDTO.ZipCode);
             var order = new Order {
                 CreatedDate = DateTime.UtcNow,
                 Total = orderDTO.Total,
-                City = orderDTO.City,
-                Street = orderDTO.Street,
-                State = orderDTO.State,
-                Country = orderDTO.Country,
-                ZipCode = orderDTO.ZipCode,
                 CardNumber = orderDTO.CardNumber,
                 CardHolderName = orderDTO.CardHolderName,
                 CardExpiration = orderDTO.CardExpiration,
                 CardExpirationShort = orderDTO.CardExpirationShort,
                 CardSecurityNumber = orderDTO.CardSecurityNumber,
                 CardTypeId = orderDTO.CardTypeId,
-                Buyer = orderDTO.Buyer
+                Buyer = orderDTO.Buyer,
+                Address = address
             };
 
             foreach (var item in orderDTO.OrderItems) {
