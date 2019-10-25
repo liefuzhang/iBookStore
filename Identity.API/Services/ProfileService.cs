@@ -8,6 +8,7 @@ using Identity.API.Models;
 using IdentityModel;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace Identity.API.Services
@@ -20,7 +21,7 @@ namespace Identity.API.Services
             _userManager = userManager;
         }
 
-        async public Task GetProfileDataAsync(ProfileDataRequestContext context) {
+        public async Task GetProfileDataAsync(ProfileDataRequestContext context) {
             var subject = context.Subject ?? throw new ArgumentNullException(nameof(context.Subject));
 
             var subjectId = subject.Claims.Where(x => x.Type == "sub").FirstOrDefault().Value;
@@ -29,12 +30,11 @@ namespace Identity.API.Services
             if (user == null)
                 throw new ArgumentException("Invalid subject identifier");
 
-            var claims = GetClaimsFromUser(user);
+            var claims = await GetClaimsFromUser(user);
             context.IssuedClaims = claims.ToList();
         }
 
-        async public Task IsActiveAsync(IsActiveContext context)
-        {
+        public async Task IsActiveAsync(IsActiveContext context) {
             var subject = context.Subject ?? throw new ArgumentNullException(nameof(context.Subject));
 
             var subjectId = subject.Claims.Where(x => x.Type == "sub").FirstOrDefault().Value;
@@ -59,13 +59,19 @@ namespace Identity.API.Services
             }
         }
 
-        private IEnumerable<Claim> GetClaimsFromUser(ApplicationUser user) {
+        private async Task<IEnumerable<Claim>> GetClaimsFromUser(ApplicationUser user) {
             var claims = new List<Claim>
             {
                 new Claim(JwtClaimTypes.Subject, user.Id),
                 new Claim(JwtClaimTypes.PreferredUserName, user.UserName),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
             };
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (userRoles.Contains("Admin"))
+                claims.Add(new Claim("role", "Admin"));
+            else
+                claims.Add(new Claim("role", "Customer"));
 
             if (!string.IsNullOrWhiteSpace(user.FirstName))
                 claims.Add(new Claim("first_name", user.FirstName));

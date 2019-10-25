@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using iBookStoreMVC.Infrastructure;
 using iBookStoreMVC.Service;
 using iBookStoreMVC.ViewModels;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -95,6 +97,10 @@ namespace iBookStoreMVC
                 //options.Scope.Add("locations");
                 //options.Scope.Add("webshoppingagg");
                 //options.Scope.Add("orders.signalrhub");
+
+                // Fix for getting roles claims correctly :
+                options.ClaimActions.MapJsonKey("role", "role", "role");
+                options.TokenValidationParameters.RoleClaimType = "role";
             });
 
             return services;

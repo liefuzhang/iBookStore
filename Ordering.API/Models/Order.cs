@@ -122,7 +122,12 @@ namespace Ordering.API.Models
             if (Status == OrderStatus.StockConfirmed) {
                 Status = OrderStatus.Paid;
             }
+        }
 
+        public void SetShippedStatus() {
+            if (Status == OrderStatus.Paid) {
+                Status = OrderStatus.Shipped;
+            }
         }
     }
 }

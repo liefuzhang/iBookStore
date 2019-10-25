@@ -139,6 +139,11 @@ body {
     font-size: 1.1rem;
 }
 
+.orders-item {
+    display: flex;
+    align-items: center;
+}
+
 .page-header {
     margin: 20px 0;
 }

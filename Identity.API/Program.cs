@@ -21,7 +21,9 @@ namespace Identity.API
                 var services = scope.ServiceProvider;
                 try {
                     var context = services.GetRequiredService<ApplicationDbContext>();
-                    ApplicationDbInitializer.Initialize(context);
+                    var serviceProvider = services.GetRequiredService<IServiceProvider>();
+                    var configuration = services.GetRequiredService<IConfiguration>();
+                    ApplicationDbInitializer.Initialize(context, serviceProvider, configuration).Wait();
                 } catch (Exception ex) {
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(ex, "An error occurred creating the DB.");

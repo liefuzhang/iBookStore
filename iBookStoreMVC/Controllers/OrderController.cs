@@ -3,15 +3,17 @@ using System.Threading.Tasks;
 using iBookStoreMVC.Infrastructure;
 using iBookStoreMVC.Service;
 using iBookStoreMVC.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iBookStoreMVC.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly IIdentityParser<ApplicationUser> _appUserParser;
-        private IBasketService _basketSvc;
-        private IOrderingService _orderSvc;
+        private readonly IBasketService _basketSvc;
+        private readonly IOrderingService _orderSvc;
 
         public OrderController(IIdentityParser<ApplicationUser> appUserParser, IBasketService basketSvc, IOrderingService orderSvc)
         {

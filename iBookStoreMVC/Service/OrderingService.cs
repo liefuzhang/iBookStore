@@ -59,6 +59,16 @@ namespace iBookStoreMVC.Service
             return response;
         }
 
+        public async Task<List<Order>> GetAllOrders() {
+            var url = API.Order.GetAllOrders(_remoteServiceBaseUrl);
+
+            var responseString = await _httpClient.GetStringAsync(url);
+
+            var response = JsonConvert.DeserializeObject<List<Order>>(responseString);
+
+            return response;
+        }
+
         public async Task CancelOrder(string orderId) {
             var order = new OrderCancelDTO() {
                 OrderNumber = orderId
@@ -84,6 +94,20 @@ namespace iBookStoreMVC.Service
             var response = JsonConvert.DeserializeObject<Order>(responseString);
 
             return response;
+        }
+
+        public async Task ShipOrder(string id)
+        {
+            var url = API.Order.ShipOrder(_remoteServiceBaseUrl);
+            var orderContent = new StringContent(JsonConvert.SerializeObject(id), System.Text.Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(url, orderContent);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError) {
+                throw new Exception("Error shipping order, try later.");
+            }
+
+            response.EnsureSuccessStatusCode();
         }
     }
 }

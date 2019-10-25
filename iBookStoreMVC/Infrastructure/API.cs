@@ -38,12 +38,21 @@ namespace iBookStoreMVC.Infrastructure
                 return baseUrl;
             }
 
+            public static string GetAllOrders(string baseUrl) {
+                return $"{baseUrl}/allOrders";
+            }
+
             public static string CancelOrder(string baseUrl) {
                 return $"{baseUrl}/cancelOrder";
             }
 
             public static string GetOrder(string baseUrl, string id) {
                 return $"{baseUrl}/{id}";
+            }
+
+            public static string ShipOrder(string baseUrl)
+            {
+                return $"{baseUrl}/shipOrder";
             }
         }
     }

@@ -42,17 +42,25 @@ namespace Ordering.Controllers
         [HttpPost]
         [Route("placeOrder")]
         public async Task PlaceOrder([FromBody] OrderDTO orderDTO) {
-            var userId = _identityService.GetUserIdentity();
-            var userName = User.FindFirst(x => x.Type == "unique_name").Value;
-
-
             _orderingContext.Orders.Add(Order.FromOrderDTO(orderDTO));
             await _orderingContext.SaveChangesAsync();
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderSummary>>> GetOrdersAsync() {
-            var userid = _identityService.GetUserIdentity();
+            var orders = _orderingContext.Orders.Select(o => new OrderSummary {
+                CreatedDate = o.CreatedDate,
+                OrderNumber = o.Id,
+                Status = o.Status.ToString(),
+                Total = o.Total
+            });
+
+            return Ok(orders);
+        }
+
+        [HttpGet]
+        [Route("allOrders")]
+        public async Task<ActionResult<IEnumerable<OrderSummary>>> GetAllOrdersAsync() {
             var orders = _orderingContext.Orders.Select(o => new OrderSummary {
                 CreatedDate = o.CreatedDate,
                 OrderNumber = o.Id,
@@ -67,24 +75,11 @@ namespace Ordering.Controllers
         [HttpPost]
         [Route("cancelOrder")]
         public async Task CancelOrder([FromBody] OrderDTO orderDTO) {
-            var userId = _identityService.GetUserIdentity();
-
             var order = _orderingContext.Orders.SingleOrDefault(o => o.Id.ToString() == orderDTO.OrderNumber);
-            if (order != null)
-                order.SetCancelledStatus();
+            order?.SetCancelledStatus();
             await _orderingContext.SaveChangesAsync();
         }
-
-        // POST api/vi/[controller]/setOrderAwaitingValidation
-        [HttpPost]
-        [AllowAnonymous]
-        [Route("setOrderAwaitingValidation")]
-        public async Task SetOrderAwaitingValidation([FromBody] int orderId) {
-            var order = await _orderingContext.Orders.FindAsync(orderId);
-            order?.SetAwaitingValidationStatus();
-            await _orderingContext.SaveChangesAsync();
-        }
-
+        
         [Route("{orderId:int}")]
         [HttpGet]
         public async Task<ActionResult<OrderDTO>> GetOrderAsync(int orderId) {
@@ -97,6 +92,15 @@ namespace Ordering.Controllers
             } catch {
                 return NotFound();
             }
+        }
+
+        // POST api/vi/[controller]/shipOrder
+        [HttpPost]
+        [Route("shipOrder")]
+        public async Task ShipOrder([FromBody] string orderId) {
+            var order = _orderingContext.Orders.SingleOrDefault(o => o.Id.ToString() == orderId);
+            order?.SetShippedStatus();
+            await _orderingContext.SaveChangesAsync();
         }
     }
 }
