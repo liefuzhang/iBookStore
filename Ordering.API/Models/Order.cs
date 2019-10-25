@@ -7,18 +7,12 @@ namespace Ordering.API.Models
     public class Order
     {
         public int Id { get; private set; }
+
         public DateTime CreatedDate { get; private set; }
+
         public OrderStatus Status { get; private set; } = OrderStatus.Submitted;
+
         public decimal Total { get; private set; }
-        public string City { get; private set; }
-
-        public string Street { get; private set; }
-
-        public string State { get; private set; }
-
-        public string Country { get; private set; }
-
-        public string ZipCode { get; private set; }
 
         public string CardNumber { get; private set; }
 
@@ -35,6 +29,8 @@ namespace Ordering.API.Models
         public int CardTypeId { get; private set; }
 
         public string Buyer { get; private set; }
+
+        public Address Address { get; set; }
 
         public List<OrderItem> OrderItems { get; } = new List<OrderItem>();
 
