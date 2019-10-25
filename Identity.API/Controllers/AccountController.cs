@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Identity.API.Models;
 using Identity.API.Models.AccountViewModels;
 using Identity.API.Services;
+using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.API.Controllers
@@ -95,6 +99,39 @@ namespace Identity.API.Controllers
             ViewData["ReturnUrl"] = model.ReturnUrl;
 
             return View(vm);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout(string logoutId) {
+            var model = new LogoutViewModel { LogoutId = logoutId };
+            var idp = User?.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
+
+            if (idp != null && idp != IdentityServerConstants.LocalIdentityProvider) {
+                if (model.LogoutId == null) {
+                    // if there's no current logout context, we need to create one
+                    // this captures necessary info from the current logged in user
+                    // before we signout and redirect away to the external IdP for signout
+                    model.LogoutId = await _interaction.CreateLogoutContextAsync();
+                }
+
+                string url = "/Account/Logout?logoutId=" + model.LogoutId;
+
+                await HttpContext.SignOutAsync(idp, new AuthenticationProperties {
+                    RedirectUri = url
+                });
+            }
+
+            // delete authentication cookie
+            await HttpContext.SignOutAsync();
+
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+
+            // set this so UI rendering sees an anonymous user
+            HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
+
+            // get context information (client name, post logout redirect URI and iframe for federated signout)
+            var logout = await _interaction.GetLogoutContextAsync(model.LogoutId);
+            return Redirect(logout?.PostLogoutRedirectUri);
         }
     }
 }

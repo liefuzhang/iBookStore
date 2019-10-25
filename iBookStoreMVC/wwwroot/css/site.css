@@ -155,3 +155,7 @@ body {
 .identity-dropdown:hover {
     cursor: pointer;
 }
+
+.identity-dropdown button {
+    outline: none;
+}

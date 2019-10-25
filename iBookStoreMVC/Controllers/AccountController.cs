@@ -8,13 +8,14 @@ using iBookStoreMVC.Service;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace iBookStoreMVC.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
-        [Authorize]
         public async Task<IActionResult> SignIn(string returnUrl) {
             var user = User as ClaimsPrincipal;
 
@@ -25,6 +26,17 @@ namespace iBookStoreMVC.Controllers
             }
 
             return RedirectToAction(nameof(CatalogController.Index), "Catalog");
+        }
+
+        public async Task<IActionResult> SignOut() {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
+
+            // "Catalog" because UrlHelper doesn't support nameof() for controllers
+            // https://github.com/aspnet/Mvc/issues/5853
+            var homeUrl = Url.Action(nameof(CatalogController.Index), "Catalog");
+            return new SignOutResult(OpenIdConnectDefaults.AuthenticationScheme,
+                new AuthenticationProperties { RedirectUri = homeUrl });
         }
     }
 }

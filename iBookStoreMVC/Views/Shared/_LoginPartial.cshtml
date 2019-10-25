@@ -15,6 +15,9 @@
                 } else {
                     <a asp-controller="Order" asp-action="Index" class="dropdown-item">My orders</a>
                 }
+            <form asp-area="" asp-controller="Account" asp-action="SignOut" method="post">
+                <button type="submit" class="btn-link dropdown-item">Log out</button>
+            </form>
             </div>
         </div>
     </section>
