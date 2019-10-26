@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Ordering.API;
+using Ordering.API.Application.Queries;
 using Ordering.API.Infrastructure;
 using Ordering.API.IntegrationEvents.EventHandling;
 using Ordering.API.IntegrationEvents.Events;
@@ -63,6 +64,8 @@ namespace Ordering
             services.AddScoped<GracePeriodConfirmedIntegrationEventHandler>();
             services.AddScoped<OrderPaymentFailedIntegrationEventHandler>();
             services.AddScoped<OrderPaymentSucceededIntegrationEventHandler>();
+
+            services.AddSingleton<IOrderQueries>(s => new OrderQueries(Configuration["ConnectionString"]));
         }
 
         private void ConfigureAuthService(IServiceCollection services) {

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Ordering.API.Application.Queries;
 using Ordering.API.Extensions;
 using Ordering.API.Infrastructure;
 using Ordering.API.Models;
@@ -20,10 +21,12 @@ namespace Ordering.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IIdentityService _identityService;
+        private readonly IOrderQueries _orderQueries;
         private readonly OrderingContext _orderingContext;
 
-        public OrderController(IIdentityService identityService, OrderingContext orderingContext) {
+        public OrderController(IIdentityService identityService, IOrderQueries orderQueries,OrderingContext orderingContext) {
             _identityService = identityService;
+            _orderQueries = orderQueries;
             _orderingContext = orderingContext;
         }
 
@@ -76,12 +79,8 @@ namespace Ordering.Controllers
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderSummary>>> GetOrdersAsync() {
-            var orders = _orderingContext.Orders.Select(o => new OrderSummary {
-                CreatedDate = o.CreatedDate,
-                OrderNumber = o.Id,
-                Status = o.Status.ToString(),
-                Total = o.GetTotal()
-            });
+            var userId = _identityService.GetUserIdentity();
+            var orders = await _orderQueries.GetOrdersFromForUserAsync(userId);
 
             return Ok(orders);
         }
