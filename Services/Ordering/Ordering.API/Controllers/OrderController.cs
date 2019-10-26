@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Ordering.API.Application.Commands;
+using Ordering.API.Application.MediatRBehaviors;
 using Ordering.API.Application.Queries;
 using Ordering.API.Extensions;
 using Ordering.API.Infrastructure;
@@ -20,27 +24,37 @@ namespace Ordering.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
+        private readonly IMediator _mediator;
         private readonly IIdentityService _identityService;
         private readonly IOrderQueries _orderQueries;
         private readonly OrderingContext _orderingContext;
+        private readonly ILogger<OrderController> _logger;
 
-        public OrderController(IIdentityService identityService, IOrderQueries orderQueries,OrderingContext orderingContext) {
+        public OrderController(
+            IMediator mediator,
+            IIdentityService identityService,
+            IOrderQueries orderQueries,
+            OrderingContext orderingContext,
+            ILogger<OrderController> logger) {
+            _mediator = mediator;
             _identityService = identityService;
             _orderQueries = orderQueries;
             _orderingContext = orderingContext;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         // POST api/vi/[controller]/draft
         [HttpPost]
         [Route("draft")]
-        public async Task<ActionResult<OrderDraftDTO>> CreateOrderDraftFromBasketDataAsync([FromBody] Basket basket) {
-            var order = Order.NewDraft();
-            var orderItems = basket.Items.Select(i => i.ToOrderItemDTO());
-            foreach (var item in orderItems) {
-                order.AddOrderItem(item.ProductId, item.ProductName, item.UnitPrice, item.PictureUrl, item.Units);
-            }
+        public async Task<ActionResult<OrderDraftDTO>> CreateOrderDraftFromBasketDataAsync([FromBody] CreateOrderDraftCommand createOrderDraftCommand) {
+            _logger.LogInformation(
+                "----- Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
+                createOrderDraftCommand.GetGenericTypeName(),
+                nameof(createOrderDraftCommand.BuyerId),
+                createOrderDraftCommand.BuyerId,
+                createOrderDraftCommand);
 
-            return OrderDraftDTO.FromOrder(order);
+            return await _mediator.Send(createOrderDraftCommand);
         }
 
         // POST api/vi/[controller]/placeOrder

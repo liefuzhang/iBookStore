@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using EventBus;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Ordering.API;
+using Ordering.API.Application.MediatRBehaviors;
 using Ordering.API.Application.Queries;
 using Ordering.API.Infrastructure;
 using Ordering.API.IntegrationEvents.EventHandling;
@@ -66,6 +69,9 @@ namespace Ordering
             services.AddScoped<OrderPaymentSucceededIntegrationEventHandler>();
 
             services.AddSingleton<IOrderQueries>(s => new OrderQueries(Configuration["ConnectionString"]));
+
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
         }
 
         private void ConfigureAuthService(IServiceCollection services) {
