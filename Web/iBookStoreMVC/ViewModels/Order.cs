@@ -10,6 +10,10 @@ namespace iBookStoreMVC.ViewModels
 {
     public class Order
     {
+        public string UserId { get; set; }
+
+        public string UserName { get; set; }
+
         public string OrderNumber { get; set; }
 
         public DateTime CreatedDate { get; set; }
@@ -49,9 +53,7 @@ namespace iBookStoreMVC.ViewModels
         [DisplayName("Card security number")]
         public string CardSecurityNumber { get; set; }
 
-        public int CardTypeId { get; set; }
-
-        public string Buyer { get; set; }
+        public CardType CardType { get; set; }
 
         //public List<SelectListItem> ActionCodeSelectList =>
         //   GetActionCodesByCurrentState();

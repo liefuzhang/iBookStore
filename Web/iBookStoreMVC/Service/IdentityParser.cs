@@ -16,7 +16,7 @@ namespace iBookStoreMVC.Service
                     CardHolderName = claims.Claims.FirstOrDefault(x => x.Type == "card_holder")?.Value ?? "",
                     CardNumber = claims.Claims.FirstOrDefault(x => x.Type == "card_number")?.Value ?? "",
                     Expiration = claims.Claims.FirstOrDefault(x => x.Type == "card_expiration")?.Value ?? "",
-                    CardType = int.Parse(claims.Claims.FirstOrDefault(x => x.Type == "missing")?.Value ?? "0"),
+                    CardType = int.Parse(claims.Claims.FirstOrDefault(x => x.Type == "card_type")?.Value ?? "0"),
                     City = claims.Claims.FirstOrDefault(x => x.Type == "address_city")?.Value ?? "",
                     Country = claims.Claims.FirstOrDefault(x => x.Type == "address_country")?.Value ?? "",
                     Email = claims.Claims.FirstOrDefault(x => x.Type == "email")?.Value ?? "",

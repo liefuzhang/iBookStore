@@ -9,6 +9,7 @@ using Ordering.API.Extensions;
 using Ordering.API.Infrastructure;
 using Ordering.API.Models;
 using Ordering.API.Services;
+using Ordering.Domain.AggregatesModel.BuyerAggregate;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 
 namespace Ordering.Controllers
@@ -43,11 +44,27 @@ namespace Ordering.Controllers
         [HttpPost]
         [Route("placeOrder")]
         public async Task PlaceOrder([FromBody] OrderDTO orderDTO) {
+            var buyer = await _orderingContext.Buyers.SingleOrDefaultAsync(b => b.IdentityGuid == orderDTO.UserId);
+            bool buyerOriginallyExisted = (buyer == null) ? false : true;
+
+            if (!buyerOriginallyExisted) {
+                buyer = new Buyer(orderDTO.UserId, orderDTO.UserName);
+            }
+            var paymentMethod = buyer.VerifyOrAddPaymentMethod(orderDTO.CardType,
+                                           orderDTO.CardNumber,
+                                           orderDTO.CardSecurityNumber,
+                                           orderDTO.CardHolderName,
+                                           orderDTO.CardExpiration);
+
+            var buyerUpdated = buyerOriginallyExisted ?
+                _orderingContext.Buyers.Update(buyer) :
+                _orderingContext.Buyers.Add(buyer);
+
+            await _orderingContext.SaveChangesAsync();
+
             var address = new Address(orderDTO.Street, orderDTO.City, orderDTO.State,
                 orderDTO.Country, orderDTO.ZipCode);
-            var order = new Order(orderDTO.CardNumber, orderDTO.CardHolderName,
-                orderDTO.CardExpiration, orderDTO.CardExpirationShort, orderDTO.CardSecurityNumber,
-                orderDTO.CardTypeId, orderDTO.Buyer, address);
+            var order = new Order(address, buyerUpdated.Entity.Id, paymentMethod.Id);
             foreach (var item in orderDTO.OrderItems) {
                 order.AddOrderItem(item.ProductId, item.ProductName, item.UnitPrice,
                     item.PictureUrl, item.Units);
@@ -90,7 +107,7 @@ namespace Ordering.Controllers
             order?.SetCancelledStatus();
             await _orderingContext.SaveChangesAsync();
         }
-        
+
         [Route("{orderId:int}")]
         [HttpGet]
         public async Task<ActionResult<OrderDTO>> GetOrderAsync(int orderId) {

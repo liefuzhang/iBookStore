@@ -1,4 +1,5 @@
-﻿using Ordering.Domain.AggregatesModel.OrderAggregate;
+﻿using Ordering.Domain.AggregatesModel.BuyerAggregate;
+using Ordering.Domain.AggregatesModel.OrderAggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,8 @@ namespace Ordering.API.Models
 {
     public class OrderDTO
     {
+        public string UserId { get; set; }
+        public string UserName { get; set; }
         public string OrderNumber { get; set; }
         public DateTime CreatedDate { get; set; }
 
@@ -35,7 +38,7 @@ namespace Ordering.API.Models
 
         public string CardSecurityNumber { get; set; }
 
-        public int CardTypeId { get; set; }
+        public CardType CardType { get; set; }
 
         public string Buyer { get; set; }
 
@@ -48,18 +51,7 @@ namespace Ordering.API.Models
                 OrderNumber = order.Id.ToString(),
                 CreatedDate = order.CreatedDate,
                 Status = order.Status.ToString(),
-                Total = order.GetTotal(),
-                City = order.Address.City,
-                Street = order.Address.Street,
-                State = order.Address.State,
-                Country = order.Address.Country,
-                ZipCode = order.Address.ZipCode,
-                CardNumber = order.CardNumber,
-                CardExpiration = order.CardExpiration,
-                CardExpirationShort = order.CardExpirationShort,
-                CardSecurityNumber = order.CardSecurityNumber,
-                CardTypeId = order.CardTypeId,
-                Buyer = order.Buyer
+                Total = order.GetTotal()
             };
 
             foreach(var item in order.OrderItems) {

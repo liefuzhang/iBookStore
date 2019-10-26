@@ -88,6 +88,9 @@ namespace Identity.API.Services
             if (!string.IsNullOrWhiteSpace(user.Expiration))
                 claims.Add(new Claim("card_expiration", user.Expiration));
 
+            if (!string.IsNullOrWhiteSpace(user.CardHolderName))
+                claims.Add(new Claim("card_type", user.CardType.ToString()));
+
             if (!string.IsNullOrWhiteSpace(user.City))
                 claims.Add(new Claim("address_city", user.City));
 

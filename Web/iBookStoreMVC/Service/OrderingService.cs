@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using iBookStoreMVC.Infrastructure;
+using iBookStoreMVC.Models;
 using iBookStoreMVC.ViewModels;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -36,6 +37,9 @@ namespace iBookStoreMVC.Service
         }
 
         public Order MapUserInfoIntoOrder(ApplicationUser user, Order order) {
+            order.UserId = user.Id;
+            order.UserName = user.FullName;
+
             order.City = user.City;
             order.Street = user.Street;
             order.State = user.State;
@@ -45,6 +49,7 @@ namespace iBookStoreMVC.Service
             order.CardNumber = user.CardNumber;
             order.CardHolderName = user.CardHolderName;
             order.CardExpiration = new DateTime(int.Parse("20" + user.Expiration.Split('/')[1]), int.Parse(user.Expiration.Split('/')[0]), 1);
+            order.CardType = (CardType)user.CardType;
 
             return order;
         }

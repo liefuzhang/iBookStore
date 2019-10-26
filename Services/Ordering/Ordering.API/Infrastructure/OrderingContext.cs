@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Ordering.API.Infrastructure.EntityConfigurations;
+using Ordering.Domain.AggregatesModel.BuyerAggregate;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 
 namespace Ordering.API.Infrastructure
@@ -13,11 +14,15 @@ namespace Ordering.API.Infrastructure
 
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<PaymentMethod> PaymentMethods { get; set; }
+        public DbSet<Buyer> Buyers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new OrderEntityTypeConfiguration());
             builder.ApplyConfiguration(new OrderItemEntityTypeConfiguration());
+            builder.ApplyConfiguration(new PaymentMethodEntityTypeConfiguration());
+            builder.ApplyConfiguration(new BuyerEntityTypeConfiguration());
         }
     }
 

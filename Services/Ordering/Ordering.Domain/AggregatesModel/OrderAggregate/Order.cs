@@ -11,21 +11,13 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
 
         public OrderStatus Status { get; private set; } = OrderStatus.Submitted;
 
-        public string CardNumber { get; private set; }
-
-        public string CardHolderName { get; private set; }
-
         private bool _isDraft;
 
-        public DateTime CardExpiration { get; private set; }
+        public int? GetBuyerId => _buyerId;
+        private int? _buyerId;
 
-        public string CardExpirationShort { get; private set; }
-
-        public string CardSecurityNumber { get; private set; }
-
-        public int CardTypeId { get; private set; }
-
-        public string Buyer { get; private set; }
+        public int? GetPaymentMethodId => _paymentMethodId;
+        private int? _paymentMethodId;
 
         public Address Address { get; set; }
 
@@ -47,16 +39,10 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
             _isDraft = false;
         }
 
-        public Order(string cardNumber, string cardHolderName, DateTime cardExpiration, string cardExpirationShort,
-            string cardSecurityNumber, int cardTypeId, string buyer, Address address) : this() {
-            CardNumber = cardNumber;
-            CardHolderName = cardHolderName;
-            CardExpiration = cardExpiration;
-            CardExpirationShort = cardExpirationShort;
-            CardSecurityNumber = cardSecurityNumber;
-            CardTypeId = cardTypeId;
-            Buyer = buyer;
+        public Order(Address address, int? buyerId = null, int? paymentMethodId = null) : this() {
             Address = address;
+            _buyerId = buyerId;
+            _paymentMethodId = paymentMethodId;
             CreatedDate = DateTime.UtcNow;
         }
 
