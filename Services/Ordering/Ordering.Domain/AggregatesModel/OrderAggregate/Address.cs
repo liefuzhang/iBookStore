@@ -1,6 +1,9 @@
-﻿namespace Ordering.API.Models
+﻿using System.Collections.Generic;
+using Microsoft.eShopOnContainers.Services.Ordering.Domain.SeedWork;
+
+namespace Ordering.Domain.AggregatesModel.OrderAggregate
 {
-    public class Address
+    public class Address : ValueObject
     {
         public string City { get; private set; }
         public string Street { get; private set; }
@@ -16,6 +19,15 @@
             State = state;
             Country = country;
             ZipCode = zipCode;
+        }
+
+        protected override IEnumerable<object> GetAtomicValues() {
+            // Using a yield return statement to return each element one at a time
+            yield return Street;
+            yield return City;
+            yield return State;
+            yield return Country;
+            yield return ZipCode;
         }
     }
 }

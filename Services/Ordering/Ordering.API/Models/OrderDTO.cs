@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ordering.Domain.AggregatesModel.OrderAggregate;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -47,7 +48,7 @@ namespace Ordering.API.Models
                 OrderNumber = order.Id.ToString(),
                 CreatedDate = order.CreatedDate,
                 Status = order.Status.ToString(),
-                Total = order.Total,
+                Total = order.GetTotal(),
                 City = order.Address.City,
                 Street = order.Address.Street,
                 State = order.Address.State,

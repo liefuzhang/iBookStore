@@ -1,24 +1,21 @@
-﻿using System;
+﻿using Microsoft.eShopOnContainers.Services.Ordering.Domain.Seedwork;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Ordering.API.Models
+namespace Ordering.Domain.AggregatesModel.OrderAggregate
 {
-    public class Order
+    public class Order : Entity, IAggregateRoot
     {
-        public int Id { get; private set; }
-
         public DateTime CreatedDate { get; private set; }
 
         public OrderStatus Status { get; private set; } = OrderStatus.Submitted;
-
-        public decimal Total { get; private set; }
 
         public string CardNumber { get; private set; }
 
         public string CardHolderName { get; private set; }
 
-        public bool IsDraft { get; private set; }
+        private bool _isDraft;
 
         public DateTime CardExpiration { get; private set; }
 
@@ -32,34 +29,35 @@ namespace Ordering.API.Models
 
         public Address Address { get; set; }
 
-        public List<OrderItem> OrderItems { get; } = new List<OrderItem>();
+        // DDD Patterns comment
+        // Using a private collection field, better for DDD Aggregate's encapsulation
+        // so OrderItems cannot be added from "outside the AggregateRoot" directly to the collection,
+        // but only through the method OrderAggrergateRoot.AddOrderItem() which includes behaviour.
+        private readonly List<OrderItem> _orderItems;
+        public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
         public static Order NewDraft() {
             var order = new Order();
-            order.IsDraft = true;
+            order._isDraft = true;
             return order;
         }
 
-        public static Order FromOrderDTO(OrderDTO orderDTO) {
-            var address = new Address(orderDTO.Street, orderDTO.City, orderDTO.State, orderDTO.Country, orderDTO.ZipCode);
-            var order = new Order {
-                CreatedDate = DateTime.UtcNow,
-                Total = orderDTO.Total,
-                CardNumber = orderDTO.CardNumber,
-                CardHolderName = orderDTO.CardHolderName,
-                CardExpiration = orderDTO.CardExpiration,
-                CardExpirationShort = orderDTO.CardExpirationShort,
-                CardSecurityNumber = orderDTO.CardSecurityNumber,
-                CardTypeId = orderDTO.CardTypeId,
-                Buyer = orderDTO.Buyer,
-                Address = address
-            };
+        protected Order() {
+            _orderItems = new List<OrderItem>();
+            _isDraft = false;
+        }
 
-            foreach (var item in orderDTO.OrderItems) {
-                order.AddOrderItem(item.ProductId, item.ProductName, item.UnitPrice, item.PictureUrl, item.Units);
-            }
-
-            return order;
+        public Order(string cardNumber, string cardHolderName, DateTime cardExpiration, string cardExpirationShort,
+            string cardSecurityNumber, int cardTypeId, string buyer, Address address) : this() {
+            CardNumber = cardNumber;
+            CardHolderName = cardHolderName;
+            CardExpiration = cardExpiration;
+            CardExpirationShort = cardExpirationShort;
+            CardSecurityNumber = cardSecurityNumber;
+            CardTypeId = cardTypeId;
+            Buyer = buyer;
+            Address = address;
+            CreatedDate = DateTime.UtcNow;
         }
 
         // DDD Patterns comment
@@ -76,7 +74,7 @@ namespace Ordering.API.Models
             } else {
                 //add validated new order item
                 var orderItem = new OrderItem(productId, productName, unitPrice, pictureUrl, units);
-                OrderItems.Add(orderItem);
+                _orderItems.Add(orderItem);
             }
         }
 

@@ -9,6 +9,7 @@ using Ordering.API.Extensions;
 using Ordering.API.Infrastructure;
 using Ordering.API.Models;
 using Ordering.API.Services;
+using Ordering.Domain.AggregatesModel.OrderAggregate;
 
 namespace Ordering.Controllers
 {
@@ -42,7 +43,17 @@ namespace Ordering.Controllers
         [HttpPost]
         [Route("placeOrder")]
         public async Task PlaceOrder([FromBody] OrderDTO orderDTO) {
-            _orderingContext.Orders.Add(Order.FromOrderDTO(orderDTO));
+            var address = new Address(orderDTO.Street, orderDTO.City, orderDTO.State,
+                orderDTO.Country, orderDTO.ZipCode);
+            var order = new Order(orderDTO.CardNumber, orderDTO.CardHolderName,
+                orderDTO.CardExpiration, orderDTO.CardExpirationShort, orderDTO.CardSecurityNumber,
+                orderDTO.CardTypeId, orderDTO.Buyer, address);
+            foreach (var item in orderDTO.OrderItems) {
+                order.AddOrderItem(item.ProductId, item.ProductName, item.UnitPrice,
+                    item.PictureUrl, item.Units);
+            }
+
+            _orderingContext.Orders.Add(order);
             await _orderingContext.SaveChangesAsync();
         }
 
@@ -52,7 +63,7 @@ namespace Ordering.Controllers
                 CreatedDate = o.CreatedDate,
                 OrderNumber = o.Id,
                 Status = o.Status.ToString(),
-                Total = o.Total
+                Total = o.GetTotal()
             });
 
             return Ok(orders);
@@ -65,7 +76,7 @@ namespace Ordering.Controllers
                 CreatedDate = o.CreatedDate,
                 OrderNumber = o.Id,
                 Status = o.Status.ToString(),
-                Total = o.Total
+                Total = o.GetTotal()
             });
 
             return Ok(orders);

@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.eShopOnContainers.Services.Ordering.Domain.Seedwork;
+using System;
 
-namespace Ordering.API.Models
+namespace Ordering.Domain.AggregatesModel.OrderAggregate
 {
-    public class OrderItem
+    public class OrderItem : Entity
     {
-        public int Id { get; set; }
         public int ProductId { get; private set; }
         public string ProductName { get; private set; }
         public decimal UnitPrice { get; private set; }

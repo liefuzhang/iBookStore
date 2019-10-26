@@ -9,6 +9,7 @@ using Ordering.API.Infrastructure;
 using Ordering.API.IntegrationEvents.Events;
 using Ordering.API.Models;
 using Ordering.API.Services;
+using Ordering.Domain.AggregatesModel.OrderAggregate;
 
 namespace Ordering.API.IntegrationEvents.EventHandling
 {
