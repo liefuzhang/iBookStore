@@ -6,6 +6,6 @@ namespace Ordering.API.Application.Queries
 {
     public interface IOrderQueries
     {
-        Task<IEnumerable<OrderSummary>> GetOrdersFromForUserAsync(string userId);
+        Task<IEnumerable<OrderSummary>> GetOrdersForUserAsync(string userId);
     }
 }

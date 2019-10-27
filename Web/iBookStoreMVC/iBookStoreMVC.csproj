@@ -16,7 +16,6 @@
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
     <None Include="Views\_ViewImports.cshtml" />
-    <None Include="Views\Order\_ViewStart.cshtml" />
   </ItemGroup>
 
 

@@ -16,7 +16,7 @@ namespace Ordering.API.Application.Queries
             _connectionString = !string.IsNullOrWhiteSpace(connectionString) ? connectionString : throw new ArgumentNullException(nameof(connectionString));
         }
 
-        public async Task<IEnumerable<OrderSummary>> GetOrdersFromForUserAsync(string userId) {
+        public async Task<IEnumerable<OrderSummary>> GetOrdersForUserAsync(string userId) {
             using (var connection = new SqlConnection(_connectionString)) {
                 connection.Open();
 

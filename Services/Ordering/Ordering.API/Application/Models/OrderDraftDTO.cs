@@ -10,6 +10,7 @@ namespace Ordering.API.Models
     {
         public IEnumerable<OrderItemDTO> OrderItems { get; set; }
         public decimal Total { get; set; }
+        public OrderStatus Status { get; set; }
 
         public static OrderDraftDTO FromOrder(Order order) {
             return new OrderDraftDTO() {
@@ -20,7 +21,8 @@ namespace Ordering.API.Models
                     Units = oi.Units,
                     ProductName = oi.ProductName
                 }),
-                Total = order.GetTotal()
+                Total = order.GetTotal(),
+                Status = order.Status
             };
         }
     }

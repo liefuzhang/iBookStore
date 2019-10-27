@@ -103,8 +103,12 @@ namespace iBookStoreMVC.Service
 
         public async Task ShipOrder(string id)
         {
+            var order = new OrderShipDTO() {
+                OrderNumber = id
+            };
+
             var url = API.Order.ShipOrder(_remoteServiceBaseUrl);
-            var orderContent = new StringContent(JsonConvert.SerializeObject(id), System.Text.Encoding.UTF8, "application/json");
+            var orderContent = new StringContent(JsonConvert.SerializeObject(order), System.Text.Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PostAsync(url, orderContent);
 

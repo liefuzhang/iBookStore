@@ -60,41 +60,26 @@ namespace Ordering.Controllers
         // POST api/vi/[controller]/placeOrder
         [HttpPost]
         [Route("placeOrder")]
-        public async Task PlaceOrder([FromBody] OrderDTO orderDTO) {
-            var buyer = await _orderingContext.Buyers.SingleOrDefaultAsync(b => b.IdentityGuid == orderDTO.UserId);
-            bool buyerOriginallyExisted = (buyer == null) ? false : true;
+        public async Task<IActionResult> PlaceOrder([FromBody] CreateOrderCommand command) {
+            _logger.LogInformation(
+                    "----- Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
+                    command.GetGenericTypeName(),
+                    nameof(command.OrderNumber),
+                    command.OrderNumber,
+                    command);
 
-            if (!buyerOriginallyExisted) {
-                buyer = new Buyer(orderDTO.UserId, orderDTO.UserName);
-            }
-            var paymentMethod = buyer.VerifyOrAddPaymentMethod(orderDTO.CardType,
-                                           orderDTO.CardNumber,
-                                           orderDTO.CardSecurityNumber,
-                                           orderDTO.CardHolderName,
-                                           orderDTO.CardExpiration);
-
-            var buyerUpdated = buyerOriginallyExisted ?
-                _orderingContext.Buyers.Update(buyer) :
-                _orderingContext.Buyers.Add(buyer);
-
-            await _orderingContext.SaveChangesAsync();
-
-            var address = new Address(orderDTO.Street, orderDTO.City, orderDTO.State,
-                orderDTO.Country, orderDTO.ZipCode);
-            var order = new Order(address, buyerUpdated.Entity.Id, paymentMethod.Id);
-            foreach (var item in orderDTO.OrderItems) {
-                order.AddOrderItem(item.ProductId, item.ProductName, item.UnitPrice,
-                    item.PictureUrl, item.Units);
+            var commandResult = await _mediator.Send(command);
+            if (!commandResult) {
+                return BadRequest();
             }
 
-            _orderingContext.Orders.Add(order);
-            await _orderingContext.SaveChangesAsync();
+            return Ok();
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderSummary>>> GetOrdersAsync() {
             var userId = _identityService.GetUserIdentity();
-            var orders = await _orderQueries.GetOrdersFromForUserAsync(userId);
+            var orders = await _orderQueries.GetOrdersForUserAsync(userId);
 
             return Ok(orders);
         }
@@ -105,7 +90,7 @@ namespace Ordering.Controllers
             var orders = _orderingContext.Orders.Select(o => new OrderSummary {
                 CreatedDate = o.CreatedDate,
                 OrderNumber = o.Id,
-                Status = o.Status.ToString(),
+                Status = o.Status,
                 Total = o.GetTotal()
             });
 
@@ -115,10 +100,20 @@ namespace Ordering.Controllers
         // POST api/vi/[controller]/cancelOrder
         [HttpPost]
         [Route("cancelOrder")]
-        public async Task CancelOrder([FromBody] OrderDTO orderDTO) {
-            var order = _orderingContext.Orders.SingleOrDefault(o => o.Id.ToString() == orderDTO.OrderNumber);
-            order?.SetCancelledStatus();
-            await _orderingContext.SaveChangesAsync();
+        public async Task<IActionResult> CancelOrder([FromBody] CancelOrderCommand command) {
+            _logger.LogInformation(
+                    "----- Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
+                    command.GetGenericTypeName(),
+                    nameof(command.OrderNumber),
+                    command.OrderNumber,
+                    command);
+
+            var commandResult = await _mediator.Send(command);
+            if (!commandResult) {
+                return BadRequest();
+            }
+
+            return Ok();
         }
 
         [Route("{orderId:int}")]
@@ -138,10 +133,20 @@ namespace Ordering.Controllers
         // POST api/vi/[controller]/shipOrder
         [HttpPost]
         [Route("shipOrder")]
-        public async Task ShipOrder([FromBody] string orderId) {
-            var order = _orderingContext.Orders.SingleOrDefault(o => o.Id.ToString() == orderId);
-            order?.SetShippedStatus();
-            await _orderingContext.SaveChangesAsync();
+        public async Task<IActionResult> ShipOrder([FromBody] ShipOrderCommand command) {
+            _logger.LogInformation(
+                    "----- Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
+                    command.GetGenericTypeName(),
+                    nameof(command.OrderNumber),
+                    command.OrderNumber,
+                    command);
+
+            var commandResult = await _mediator.Send(command);
+            if (!commandResult) {
+                return BadRequest();
+            }
+
+            return Ok();
         }
     }
 }

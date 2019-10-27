@@ -27,7 +27,7 @@
                         <a class="orders-link" asp-controller="Order" asp-action="Detail" asp-route-orderId="@item.OrderNumber">Detail</a>
                     </section>
                     <section class="orders-item col-1">
-                        <a class="orders-link @(item.Status != "Paid" ? "d-none" : "")" asp-action="OrderProcess" asp-route-orderId="@item.OrderNumber">Ship</a>
+                        <a class="orders-link @(item.Status != OrderStatus.Paid ? "d-none" : "")" asp-action="OrderProcess" asp-route-orderId="@item.OrderNumber">Ship</a>
                     </section>
                 </article>
             }

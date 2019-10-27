@@ -18,7 +18,7 @@ namespace iBookStoreMVC.ViewModels
 
         public DateTime CreatedDate { get; set; }
 
-        public string Status { get; set; }
+        public OrderStatus Status { get; set; }
 
         public decimal Total { get; set; }
 
@@ -80,8 +80,8 @@ namespace iBookStoreMVC.ViewModels
 
         private List<SelectListItem> GetActionCodesByCurrentState() {
             var actions = new List<OrderProcessAction>();
-            switch (Status?.ToLower()) {
-                case "paid":
+            switch (Status) {
+                case OrderStatus.Paid:
                     actions.Add(OrderProcessAction.Ship);
                     break;
             }
