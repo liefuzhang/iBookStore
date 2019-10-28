@@ -22,24 +22,6 @@ namespace Ordering.API.Application.Commands
         }
 
         public async Task<bool> Handle(CreateOrderCommand command, CancellationToken cancellationToken) {
-            var buyer = await _orderingContext.Buyers.SingleOrDefaultAsync(b => b.IdentityGuid == command.UserId);
-            bool buyerOriginallyExisted = (buyer == null) ? false : true;
-
-            if (!buyerOriginallyExisted) {
-                buyer = new Buyer(command.UserId, command.UserName);
-            }
-            var paymentMethod = buyer.VerifyOrAddPaymentMethod(command.CardType,
-                                           command.CardNumber,
-                                           command.CardSecurityNumber,
-                                           command.CardHolderName,
-                                           command.CardExpiration);
-
-            var buyerUpdated = buyerOriginallyExisted ?
-                _orderingContext.Buyers.Update(buyer) :
-                _orderingContext.Buyers.Add(buyer);
-
-            await _orderingContext.SaveChangesAsync();
-
             var address = new Address(command.Street, command.City, command.State,
                 command.Country, command.ZipCode);
             var order = new Order(command.UserId, command.UserName, address, (int)command.CardType, command.CardNumber,
@@ -50,7 +32,7 @@ namespace Ordering.API.Application.Commands
             }
 
             _orderingContext.Orders.Add(order);
-            await _orderingContext.SaveChangesAsync();
+            await _orderingContext.SaveEntitiesAsync();
 
             return true;
         }

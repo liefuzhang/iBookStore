@@ -74,6 +74,14 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
             }
         }
 
+        public void SetPaymentId(int id) {
+            _paymentMethodId = id;
+        }
+
+        public void SetBuyerId(int id) {
+            _buyerId = id;
+        }
+
         public decimal GetTotal() {
             return OrderItems.Sum(oi => oi.Units * oi.UnitPrice);
         }

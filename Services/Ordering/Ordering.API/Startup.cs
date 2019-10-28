@@ -48,9 +48,7 @@ namespace Ordering
                         .AllowCredentials());
             });
 
-            services.AddDbContext<OrderingContext>(options =>
-                options.UseSqlServer(Configuration["ConnectionString"],
-                b => b.MigrationsAssembly(typeof(Startup).Assembly.FullName)));
+            services.AddDbContext<OrderingContext>(options => options.UseSqlServer(Configuration["ConnectionString"])) ;
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
