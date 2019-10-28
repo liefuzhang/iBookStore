@@ -64,7 +64,7 @@ namespace iBookStoreMVC.Controllers
                     var user = _appUserParser.Parse(HttpContext.User);
                     await _basketSvc.AddItemToBasket(user, item.Id);
                 }
-                return RedirectToAction("Index", "Catalog");
+                return RedirectToAction("Index", "Cart");
             } catch (Exception e) {
                 _logger.LogError(e, "Add to cart failed");
             }

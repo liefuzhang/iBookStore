@@ -25,6 +25,16 @@ namespace iBookStoreMVC.Service
             _remoteServiceBaseUrl = $"{_settings.Value.CatalogUrl}/api/v1/catalog";
         }
 
+        public async Task<CatalogItem> GetCatalogItem(int catalogItemId) {
+            var url = API.Catalog.GetCatalogItem(_remoteServiceBaseUrl, catalogItemId);
+
+            var responseString = await _httpClient.GetStringAsync(url);
+
+            var catalogItem = JsonConvert.DeserializeObject<CatalogItem>(responseString);
+
+            return catalogItem;
+        }
+
         public async Task<IEnumerable<CatalogItem>> GetCatalogItems()
         {
             var url = API.Catalog.GetCatalogItems(_remoteServiceBaseUrl);

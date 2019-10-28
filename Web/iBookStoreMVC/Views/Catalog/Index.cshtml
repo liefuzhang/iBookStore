@@ -10,14 +10,14 @@
         @foreach (var item in Model) {
             <div class="col-3 p-5">
                 <form asp-controller="Cart" asp-action="AddToCart">
-                    <div class="book-container" title="@item.Description">
+                    <a asp-action="Detail" asp-route-catalogItemId="@item.Id" class="book-container" title="@item.Description">
                         <img class="book-img" src="~/images/book_placeholder.jpg" />
                         <div class="p-2">
                             <div class="book-name">@item.Name</div>
                             <div>@item.Author</div>
                             <div>$@item.Price.ToString("N2")</div>
                         </div>
-                    </div>
+                    </a>
                     <input class="btn btn-primary @((!User.Identity.IsAuthenticated) ? "is-disabled" : "")" type="submit" value="Add to cart" />
                     <input type="hidden" asp-for="@item.Id" name="id" />
                 </form>
