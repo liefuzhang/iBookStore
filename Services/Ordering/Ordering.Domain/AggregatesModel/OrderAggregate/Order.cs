@@ -1,4 +1,5 @@
 ﻿using Microsoft.eShopOnContainers.Services.Ordering.Domain.Seedwork;
+using Ordering.Domain.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
 
         public int? GetBuyerId => _buyerId;
         private int? _buyerId;
-
+        
         public int? GetPaymentMethodId => _paymentMethodId;
         private int? _paymentMethodId;
 
@@ -39,11 +40,20 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
             _isDraft = false;
         }
 
-        public Order(Address address, int? buyerId = null, int? paymentMethodId = null) : this() {
+        public Order(string userId, string userName, Address address, int cardType, string cardNumber, string cardSecurityNumber,
+                string cardHolderName, DateTime cardExpiration, int? buyerId = null, int? paymentMethodId = null) : this() {
             Address = address;
             _buyerId = buyerId;
             _paymentMethodId = paymentMethodId;
             CreatedDate = DateTime.UtcNow;
+
+            // Add the OrderStarterDomainEvent to the domain events collection 
+            // to be raised/dispatched when comitting changes into the Database [ After DbContext.SaveChanges() ]
+            var orderStartedDomainEvent = new OrderStartedDomainEvent(this, userId, userName, cardType,
+                                                                      cardNumber, cardSecurityNumber,
+                                                                      cardHolderName, cardExpiration);
+
+            this.AddDomainEvent(orderStartedDomainEvent);
         }
 
         // DDD Patterns comment
