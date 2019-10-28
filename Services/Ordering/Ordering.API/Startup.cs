@@ -20,10 +20,10 @@ using Microsoft.Extensions.Options;
 using Ordering.API;
 using Ordering.API.Application.MediatRBehaviors;
 using Ordering.API.Application.Queries;
-using Ordering.API.Infrastructure;
 using Ordering.API.IntegrationEvents.EventHandling;
 using Ordering.API.IntegrationEvents.Events;
 using Ordering.API.Services;
+using Ordering.API.Infrastructure;
 
 namespace Ordering
 {
@@ -49,7 +49,8 @@ namespace Ordering
             });
 
             services.AddDbContext<OrderingContext>(options =>
-                options.UseSqlServer(Configuration["ConnectionString"]));
+                options.UseSqlServer(Configuration["ConnectionString"],
+                b => b.MigrationsAssembly(typeof(Startup).Assembly.FullName)));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Ordering.API.Extensions;
-using Ordering.API.Infrastructure;
 using Ordering.API.Models;
 using Ordering.Domain.AggregatesModel.BuyerAggregate;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
+using Ordering.API.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +42,8 @@ namespace Ordering.API.Application.Commands
 
             var address = new Address(command.Street, command.City, command.State,
                 command.Country, command.ZipCode);
-            var order = new Order(address, buyerUpdated.Entity.Id, paymentMethod.Id);
+            var order = new Order(command.UserId, command.UserName, address, (int)command.CardType, command.CardNumber,
+                command.CardSecurityNumber, command.CardHolderName, command.CardExpiration);
             foreach (var item in command.OrderItems) {
                 order.AddOrderItem(item.ProductId, item.ProductName, item.UnitPrice,
                     item.PictureUrl, item.Units);
