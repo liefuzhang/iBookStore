@@ -9,6 +9,9 @@ namespace Ordering.API.Infrastructure.EntityConfigurations
     public class OrderEntityTypeConfiguration : IEntityTypeConfiguration<Order>
     {
         public void Configure(EntityTypeBuilder<Order> builder) {
+            builder.Property(o => o.Id)
+                .ForSqlServerUseSequenceHiLo("orderseq");
+
             //Address value object persisted as owned entity type supported since EF Core 2.0
             builder.OwnsOne(o => o.Address);
 

@@ -27,7 +27,7 @@ namespace Ordering.API.Application.DomainEventHandlers.BuyerAndPaymentMethodVeri
         // When the Buyer and Buyer's payment method have been created or verified that they existed, 
         // then we can update the original Order with the BuyerId and PaymentId (foreign keys)
         public async Task Handle(BuyerAndPaymentMethodVerifiedDomainEvent buyerPaymentMethodVerifiedEvent, CancellationToken cancellationToken) {
-            var orderToUpdate = await _orderingContext.Orders.SingleOrDefaultAsync(o => o.Id == buyerPaymentMethodVerifiedEvent.OrderId);
+            var orderToUpdate = await _orderingContext.Orders.FindAsync(buyerPaymentMethodVerifiedEvent.OrderId);
             orderToUpdate.SetBuyerId(buyerPaymentMethodVerifiedEvent.Buyer.Id);
             orderToUpdate.SetPaymentId(buyerPaymentMethodVerifiedEvent.Payment.Id);
 

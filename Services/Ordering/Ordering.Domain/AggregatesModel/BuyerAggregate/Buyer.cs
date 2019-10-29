@@ -26,8 +26,8 @@ namespace Ordering.Domain.AggregatesModel.BuyerAggregate
         }
 
         public PaymentMethod VerifyOrAddPaymentMethod(CardType cardType, string cardNumber, string securityNumber, string cardHolderName, DateTime expiration, int orderId) {
-            var existingPayment = _paymentMethods.Where(p => p.IsEqualTo(cardType, cardNumber, expiration))
-                .SingleOrDefault();
+            var existingPayment = _paymentMethods
+                .SingleOrDefault(p => p.IsEqualTo(cardType, cardNumber, expiration));
 
             if (existingPayment != null) {
                 AddDomainEvent(new BuyerAndPaymentMethodVerifiedDomainEvent(this, existingPayment, orderId));

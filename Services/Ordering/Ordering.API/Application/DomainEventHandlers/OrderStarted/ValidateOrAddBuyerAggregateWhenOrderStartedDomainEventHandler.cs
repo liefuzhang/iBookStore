@@ -29,8 +29,10 @@ namespace Ordering.API.Application.DomainEventHandlers.OrderStarted
         }
 
         public async Task Handle(OrderStartedDomainEvent orderStartedEvent, CancellationToken cancellationToken) {
-            var buyer = await _orderingContext.Buyers.SingleOrDefaultAsync(b => b.IdentityGuid == orderStartedEvent.UserId);
-            var buyerOriginallyExisted = (buyer == null) ? false : true;
+            var buyer = await _orderingContext.Buyers
+                .Include(b => b.PaymentMethods)
+                .SingleOrDefaultAsync(b => b.IdentityGuid == orderStartedEvent.UserId);
+            var buyerOriginallyExisted = buyer != null;
 
             if (!buyerOriginallyExisted) {
                 buyer = new Buyer(orderStartedEvent.UserId, orderStartedEvent.UserName);

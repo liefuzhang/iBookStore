@@ -11,6 +11,9 @@ namespace Ordering.API.Infrastructure.EntityConfigurations
     public class PaymentMethodEntityTypeConfiguration : IEntityTypeConfiguration<PaymentMethod>
     {
         public void Configure(EntityTypeBuilder<PaymentMethod> builder) {
+            builder.Property(o => o.Id)
+                .ForSqlServerUseSequenceHiLo("paymentmethodseq");
+
             builder.Property<int>("BuyerId").IsRequired();
 
             builder.Property<string>("CardHolderName")

@@ -8,6 +8,8 @@ namespace Ordering.API.Infrastructure.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<OrderItem> builder)
         {
+            builder.Property(o => o.Id)
+                .ForSqlServerUseSequenceHiLo("orderitemseq");
         }
     }
 }

@@ -11,6 +11,9 @@ namespace Ordering.API.Infrastructure.EntityConfigurations
     public class BuyerEntityTypeConfiguration : IEntityTypeConfiguration<Buyer>
     {
         public void Configure(EntityTypeBuilder<Buyer> builder) {
+            builder.Property(o => o.Id)
+                .ForSqlServerUseSequenceHiLo("buyerseq");
+
             builder.Property(b => b.IdentityGuid)
                  .HasMaxLength(200)
                  .IsRequired();
