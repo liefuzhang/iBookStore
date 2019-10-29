@@ -25,6 +25,9 @@ namespace Ordering.API.Infrastructure.EntityConfigurations
                .WithOne()
                .HasForeignKey("BuyerId")
                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Metadata.FindNavigation(nameof(Buyer.PaymentMethods))
+                .SetPropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }
