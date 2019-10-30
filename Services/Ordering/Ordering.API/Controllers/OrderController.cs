@@ -11,11 +11,11 @@ using Ordering.API.Application.Commands;
 using Ordering.API.Application.MediatRBehaviors;
 using Ordering.API.Application.Queries;
 using Ordering.API.Extensions;
-using Ordering.API.Infrastructure;
 using Ordering.API.Models;
 using Ordering.API.Services;
 using Ordering.Domain.AggregatesModel.BuyerAggregate;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
+using Ordering.Infrastructure;
 
 namespace Ordering.Controllers
 {

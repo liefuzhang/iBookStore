@@ -23,7 +23,7 @@ using Ordering.API.Application.Queries;
 using Ordering.API.IntegrationEvents.EventHandling;
 using Ordering.API.IntegrationEvents.Events;
 using Ordering.API.Services;
-using Ordering.API.Infrastructure;
+using Ordering.Infrastructure;
 
 namespace Ordering
 {

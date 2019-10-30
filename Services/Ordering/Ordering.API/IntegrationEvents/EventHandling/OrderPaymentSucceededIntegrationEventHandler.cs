@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using EventBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ordering.API.Infrastructure;
 using Ordering.API.IntegrationEvents.Events;
 using Ordering.API.Models;
+using Ordering.Infrastructure;
 
 namespace Ordering.API.IntegrationEvents.EventHandling
 {

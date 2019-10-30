@@ -1,10 +1,9 @@
-﻿using Ordering.API.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Ordering.Domain.AggregatesModel.OrderAggregate;
 using Ordering.Domain.AggregatesModel.BuyerAggregate;
+using Ordering.Domain.AggregatesModel.OrderAggregate;
 
-namespace Ordering.API.Infrastructure.EntityConfigurations
+namespace Ordering.Infrastructure.EntityConfigurations
 {
     public class OrderEntityTypeConfiguration : IEntityTypeConfiguration<Order>
     {

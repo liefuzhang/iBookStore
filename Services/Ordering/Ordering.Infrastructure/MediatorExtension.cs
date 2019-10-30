@@ -1,11 +1,9 @@
-﻿using MediatR;
-using Microsoft.eShopOnContainers.Services.Ordering.Domain.Seedwork;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.eShopOnContainers.Services.Ordering.Domain.Seedwork;
 
-namespace Ordering.API.Infrastructure
+namespace Ordering.Infrastructure
 {
     static class MediatorExtension
     {

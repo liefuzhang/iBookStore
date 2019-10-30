@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using EventBus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Ordering.API.Infrastructure;
 using Ordering.API.IntegrationEvents.Events;
 using Ordering.API.Models;
 using Ordering.API.Services;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
+using Ordering.Infrastructure;
 
 namespace Ordering.API.IntegrationEvents.EventHandling
 {

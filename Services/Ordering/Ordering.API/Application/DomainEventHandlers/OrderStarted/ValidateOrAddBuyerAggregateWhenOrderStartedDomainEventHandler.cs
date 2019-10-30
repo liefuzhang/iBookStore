@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ordering.API.Infrastructure;
 using Ordering.API.Services;
 using Ordering.Domain.AggregatesModel.BuyerAggregate;
 using Ordering.Domain.Events;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Ordering.Infrastructure;
 
 namespace Ordering.API.Application.DomainEventHandlers.OrderStarted
 {

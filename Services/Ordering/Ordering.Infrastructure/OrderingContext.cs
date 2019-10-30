@@ -1,14 +1,14 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Ordering.API.Infrastructure.EntityConfigurations;
-using Ordering.Domain.AggregatesModel.BuyerAggregate;
-using Ordering.Domain.AggregatesModel.OrderAggregate;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Ordering.Domain.AggregatesModel.BuyerAggregate;
+using Ordering.Domain.AggregatesModel.OrderAggregate;
+using Ordering.Infrastructure.EntityConfigurations;
 
-namespace Ordering.API.Infrastructure
+namespace Ordering.Infrastructure
 {
     public class OrderingContext : DbContext
     {
@@ -57,7 +57,8 @@ namespace Ordering.API.Infrastructure
         public OrderingContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<OrderingContext>()
-                .UseSqlServer("Server=.;Initial Catalog=iBookStore.Services.OrderingDb;Integrated Security=true");
+                .UseSqlServer("Server=.;Initial Catalog=iBookStore.Services.OrderingDb;Integrated Security=true", 
+                    x => x.MigrationsAssembly("Ordering.API"));
 
             return new OrderingContext(optionsBuilder.Options, new NoMediator());
         }

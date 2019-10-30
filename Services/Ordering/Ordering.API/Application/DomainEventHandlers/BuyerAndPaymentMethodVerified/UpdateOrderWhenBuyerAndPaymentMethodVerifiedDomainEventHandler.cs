@@ -1,13 +1,13 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ordering.API.Infrastructure;
 using Ordering.Domain.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Ordering.Infrastructure;
 
 namespace Ordering.API.Application.DomainEventHandlers.BuyerAndPaymentMethodVerified
 {

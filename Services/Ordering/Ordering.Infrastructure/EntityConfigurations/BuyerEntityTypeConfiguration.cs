@@ -1,12 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Ordering.Domain.AggregatesModel.BuyerAggregate;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Ordering.API.Infrastructure.EntityConfigurations
+namespace Ordering.Infrastructure.EntityConfigurations
 {
     public class BuyerEntityTypeConfiguration : IEntityTypeConfiguration<Buyer>
     {

@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Ordering.API.Extensions;
-using Ordering.API.Infrastructure;
 using Ordering.API.Models;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 using System;
@@ -8,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Ordering.Infrastructure;
 
 namespace Ordering.API.Application.Commands
 {
