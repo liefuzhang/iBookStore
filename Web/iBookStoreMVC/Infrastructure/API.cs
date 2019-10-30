@@ -16,8 +16,6 @@ namespace iBookStoreMVC.Infrastructure
             public static string UpdateBasketItem(string baseUrl) => $"{baseUrl}/items";
 
             public static string GetOrderDraft(string baseUrl, string basketId) => $"{baseUrl}/orderDraft/{basketId}";
-
-            internal static string ClearBasket(string baseUrl, string basketId) => $"{baseUrl}/{basketId}";
         }
 
         public static class Catalog

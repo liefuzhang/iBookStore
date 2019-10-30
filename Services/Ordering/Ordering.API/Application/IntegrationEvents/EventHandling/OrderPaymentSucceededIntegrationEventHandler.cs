@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using EventBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ordering.API.IntegrationEvents.Events;
+using Ordering.API.Application.IntegrationEvents.Events;
 using Ordering.API.Models;
 using Ordering.Infrastructure;
 
-namespace Ordering.API.IntegrationEvents.EventHandling
+namespace Ordering.API.Application.IntegrationEvents.EventHandling
 {
     public class OrderPaymentSucceededIntegrationEventHandler : IIntegrationEventHandler<OrderPaymentSucceededIntegrationEvent>
     {

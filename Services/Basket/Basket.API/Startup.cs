@@ -4,7 +4,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using Basket.API.Infrastructure;
+using Basket.API.IntegrationEvents.EventHandling;
 using Basket.API.Services;
+using EventBus;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Payment.API.IntegrationEvents.Events;
 
 namespace Basket.API
 {
@@ -43,6 +46,12 @@ namespace Basket.API
             services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp => {
+                var queueName = Configuration["MessageQueueName"];
+                return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
+            });
+            services.AddScoped<OrderStartedIntegrationEventHandler>();
 
             services.AddHttpClient<ICatalogService, CatalogService>();
             services.AddHttpClient<IOrderService, OrderService>()
@@ -89,6 +98,14 @@ namespace Basket.API
             app.UseAuthentication();
 
             app.UseMvc();
+
+            ConfigureEventBus(app);
+        }
+
+        private void ConfigureEventBus(IApplicationBuilder app) {
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+
+            eventBus.Subscribe<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>();
         }
     }
 }

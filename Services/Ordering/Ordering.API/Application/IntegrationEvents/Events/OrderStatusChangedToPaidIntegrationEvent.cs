@@ -2,7 +2,7 @@
 using EventBus;
 using Ordering.API.Models;
 
-namespace Ordering.API.IntegrationEvents.Events
+namespace Ordering.API.Application.IntegrationEvents.Events
 {
     public class OrderStatusChangedToPaidIntegrationEvent : IntegrationEvent
     {

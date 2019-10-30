@@ -18,10 +18,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Ordering.API;
+using Ordering.API.Application.IntegrationEvents.EventHandling;
+using Ordering.API.Application.IntegrationEvents.Events;
 using Ordering.API.Application.MediatRBehaviors;
 using Ordering.API.Application.Queries;
-using Ordering.API.IntegrationEvents.EventHandling;
-using Ordering.API.IntegrationEvents.Events;
 using Ordering.API.Services;
 using Ordering.Infrastructure;
 

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EventBus;
+﻿using EventBus;
 
-namespace Ordering.API.IntegrationEvents.Events
+namespace Ordering.API.Application.IntegrationEvents.Events
 {
     public class GracePeriodConfirmedIntegrationEvent : IntegrationEvent
     {

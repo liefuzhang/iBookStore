@@ -1,6 +1,6 @@
 ﻿using EventBus;
 
-namespace Ordering.API.IntegrationEvents.Events
+namespace Ordering.API.Application.IntegrationEvents.Events
 {
     public class OrderPaymentSucceededIntegrationEvent : IntegrationEvent
     {

@@ -39,7 +39,6 @@ namespace iBookStoreMVC.Controllers
                     var user = _appUserParser.Parse(HttpContext.User);
 
                     await _orderSvc.PlaceOrder(order);
-                    await _basketSvc.ClearBasket(user.Id);
 
                     //Redirect to historic list.
                     return RedirectToAction("Index");

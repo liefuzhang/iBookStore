@@ -5,7 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastructure\" />
+    <Compile Remove="IntegrationEvents\**" />
+    <Content Remove="IntegrationEvents\**" />
+    <EmbeddedResource Remove="IntegrationEvents\**" />
+    <None Remove="IntegrationEvents\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

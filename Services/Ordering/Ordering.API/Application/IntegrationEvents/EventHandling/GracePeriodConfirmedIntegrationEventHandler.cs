@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EventBus;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Ordering.API.IntegrationEvents.Events;
-using Ordering.API.Models;
+using Ordering.API.Application.IntegrationEvents.Events;
 using Ordering.API.Services;
 using Ordering.Domain.AggregatesModel.OrderAggregate;
 using Ordering.Infrastructure;
 
-namespace Ordering.API.IntegrationEvents.EventHandling
+namespace Ordering.API.Application.IntegrationEvents.EventHandling
 {
     public class GracePeriodConfirmedIntegrationEventHandler : IIntegrationEventHandler<GracePeriodConfirmedIntegrationEvent>
     {

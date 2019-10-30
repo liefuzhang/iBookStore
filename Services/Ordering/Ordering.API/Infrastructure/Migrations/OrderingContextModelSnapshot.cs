@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ordering.Infrastructure;
 
-namespace Ordering.API.Migrations
+namespace Ordering.API.Infrastructure.Migrations
 {
     [DbContext(typeof(OrderingContext))]
     partial class OrderingContextModelSnapshot : ModelSnapshot
