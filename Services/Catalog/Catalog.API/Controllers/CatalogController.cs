@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Catalog.API.Infrastructure;
 using Catalog.API.Models;
+using Catalog.API.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,13 +19,20 @@ namespace Catalog.API.Controllers
         {
             _catalogContext = catalogContext;
         }
-
-        // GET api/v1/[controller]/catalogItems
+        
+        // GET api/v1/[controller]/catalogItems[?pageIndex=0&pageSize=10]
         [HttpGet]
         [Route("catalogItems")]
-        public async Task<IEnumerable<CatalogItem>> CatalogItems()
+        public async Task<IActionResult> CatalogItems([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)
         {
-            return await _catalogContext.CatalogItems.ToListAsync();
+            var totalItems = await _catalogContext.CatalogItems
+                .LongCountAsync();
+            var itemsOnPage = await _catalogContext.CatalogItems
+                .Skip(pageSize * pageIndex)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return Ok(new PaginatedItemsViewModel<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
         }
 
         // GET api/v1/[controller]/items/{id}

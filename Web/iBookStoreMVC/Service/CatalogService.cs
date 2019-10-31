@@ -35,15 +35,15 @@ namespace iBookStoreMVC.Service
             return catalogItem;
         }
 
-        public async Task<IEnumerable<CatalogItem>> GetCatalogItems()
+        public async Task<Catalog> GetCatalogItems(int page, int take)
         {
-            var url = API.Catalog.GetCatalogItems(_remoteServiceBaseUrl);
+            var url = API.Catalog.GetCatalogItems(_remoteServiceBaseUrl, page, take);
 
             var responseString = await _httpClient.GetStringAsync(url);
 
-            var catalogItems = JsonConvert.DeserializeObject<IEnumerable<CatalogItem>>(responseString);
+            var catalog = JsonConvert.DeserializeObject<Catalog>(responseString);
 
-            return catalogItems;
+            return catalog;
         }
     }
 }

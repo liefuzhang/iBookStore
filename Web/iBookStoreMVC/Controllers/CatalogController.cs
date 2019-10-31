@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using iBookStoreMVC.Models;
 using iBookStoreMVC.Service;
+using iBookStoreMVC.ViewModels;
 
 namespace iBookStoreMVC.Controllers
 {
@@ -17,9 +18,23 @@ namespace iBookStoreMVC.Controllers
             _catalogService = catalogService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            var vm = await _catalogService.GetCatalogItems();
+            var itemsPerPage = 10;
+            var catalog = await _catalogService.GetCatalogItems(page ?? 0, itemsPerPage);
+
+            var vm = new IndexViewModel() {
+                CatalogItems = catalog.Data,
+                PaginationInfo = new PaginationInfo() {
+                    ActualPage = page ?? 0,
+                    ItemsPerPage = catalog.Data.Count,
+                    TotalItems = catalog.Count,
+                    TotalPages = (int)Math.Ceiling(((decimal)catalog.Count / itemsPerPage))
+                }
+            };
+
+            vm.PaginationInfo.Next = (vm.PaginationInfo.ActualPage == vm.PaginationInfo.TotalPages - 1) ? "is-disabled" : "";
+            vm.PaginationInfo.Previous = (vm.PaginationInfo.ActualPage == 0) ? "is-disabled" : "";
 
             return View(vm);
         }

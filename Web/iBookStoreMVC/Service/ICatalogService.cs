@@ -6,7 +6,7 @@ namespace iBookStoreMVC.Service
 {
     public interface ICatalogService
     {
-        Task<IEnumerable<CatalogItem>> GetCatalogItems();
+        Task<Catalog> GetCatalogItems(int page, int take);
         Task<CatalogItem> GetCatalogItem(int catalogItemId);
     }
 }

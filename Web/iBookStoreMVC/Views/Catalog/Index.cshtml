@@ -1,4 +1,4 @@
-﻿@model IEnumerable<iBookStoreMVC.ViewModels.CatalogItem>
+﻿@model iBookStoreMVC.ViewModels.IndexViewModel
 
 @{
     ViewData["Title"] = "Home Page";
@@ -7,7 +7,7 @@
 <div>
     <div class="h4 mb-4">Books in store</div>
     <div class="row">
-        @foreach (var item in Model) {
+        @foreach (var item in Model.CatalogItems) {
             <div class="col-3 p-5">
                 <form asp-controller="Cart" asp-action="AddToCart">
                     <a asp-action="Detail" asp-route-catalogItemId="@item.Id" class="book-container" title="@item.Description">
@@ -24,4 +24,5 @@
             </div>
         }
     </div>
+    @Html.Partial("_pagination", Model.PaginationInfo)
 </div>

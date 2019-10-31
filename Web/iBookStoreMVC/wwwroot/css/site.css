@@ -53,6 +53,16 @@ body {
     line-height: 60px; /* Vertically center the text there */
 }
 
+.is-disabled {
+    pointer-events: none;
+    color: grey;
+}
+
+.btn.is-disabled {
+    background-color: lightgrey;
+    border-color: grey;
+}
+
 .book-container {
     cursor: pointer;
 }
@@ -90,6 +100,7 @@ body {
     border-radius: 10px;
     font-size: .9em;
 }
+
 .basket-title {
     font-weight: 600;
     font-size: 1.2rem;
@@ -100,7 +111,7 @@ body {
     max-height: 120px;
 }
 
-.field-validation-valid{
+.field-validation-valid {
     display: none;
 }
 
@@ -152,10 +163,15 @@ body {
     display: inline-block;
 }
 
-.identity-dropdown:hover {
-    cursor: pointer;
-}
+    .identity-dropdown:hover {
+        cursor: pointer;
+    }
 
-.identity-dropdown button {
-    outline: none;
+    .identity-dropdown button {
+        outline: none;
+    }
+
+.pager-wrapper {
+    justify-content: center;
+    margin-top: 30px;
 }
