@@ -20,13 +20,24 @@ namespace iBookStoreMVC.Infrastructure
 
         public static class Catalog
         {
-            public static string GetCatalogItems(string baseUrl, int page, int take)
+            public static string GetCatalogItems(string baseUrl, int page, int take, int? categoryId)
             {
-                return $"{baseUrl}/catalogItems?pageIndex={page}&pageSize={take}";
+                var filter = "";
+                if (categoryId.HasValue)
+                {
+                    filter = $"/category/{categoryId.Value}";
+                }
+
+                return $"{baseUrl}/catalogItems{filter}?pageIndex={page}&pageSize={take}";
             }
 
             public static string GetCatalogItem(string baseUrl, int catalogItemId) {
                 return $"{baseUrl}/items/{catalogItemId}";
+            }
+
+            public static string GetCategories(string baseUrl)
+            {
+                return $"{baseUrl}/categories";
             }
         }
 

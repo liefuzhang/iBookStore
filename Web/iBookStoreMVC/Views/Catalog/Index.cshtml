@@ -6,6 +6,19 @@
 
 <div>
     <div class="h4 mb-4">Books in store</div>
+    <section class="category-filters">
+        <div class="container">
+            <form asp-action="Index" asp-controller="Catalog" method="post">
+                <div class="form-group">
+                    <label class="catalog-label" data-title="category">
+                        <select asp-for="@Model.CategoryFilterApplied" asp-items="@Model.Categories" class="catalog-filter form-control"></select>
+                    </label>
+                    <button type="submit" class="btn btn-link category-button"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>
+            </form>
+        </div>
+    </section>
+
     <div class="row">
         @foreach (var item in Model.CatalogItems) {
             <div class="col-3 p-5">

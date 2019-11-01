@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using iBookStoreMVC.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace iBookStoreMVC.Service
 {
     public interface ICatalogService
     {
-        Task<Catalog> GetCatalogItems(int page, int take);
+        Task<Catalog> GetCatalogItems(int page, int take, int? categoryFilterApplied);
         Task<CatalogItem> GetCatalogItem(int catalogItemId);
+        Task<IEnumerable<SelectListItem>> GetCategories();
     }
 }
