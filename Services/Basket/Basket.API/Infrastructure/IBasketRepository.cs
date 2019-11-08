@@ -11,5 +11,6 @@ namespace Basket.API.Infrastructure
         Task<CustomerBasket> GetBasketAsync(string customerId);
         Task<CustomerBasket> UpdateBasketAsync(CustomerBasket basket);
         Task DeleteBasketAsync(string customerId);
+        Task<IEnumerable<string>> GetAllBuyerIdsAsync();
     }
 }

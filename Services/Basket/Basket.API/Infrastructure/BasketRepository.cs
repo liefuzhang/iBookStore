@@ -12,9 +12,9 @@ namespace Basket.API.Infrastructure
     public class BasketRepository : IBasketRepository
     {
         private readonly ILogger<BasketRepository> _logger;
-        private readonly IDistributedCache _cache;
+        private readonly ICacheService _cache;
 
-        public BasketRepository(ILoggerFactory loggerFactory, IDistributedCache cache) {
+        public BasketRepository(ILoggerFactory loggerFactory, ICacheService cache) {
             _logger = loggerFactory.CreateLogger<BasketRepository>();
             _cache = cache;
         }
@@ -39,6 +39,11 @@ namespace Basket.API.Infrastructure
             _logger.LogInformation("Basket item persisted succesfully.");
 
             return await GetBasketAsync(basket.BuyerId);
+        }
+
+        public async Task<IEnumerable<string>> GetAllBuyerIdsAsync()
+        {
+            return await _cache.GetAllKeysAsync();
         }
     }
 }

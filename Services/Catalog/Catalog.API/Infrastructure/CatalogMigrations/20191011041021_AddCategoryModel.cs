@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Catalog.API.Migrations
+namespace Catalog.API.Infrastructure.Migrations
 {
     public partial class AddCategoryModel : Migration
     {

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Basket.API.Infrastructure;
 using Basket.API.IntegrationEvents.EventHandling;
+using Basket.API.IntegrationEvents.Events;
 using Basket.API.Services;
 using EventBus;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -42,6 +43,8 @@ namespace Basket.API
                         .AllowCredentials());
             });
 
+            services.AddSingleton<ICacheService, CacheService>();
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
 
@@ -52,13 +55,14 @@ namespace Basket.API
                 return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
             });
             services.AddScoped<OrderStartedIntegrationEventHandler>();
+            services.AddScoped<ProductPriceChangedIntegrationEventHandler>();
 
             services.AddHttpClient<ICatalogService, CatalogService>();
             services.AddHttpClient<IOrderService, OrderService>()
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5))
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 
-            services.AddDistributedMemoryCache();
+            //services.AddDistributedMemoryCache();
 
             ConfigureAuthService(services);
 
@@ -106,6 +110,7 @@ namespace Basket.API
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
 
             eventBus.Subscribe<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>();
+            eventBus.Subscribe<ProductPriceChangedIntegrationEvent, ProductPriceChangedIntegrationEventHandler>();
         }
     }
 }

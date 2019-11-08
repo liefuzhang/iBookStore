@@ -48,7 +48,14 @@ namespace Ordering
                         .AllowCredentials());
             });
 
-            services.AddDbContext<OrderingContext>(options => options.UseSqlServer(Configuration["ConnectionString"])) ;
+            services.AddDbContext<OrderingContext>(options =>
+                options.UseSqlServer(Configuration["ConnectionString"],
+                    sqlServerOptionsAction: sqlOptions => {
+                        sqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: 10,
+                            maxRetryDelay: TimeSpan.FromSeconds(30),
+                            errorNumbersToAdd: null);
+                    }));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
