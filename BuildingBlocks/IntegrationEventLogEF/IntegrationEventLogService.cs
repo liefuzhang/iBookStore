@@ -71,8 +71,6 @@ namespace IntegrationEventLogEF
             if (status == EventStateEnum.InProgress)
                 eventLogEntry.TimesSent++;
 
-            _integrationEventLogContext.IntegrationEventLogs.Update(eventLogEntry);
-
             return _integrationEventLogContext.SaveChangesAsync();
         }
     }

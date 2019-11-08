@@ -25,7 +25,7 @@ namespace Basket.API.IntegrationEvents.EventHandling
         public async Task Handle(ProductPriceChangedIntegrationEvent @event) {
             _logger.LogInformation("----- Handling integration event: {IntegrationEventId} at {AppName} - ({@IntegrationEvent})", @event.Id, Program.AppName, @event);
 
-            var userIds = _repository.GetUsers();
+            var userIds = await _repository.GetAllBuyerIdsAsync();
 
             foreach (var id in userIds) {
                 var basket = await _repository.GetBasketAsync(id);
@@ -35,17 +35,14 @@ namespace Basket.API.IntegrationEvents.EventHandling
         }
 
         private async Task UpdatePriceInBasketItems(int productId, decimal newPrice, decimal oldPrice, CustomerBasket basket) {
-            string match = productId.ToString();
-            var itemsToUpdate = basket?.Items?.Where(x => x.ProductId == match).ToList();
+            var itemsToUpdate = basket?.Items?.Where(x => x.ProductId == productId.ToString()).ToList();
 
             if (itemsToUpdate != null) {
                 _logger.LogInformation("----- ProductPriceChangedIntegrationEventHandler - Updating items in basket for user: {BuyerId} ({@Items})", basket.BuyerId, itemsToUpdate);
 
                 foreach (var item in itemsToUpdate) {
                     if (item.UnitPrice == oldPrice) {
-                        var originalPrice = item.UnitPrice;
                         item.UnitPrice = newPrice;
-                        item.OldUnitPrice = originalPrice;
                     }
                 }
                 await _repository.UpdateBasketAsync(basket);

@@ -8,7 +8,7 @@ namespace Basket.API.Infrastructure
 {
     public class CacheService : ICacheService
     {
-        private ConcurrentDictionary<string, string> _cache;
+        private readonly ConcurrentDictionary<string, string> _cache = new ConcurrentDictionary<string, string>();
 
         public Task RemoveAsync(string key) {
             if (_cache.ContainsKey(key))

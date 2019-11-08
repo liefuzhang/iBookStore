@@ -81,8 +81,7 @@ namespace Catalog.API.Controllers
             var raiseProductPriceChangedEvent = oldPrice != productToUpdate.Price;
 
             // Update current product
-            catalogItem = productToUpdate;
-            _catalogContext.CatalogItems.Update(catalogItem);
+            catalogItem.Price = productToUpdate.Price;
 
             if (raiseProductPriceChangedEvent) // Save product's data and publish integration event through the Event Bus if price has changed
             {
