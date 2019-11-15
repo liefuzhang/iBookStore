@@ -9,6 +9,7 @@ using iBookStoreMVC.Service;
 using Microsoft.AspNetCore.Authorization;
 using iBookStoreMVC.ViewModels;
 using Microsoft.Extensions.Logging;
+using Polly.CircuitBreaker;
 
 namespace iBookStoreMVC.Controllers
 {
@@ -29,16 +30,6 @@ namespace iBookStoreMVC.Controllers
         }
 
         public async Task<IActionResult> Index() {
-            try {
-                var user = _appUserParser.Parse(HttpContext.User);
-                var vm = await _basketSvc.GetBasket(user);
-
-                return View(vm);
-            } catch (Exception e) {
-                // Catch error when Basket.api is in circuit-opened mode                 
-                ViewBag.BasketInoperativeMsg = "Basket Service is inoperative, please try later on. (Business Msg Due to Circuit-Breaker)";
-            }
-
             return View();
         }
 
@@ -50,7 +41,7 @@ namespace iBookStoreMVC.Controllers
                 if (action == "Checkout") {
                     return RedirectToAction("Create", "Order");
                 }
-            } catch (Exception e) {
+            } catch (BrokenCircuitException e) {
                 // Catch error when Basket.api is in circuit-opened mode                 
                 ViewBag.BasketInoperativeMsg = "Basket Service is inoperative, please try later on. (Business Msg Due to Circuit-Breaker)";
             }

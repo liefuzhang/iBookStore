@@ -5,6 +5,7 @@ using iBookStoreMVC.Service;
 using iBookStoreMVC.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Polly.CircuitBreaker;
 
 namespace iBookStoreMVC.Controllers
 {
@@ -43,7 +44,7 @@ namespace iBookStoreMVC.Controllers
                     //Redirect to historic list.
                     return RedirectToAction("Index");
                 }
-            } catch (Exception) {
+            } catch (BrokenCircuitException) {
                 ModelState.AddModelError("Error", "It was not possible to create a new order, please try later on. (Business Msg Due to Circuit-Breaker)");
             }
 

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using iBookStoreMVC.Service;
 using iBookStoreMVC.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Polly.CircuitBreaker;
 
 namespace iBookStoreMVC.ViewComponents
 {
@@ -18,7 +19,7 @@ namespace iBookStoreMVC.ViewComponents
                 var itemsCountInCart = await ItemsCountInCartAsync(user);
                 vm.ItemsCount = itemsCountInCart;
                 return View(vm);
-            } catch (/*BrokenCircuitException*/Exception e) {
+            } catch (BrokenCircuitException e) {
                 // Catch error when Basket.api is in circuit-opened mode                 
                 ViewBag.IsBasketInoperative = true;
             }

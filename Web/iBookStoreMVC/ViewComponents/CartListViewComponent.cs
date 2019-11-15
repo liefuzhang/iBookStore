@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using iBookStoreMVC.Service;
 using iBookStoreMVC.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Polly.CircuitBreaker;
 
 namespace iBookStoreMVC.ViewComponents
 {
@@ -17,7 +18,7 @@ namespace iBookStoreMVC.ViewComponents
             try {
                 vm = await GetCartAsync(user);
                 return View(vm);
-            } catch (/*BrokenCircuitException*/ Exception e) {
+            } catch (BrokenCircuitException e) {
                 // Catch error when Basket.api is in circuit-opened mode                 
                 ViewBag.BasketInoperativeMsg = "Basket Service is inoperative, please try later on. (Business Msg Due to Circuit-Breaker)";
             }
