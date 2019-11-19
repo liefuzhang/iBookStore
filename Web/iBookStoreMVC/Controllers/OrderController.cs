@@ -64,8 +64,6 @@ namespace iBookStoreMVC.Controllers
         }
 
         public async Task<IActionResult> Detail(string orderId) {
-            var user = _appUserParser.Parse(HttpContext.User);
-
             var order = await _orderSvc.GetOrder(orderId);
             return View(order);
         }

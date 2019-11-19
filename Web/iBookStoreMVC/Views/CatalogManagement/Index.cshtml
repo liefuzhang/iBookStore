@@ -1,38 +1,26 @@
-﻿@using iBookStoreMVC.ViewModels
-
-@model IEnumerable<iBookStoreMVC.ViewModels.Catalog>
+﻿@model iBookStoreMVC.ViewModels.CatalogManagementIndexViewModel
 
 @{
-    ViewData["Title"] = "Manage Orders";
+    ViewData["Title"] = "Manage Catalog";
 }
 
-<h4>My Orders</h4>
-<div class="orders">
+<h4>Manage Books</h4>
+<div class="manage-books">
     <div class="container">
-        <article class="orders-titles row">
-            <section class="orders-title col-2">Order number</section>
-            <section class="orders-title col-4">Date</section>
-            <section class="orders-title col-2">Total</section>
-            <section class="orders-title col-2">Status</section>
-            <section class="orders-title col-2"></section>
-        </article>
-        @if (Model != null && Model.Any()) {
-            foreach (var item in Model) {
-                <article class="orders-items row">
-                    <section class="orders-item col-2">@Html.DisplayFor(modelItem => item.OrderNumber)</section>
-                    <section class="orders-item col-4">@Html.DisplayFor(modelItem => item.CreatedDate)</section>
-                    <section class="orders-item col-2">$ @Html.DisplayFor(modelItem => item.Total)</section>
-                    <section class="orders-item col-2">@Html.DisplayFor(modelItem => item.Status)</section>
-                    <section class="orders-item col-1">
-                        <a class="orders-link" asp-controller="Order" asp-action="Detail" asp-route-orderId="@item.OrderNumber">Detail</a>
-                    </section>
-                    <section class="orders-item col-1">
-                        <a class="orders-link @(item.Status != OrderStatus.Paid ? "d-none" : "")" asp-action="OrderProcess" asp-route-orderId="@item.OrderNumber">Ship</a>
-                    </section>
-                </article>
-            }
+        @foreach (var item in Model.CatalogItems)
+        {
+            <div class="row flex-row manage-book-container pt-4">
+                <div class="manage-book-img col-2">
+                    <img src="~/images/book_placeholder.jpg" />
+                </div>
+                <span class="book-name col-3">@item.Name</span>
+                <span class="col-3">@item.Author</span>
+                <span class="col-3">$@item.Price.ToString("N2")</span>
+                <a class="book-link" asp-controller="CatalogManagement" asp-action="Detail" asp-route-catalogItemId="@item.Id">Detail</a>
+            </div>
         }
     </div>
+    @Html.Partial("_pagination", Model.PaginationInfo)
 </div>
 
 

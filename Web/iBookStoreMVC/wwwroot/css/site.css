@@ -179,3 +179,13 @@ body {
 .category-button {
     padding-top: 0;
 }
+
+.manage-book-container {
+    align-items: center;
+}
+
+.manage-book-img img {
+    max-width: 50px;
+    max-height: 50px;
+    box-sizing: content-box;
+}
