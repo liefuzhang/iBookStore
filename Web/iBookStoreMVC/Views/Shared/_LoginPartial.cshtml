@@ -10,14 +10,18 @@
                 <span class="identity-name">Hello, @User.FindFirst(x => x.Type == "preferred_username").Value</span>
             </div>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                @if (User.IsInRole("Admin")) {
+                @if (User.IsInRole("Admin"))
+                {
                     <a asp-controller="OrderManagement" asp-action="Index" class="dropdown-item">Manage orders</a>
-                } else {
+                    <a asp-controller="CatalogManagement" asp-action="Index" class="dropdown-item">Manage catalog</a>
+                }
+                else
+                {
                     <a asp-controller="Order" asp-action="Index" class="dropdown-item">My orders</a>
                 }
-            <form asp-area="" asp-controller="Account" asp-action="SignOut" method="post">
-                <button type="submit" class="btn-link dropdown-item">Log out</button>
-            </form>
+                <form asp-area="" asp-controller="Account" asp-action="SignOut" method="post">
+                    <button type="submit" class="btn-link dropdown-item">Log out</button>
+                </form>
             </div>
         </div>
     </section>
