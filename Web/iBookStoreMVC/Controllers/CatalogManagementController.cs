@@ -45,5 +45,12 @@ namespace iBookStoreMVC.Controllers
             var item = await _catalogService.GetCatalogItem(catalogItemId);
             return View(item);
         }
+
+        public async Task<IActionResult> Update(CatalogItem catalogItem)
+        {
+            await _catalogService.UpdateCatalogItem(catalogItem);
+
+            return RedirectToAction("Index");
+        }
     }
 }

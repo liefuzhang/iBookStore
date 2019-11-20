@@ -67,5 +67,15 @@ namespace iBookStoreMVC.Service
 
             return catalog;
         }
+
+        public async Task UpdateCatalogItem(CatalogItem catalogItem)
+        {
+            var url = API.Catalog.UpdateCatalogItem(_remoteServiceBaseUrl);
+            var catalogItemContent = new StringContent(JsonConvert.SerializeObject(catalogItem), System.Text.Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PutAsync(url, catalogItemContent);
+
+            response.EnsureSuccessStatusCode();
+        }
     }
 }

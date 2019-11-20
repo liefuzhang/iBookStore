@@ -31,7 +31,8 @@ namespace iBookStoreMVC.Infrastructure
                 return $"{baseUrl}/catalogItems{filter}?pageIndex={page}&pageSize={take}";
             }
 
-            public static string GetCatalogItem(string baseUrl, int catalogItemId) {
+            public static string GetCatalogItem(string baseUrl, int catalogItemId)
+            {
                 return $"{baseUrl}/items/{catalogItemId}";
             }
 
@@ -39,27 +40,37 @@ namespace iBookStoreMVC.Infrastructure
             {
                 return $"{baseUrl}/categories";
             }
+
+            public static string UpdateCatalogItem(string baseUrl)
+            {
+                return $"{baseUrl}/items";
+            }
         }
 
         public static class Order
         {
-            public static string PlaceOrder(string baseUrl) {
+            public static string PlaceOrder(string baseUrl)
+            {
                 return $"{baseUrl}/placeOrder";
             }
 
-            public static string GetAllMyOrders(string baseUrl) {
+            public static string GetAllMyOrders(string baseUrl)
+            {
                 return baseUrl;
             }
 
-            public static string GetAllOrders(string baseUrl) {
+            public static string GetAllOrders(string baseUrl)
+            {
                 return $"{baseUrl}/allOrders";
             }
 
-            public static string CancelOrder(string baseUrl) {
+            public static string CancelOrder(string baseUrl)
+            {
                 return $"{baseUrl}/cancelOrder";
             }
 
-            public static string GetOrder(string baseUrl, string id) {
+            public static string GetOrder(string baseUrl, string id)
+            {
                 return $"{baseUrl}/{id}";
             }
 
