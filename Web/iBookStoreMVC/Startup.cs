@@ -115,6 +115,7 @@ namespace iBookStoreMVC
 
             //register delegating handlers
             services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
+            services.AddTransient<HttpClientRequestIdDelegatingHandler>();
 
             //add http client services
             services.AddHttpClient<ICatalogService, CatalogService>()
@@ -130,6 +131,7 @@ namespace iBookStoreMVC
             services.AddHttpClient<IOrderingService, OrderingService>()
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5)) 
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+                .AddHttpMessageHandler<HttpClientRequestIdDelegatingHandler>()
                 .AddPolicyHandler(GetRetryPolicy())
                 .AddPolicyHandler(GetCircuitBreakerPolicy());
 

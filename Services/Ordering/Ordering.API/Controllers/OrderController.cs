@@ -35,7 +35,8 @@ namespace Ordering.Controllers
             IIdentityService identityService,
             IOrderQueries orderQueries,
             OrderingContext orderingContext,
-            ILogger<OrderController> logger) {
+            ILogger<OrderController> logger)
+        {
             _mediator = mediator;
             _identityService = identityService;
             _orderQueries = orderQueries;
@@ -46,7 +47,8 @@ namespace Ordering.Controllers
         // POST api/vi/[controller]/draft
         [HttpPost]
         [Route("draft")]
-        public async Task<ActionResult<OrderDraftDTO>> CreateOrderDraftFromBasketDataAsync([FromBody] CreateOrderDraftCommand createOrderDraftCommand) {
+        public async Task<ActionResult<OrderDraftDTO>> CreateOrderDraftFromBasketDataAsync([FromBody] CreateOrderDraftCommand createOrderDraftCommand)
+        {
             _logger.LogInformation(
                 "----- Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
                 createOrderDraftCommand.GetGenericTypeName(),
@@ -60,7 +62,8 @@ namespace Ordering.Controllers
         // POST api/vi/[controller]/placeOrder
         [HttpPost]
         [Route("placeOrder")]
-        public async Task<IActionResult> PlaceOrder([FromBody] CreateOrderCommand command) {
+        public async Task<IActionResult> PlaceOrder([FromBody] CreateOrderCommand command)
+        {
             _logger.LogInformation(
                     "----- Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
                     command.GetGenericTypeName(),
@@ -69,7 +72,8 @@ namespace Ordering.Controllers
                     command);
 
             var commandResult = await _mediator.Send(command);
-            if (!commandResult) {
+            if (!commandResult)
+            {
                 return BadRequest();
             }
 
@@ -77,7 +81,8 @@ namespace Ordering.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderSummary>>> GetOrdersAsync() {
+        public async Task<ActionResult<IEnumerable<OrderSummary>>> GetOrdersAsync()
+        {
             var userId = _identityService.GetUserIdentity();
             var orders = await _orderQueries.GetOrdersForUserAsync(userId);
 
@@ -86,8 +91,10 @@ namespace Ordering.Controllers
 
         [HttpGet]
         [Route("allOrders")]
-        public async Task<ActionResult<IEnumerable<OrderSummary>>> GetAllOrdersAsync() {
-            var orders = _orderingContext.Orders.Select(o => new OrderSummary {
+        public async Task<ActionResult<IEnumerable<OrderSummary>>> GetAllOrdersAsync()
+        {
+            var orders = _orderingContext.Orders.Select(o => new OrderSummary
+            {
                 CreatedDate = o.CreatedDate,
                 OrderNumber = o.Id,
                 Status = o.Status,
@@ -100,7 +107,8 @@ namespace Ordering.Controllers
         // POST api/vi/[controller]/cancelOrder
         [HttpPost]
         [Route("cancelOrder")]
-        public async Task<IActionResult> CancelOrder([FromBody] CancelOrderCommand command) {
+        public async Task<IActionResult> CancelOrder([FromBody] CancelOrderCommand command)
+        {
             _logger.LogInformation(
                     "----- Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
                     command.GetGenericTypeName(),
@@ -109,7 +117,8 @@ namespace Ordering.Controllers
                     command);
 
             var commandResult = await _mediator.Send(command);
-            if (!commandResult) {
+            if (!commandResult)
+            {
                 return BadRequest();
             }
 
@@ -118,14 +127,18 @@ namespace Ordering.Controllers
 
         [Route("{orderId:int}")]
         [HttpGet]
-        public async Task<ActionResult<OrderDTO>> GetOrderAsync(int orderId) {
-            try {
+        public async Task<ActionResult<OrderDTO>> GetOrderAsync(int orderId)
+        {
+            try
+            {
                 var order = await _orderingContext.Orders
                     .Include(o => o.OrderItems)
                     .SingleAsync(o => o.Id == orderId);
 
                 return Ok(OrderDTO.FromOrder(order));
-            } catch {
+            }
+            catch
+            {
                 return NotFound();
             }
         }
@@ -133,16 +146,26 @@ namespace Ordering.Controllers
         // POST api/vi/[controller]/shipOrder
         [HttpPost]
         [Route("shipOrder")]
-        public async Task<IActionResult> ShipOrder([FromBody] ShipOrderCommand command) {
-            _logger.LogInformation(
-                    "----- Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
-                    command.GetGenericTypeName(),
-                    nameof(command.OrderNumber),
-                    command.OrderNumber,
-                    command);
+        public async Task<IActionResult> ShipOrder([FromBody] ShipOrderCommand command, [FromHeader(Name = "x-requestid")] string requestId)
+        {
+            var commandResult = false;
 
-            var commandResult = await _mediator.Send(command);
-            if (!commandResult) {
+            if (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty)
+            {
+                var requestShipOrder = new IdentifiedCommand<ShipOrderCommand, bool>(command, guid);
+
+                _logger.LogInformation(
+                    "----- Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
+                    requestShipOrder.GetGenericTypeName(),
+                    nameof(requestShipOrder.Command.OrderNumber),
+                    requestShipOrder.Command.OrderNumber,
+                    requestShipOrder);
+
+                commandResult = await _mediator.Send(requestShipOrder);
+            }
+
+            if (!commandResult)
+            {
                 return BadRequest();
             }
 

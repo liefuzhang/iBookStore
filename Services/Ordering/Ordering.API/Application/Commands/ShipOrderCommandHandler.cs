@@ -7,10 +7,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Ordering.Infrastructure;
+using Ordering.Infrastructure.Idempotency;
 
 namespace Ordering.API.Application.Commands
 {
+    // Regular CommandHandler
     public class ShipOrderCommandHandler : IRequestHandler<ShipOrderCommand, bool>
     {
         private readonly OrderingContext _orderingContext;
@@ -30,10 +33,27 @@ namespace Ordering.API.Application.Commands
             if (order == null)
                 return false;
 
-            order?.SetShippedStatus();
+            order.SetShippedStatus();
             await _orderingContext.SaveChangesAsync();
 
             return true;
+        }
+    }
+
+    // Use for Idempotency in Command process
+    public class ShipOrderIdentifiedCommandHandler : IdentifiedCommandHandler<ShipOrderCommand, bool>
+    {
+        public ShipOrderIdentifiedCommandHandler(
+            IMediator mediator,
+            IRequestManager requestManager,
+            ILogger<IdentifiedCommandHandler<ShipOrderCommand, bool>> logger)
+            : base(mediator, requestManager, logger)
+        {
+        }
+
+        protected override bool CreateResultForDuplicateRequest()
+        {
+            return true;                // Ignore duplicate requests for processing order.
         }
     }
 }

@@ -33,6 +33,7 @@ namespace Ordering.Infrastructure
             builder.ApplyConfiguration(new OrderItemEntityTypeConfiguration());
             builder.ApplyConfiguration(new PaymentMethodEntityTypeConfiguration());
             builder.ApplyConfiguration(new BuyerEntityTypeConfiguration());
+            builder.ApplyConfiguration(new ClientRequestEntityTypeConfiguration());
         }
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default(CancellationToken)) {
