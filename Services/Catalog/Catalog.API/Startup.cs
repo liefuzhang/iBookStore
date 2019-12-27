@@ -79,6 +79,8 @@ namespace Catalog.API
             services.AddTransient<ICatalogIntegrationEventService, CatalogIntegrationEventService>();
             services.AddTransient<ServiceRegistryRepository>();
             services.AddTransient<ServiceRegistryRegistrationService>();
+
+            services.AddHttpContextAccessor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -112,16 +114,16 @@ namespace Catalog.API
 
             ConfigureEventBus(app);
 
-            RegisterService(app);
+            RegisterService(app, Configuration);
         }
 
-        private static void RegisterService(IApplicationBuilder app)
+        private static void RegisterService(IApplicationBuilder app, IConfiguration configuration)
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var serviceRegistryRegistrationService =
                     scope.ServiceProvider.GetRequiredService<ServiceRegistryRegistrationService>();
-                serviceRegistryRegistrationService.Initialize(app);
+                serviceRegistryRegistrationService.Initialize(app, configuration["ApplicationName"]);
             }
         }
 
