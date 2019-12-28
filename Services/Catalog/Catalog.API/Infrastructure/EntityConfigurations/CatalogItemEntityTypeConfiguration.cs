@@ -10,7 +10,7 @@ namespace Catalog.API.Infrastructure.EntityConfigurations
         {
             builder.Property(ci => ci.Name)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(200);
 
             builder.Property(ci => ci.Price)
                 .IsRequired();

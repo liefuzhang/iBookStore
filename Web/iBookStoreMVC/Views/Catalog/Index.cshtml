@@ -21,14 +21,14 @@
 
     <div class="row">
         @foreach (var item in Model.CatalogItems) {
-            <div class="col-3 p-5">
+            <div class="col-3 catalog-item">
                 <form asp-controller="Cart" asp-action="AddToCart">
-                    <a asp-action="Detail" asp-route-catalogItemId="@item.Id" class="book-container" title="@item.Description">
-                        <img class="book-img" src="~/images/book_placeholder.jpg" />
-                        <div class="p-2">
-                            <div class="book-name">@item.Name</div>
-                            <div>@item.Author</div>
-                            <div>$@item.Price.ToString("N2")</div>
+                    <a asp-action="Detail" asp-route-catalogItemId="@item.Id" class="book-container">
+                        <img class="book-img" src=@("/images/books/"+ item.ISBN13 + ".jpg") />
+                        <div class="pt-2 pb-2">
+                            <div class="book-name" title="@item.Name">@item.Name</div>
+                            <div class="author-name" title="@item.Author">@item.Author</div>
+                            <div class="book-price">NZ$@item.Price.ToString("N2")</div>
                         </div>
                     </a>
                     <input class="btn btn-primary @((!User.Identity.IsAuthenticated) ? "is-disabled" : "")" type="submit" value="Add to cart" />

@@ -16,6 +16,12 @@ namespace Catalog.API.Models
 
         public string PictureUrl { get; set; }
 
+        public int TotalPage { get; set; }
+
+        public DateTime PublicationDate { get; set; }
+
+        public string ISBN13 { get; set; }
+
         public Category Category { get; set; }
 
         public int CategoryId { get; set; }

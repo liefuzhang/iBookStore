@@ -63,18 +63,39 @@ body {
     border-color: grey;
 }
 
-.book-container {
-    cursor: pointer;
+.catalog-item {
+    padding: 40px;
 }
 
-    .book-container:hover .book-name {
-        text-decoration: underline;
-        color: #297fa3;
-    }
+.book-container {
+    cursor: pointer;
+    font-size: 0.9em;
+    color: #333;
+}
+
+.book-name {
+    font-weight: 600;
+    height: 48px;
+    overflow: hidden;
+}
+
+.author-name {
+    height: 28px;
+    overflow: hidden;
+}
+
+.book-price {
+    font-size: 1.2em;
+    color: #ff0072;
+}
+
+.book-container:hover .book-name {
+    text-decoration: underline;
+}
 
 .book-img {
-    width: 160px;
-    height: 160px;
+    max-width: 160px;
+    max-height: 160px;
 }
 
 .basket-status-image img {
