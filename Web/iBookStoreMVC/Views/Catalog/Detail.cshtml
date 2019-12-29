@@ -31,10 +31,17 @@
                 <div class="rhs-info pt-1 pb-1">
                     <div><i class="fa fa-truck"></i>Free delivery</div>
                     <div><i class="fa fa-hand-holding-usd"></i>Price includes GST</div>
-                    <div><i class="fas fa-check-circle"></i>Available</div>
+                    @if (Model.AvailableStock > 0)
+                    {
+                        <div><i class="fas fa-check-circle"></i>Available</div>
+                    }
+                    else
+                    {
+                        <div class="out-of-stock"><i class="fas fa-exclamation-circle"></i>Out of stock</div>
+                    }
                 </div>
                 <form asp-controller="Cart" asp-action="AddToCart" class="pt-4">
-                    <input class="btn btn-primary" disabled=@(!User.Identity.IsAuthenticated) type="submit" value="Add to cart" />
+                    <input class="btn btn-primary" disabled=@(!User.Identity.IsAuthenticated || Model.AvailableStock == 0) type="submit" value="Add to cart" />
                     <input type="hidden" asp-for="@Model.Id" name="id" />
                 </form>
             </div>

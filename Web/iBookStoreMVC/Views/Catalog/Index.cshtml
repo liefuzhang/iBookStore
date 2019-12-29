@@ -20,7 +20,8 @@
     </section>
 
     <div class="row">
-        @foreach (var item in Model.CatalogItems) {
+        @foreach (var item in Model.CatalogItems)
+        {
             <div class="col-3 catalog-item">
                 <form asp-controller="Cart" asp-action="AddToCart">
                     <a asp-action="Detail" asp-route-catalogItemId="@item.Id" class="book-container">
@@ -31,7 +32,8 @@
                             <div class="book-price">NZ$@item.Price.ToString("N2")</div>
                         </div>
                     </a>
-                    <input class="btn btn-primary" disabled=@(!User.Identity.IsAuthenticated) type="submit" value="Add to cart" />
+                    <input class="btn btn-primary" disabled=@(!User.Identity.IsAuthenticated || item.AvailableStock == 0)
+                           title=@Html.Raw(item.AvailableStock == 0 ? "'Out of stock'" : "'Add to cart'") type="submit" value="Add to cart" />
                     <input type="hidden" asp-for="@item.Id" name="id" />
                 </form>
             </div>

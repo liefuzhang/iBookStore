@@ -272,3 +272,7 @@ body {
     margin-right: 10px;
     width: 32px;
 }
+
+        .rhs-detail .rhs-info .out-of-stock {
+            color: #ff0072
+        }
