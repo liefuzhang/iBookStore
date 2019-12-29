@@ -60,14 +60,8 @@ body {
     box-shadow: 0 1px 3px rgba(0,0,0,.1);
 }
 
-.is-disabled {
-    pointer-events: none;
-    color: grey;
-}
-
-.btn.is-disabled {
-    background-color: lightgrey;
-    border-color: grey;
+.btn.btn-primary {
+    width: 100%;
 }
 
 .catalog-item {
@@ -91,10 +85,14 @@ body {
         overflow: hidden;
     }
 
-.book-price {
-    font-size: 1.2em;
-    color: #ff0072;
+.catalog-item .btn.btn-primary {
+    width: 80%;
 }
+
+    .book-price {
+        font-size: 1.2em;
+        color: #ff0072;
+    }
 
 .book-container:hover .book-name {
     text-decoration: underline;
@@ -256,3 +254,21 @@ body {
         border-top: 1px solid #eee;
         font-size: 0.9em;
     }
+
+    .rhs-detail .rhs-info {
+        border-top: 1px solid #eee;
+        font-weight: 500;
+        font-size: 0.9em;
+    }
+
+.rhs-detail .rhs-info div {
+    line-height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.rhs-detail .rhs-info i {
+    font-size: 24px;
+    margin-right: 10px;
+    width: 32px;
+}

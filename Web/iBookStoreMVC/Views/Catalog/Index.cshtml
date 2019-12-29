@@ -31,7 +31,7 @@
                             <div class="book-price">NZ$@item.Price.ToString("N2")</div>
                         </div>
                     </a>
-                    <input class="btn btn-primary @((!User.Identity.IsAuthenticated) ? "is-disabled" : "")" type="submit" value="Add to cart" />
+                    <input class="btn btn-primary" disabled=@(!User.Identity.IsAuthenticated) type="submit" value="Add to cart" />
                     <input type="hidden" asp-for="@item.Id" name="id" />
                 </form>
             </div>

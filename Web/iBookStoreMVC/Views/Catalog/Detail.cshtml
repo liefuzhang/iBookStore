@@ -28,8 +28,13 @@
         <div class="col-3 pr-0">
             <div class="rhs-detail panel p-3">
                 <h3 class="book-price">NZ$@Model.Price.ToString("N2")</h3>
-                <form asp-controller="Cart" asp-action="AddToCart">
-                    <input class="btn btn-primary @((!User.Identity.IsAuthenticated) ? "is-disabled" : "")" type="submit" value="Add to cart" />
+                <div class="rhs-info pt-1 pb-1">
+                    <div><i class="fa fa-truck"></i>Free delivery</div>
+                    <div><i class="fa fa-hand-holding-usd"></i>Price includes GST</div>
+                    <div><i class="fas fa-check-circle"></i>Available</div>
+                </div>
+                <form asp-controller="Cart" asp-action="AddToCart" class="pt-4">
+                    <input class="btn btn-primary" disabled=@(!User.Identity.IsAuthenticated) type="submit" value="Add to cart" />
                     <input type="hidden" asp-for="@Model.Id" name="id" />
                 </form>
             </div>
