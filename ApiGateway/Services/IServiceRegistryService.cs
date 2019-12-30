@@ -6,5 +6,6 @@ namespace ApiGateway.Services
     {
         IService GetOrCreate(string serviceName);
         void RegisterInstance(IServiceInstance instance);
+        void ReplaceOperationsForService(IService service, string version);
     }
 }

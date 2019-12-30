@@ -1,4 +1,7 @@
-﻿using System.Data.SqlClient;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
 using ApiGateway.Models;
 using ApiGateway.Repositories.Dtos;
 using Dapper;
@@ -65,6 +68,65 @@ namespace ApiGateway.Repositories
                         instance.Port,
                         instance.IsStatic
                     });
+        }
+
+        public List<IServiceOperation> SelectAllOperations()
+        {
+            using (var conn = Connection)
+            {
+                using (var dataset = conn.QueryMultiple(
+                    "SELECT * FROM ServiceRegistry.Services; " +
+                    "SELECT * FROM ServiceRegistry.ServiceOperations;"))
+                {
+                    var serviceDtos = dataset.Read<ServiceDto>();
+                    var operationDtos = dataset.Read<OperationDto>();
+
+                    return serviceDtos.Select(s =>
+                        {
+                            var service = new Service(s.ServiceId, s.ServiceName);
+
+                            service.AddRangeOperation(operationDtos
+                                .Where(o => o.ServiceId == service.ServiceId)
+                                .Select(o => new ServiceOperation(o.HttpMethod, o.Path)));
+
+                            return service;
+                        })
+                        .SelectMany(s => s.Operations)
+                        .ToList();
+                }
+            }
+        }
+
+        public void DeleteAllOperations(int serviceId)
+        {
+            using (var conn = Connection)
+                conn.Execute("DELETE FROM ServiceRegistry.ServiceOperations WHERE ServiceID = @ServiceID", new { serviceId });
+        }
+
+        public void BulkInsertServiceOperations(IEnumerable<IServiceOperation> serviceOperations)
+        {
+            using (var conn = Connection)
+            using (var copy = new SqlBulkCopy(conn))
+            {
+                copy.DestinationTableName = "ServiceRegistry.ServiceOperations";
+                var table = new DataTable();
+                table.Columns.Add("ServiceID", typeof(int));
+                table.Columns.Add("HttpMethod", typeof(string));
+                table.Columns.Add("Path", typeof(string));
+
+                foreach (var column in table.Columns)
+                {
+                    copy.ColumnMappings.Add(column.ToString(), column.ToString());
+                }
+
+                foreach (var operation in serviceOperations)
+                {
+                    table.Rows.Add(operation.Service.ServiceId, operation.Route.HttpMethod, operation.Route.Path);
+                }
+
+                conn.Open();
+                copy.WriteToServer(table);
+            }
         }
     }
 }

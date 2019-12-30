@@ -11,6 +11,8 @@ namespace ApiGateway.Models
 
         string ServiceName { get; }
         void AddInstance(IServiceInstance instance);
+        IEnumerable<IServiceOperation> Operations { get; }
+        void AddRangeOperation(IEnumerable<ServiceOperation> operations);
     }
 
     public class Service : IService
@@ -27,7 +29,11 @@ namespace ApiGateway.Models
 
         private readonly List<IServiceInstance> _instances = new List<IServiceInstance>();
 
+        private readonly List<IServiceOperation> _operations = new List<IServiceOperation>();
+
         public IEnumerable<IServiceInstance> Instances => _instances;
+
+        public IEnumerable<IServiceOperation> Operations => _operations;
 
         public int ServiceId { get; }
 
@@ -37,6 +43,17 @@ namespace ApiGateway.Models
         {
             instance.Service = this;
             _instances.Add(instance);
+        }
+
+        public void AddRangeOperation(IEnumerable<ServiceOperation> operations)
+        {
+            foreach (var o in operations) AddOperation(o);
+        }
+
+        private void AddOperation(ServiceOperation operation)
+        {
+            operation.Service = this;
+            _operations.Add(operation);
         }
     }
 }

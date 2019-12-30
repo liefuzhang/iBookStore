@@ -1,4 +1,5 @@
-﻿using ApiGateway.Models;
+﻿using System.Collections.Generic;
+using ApiGateway.Models;
 
 namespace ApiGateway.Repositories
 {
@@ -7,5 +8,8 @@ namespace ApiGateway.Repositories
         IService SelectService(string serviceName);
         IService InsertService(string serviceName);
         void InsertInstance(IServiceInstance instance);
+        List<IServiceOperation> SelectAllOperations();
+        void DeleteAllOperations(int serviceId);
+        void BulkInsertServiceOperations(IEnumerable<IServiceOperation> serviceOperations);
     }
 }

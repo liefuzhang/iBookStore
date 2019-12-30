@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Linq;
+using iBookStoreCommon.Dtos;
 
 namespace iBookStoreCommon
 {
@@ -42,5 +46,23 @@ namespace iBookStoreCommon
                 return null;
             }
         }
+
+        public async Task RegisterAllOperations(string serviceName, IEnumerable<IServiceOperation> serviceOperations)
+        {
+            try
+            {
+                var serviceOperationDtos = serviceOperations.Select(o => new ServiceOperationDto(o));
+                var content = new StringContent(JsonConvert.SerializeObject(serviceOperationDtos), System.Text.Encoding.UTF8, "application/json");
+                var version = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+
+                await _httpClient.PostAsync($"{ServiceRegistry}/services/{serviceName}/versions/{version ?? "1.0.0"}/operations", content);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to register operations for service: {serviceName} to the registry: {ex.Message}");
+                throw;
+            }
+        }
+
     }
 }
