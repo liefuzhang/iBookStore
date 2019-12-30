@@ -17,7 +17,7 @@ namespace Ordering.API.Models
                 OrderItems = order.OrderItems.Select(oi => new OrderItemDTO {
                     ProductId = oi.ProductId,
                     UnitPrice = oi.UnitPrice,
-                    PictureUrl = oi.PictureUrl,
+                    ISBN13 = oi.ISBN13,
                     Units = oi.Units,
                     ProductName = oi.ProductName
                 }),

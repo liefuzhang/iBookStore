@@ -58,7 +58,7 @@ namespace Ordering.API.Models
                 orderDTO.OrderItems.Add(new OrderItemDTO {
                     ProductId = item.ProductId,
                     ProductName = item.ProductName,
-                    PictureUrl = item.PictureUrl,
+                    ISBN13 = item.ISBN13,
                     UnitPrice = item.UnitPrice,
                     Units = item.Units
                 });
