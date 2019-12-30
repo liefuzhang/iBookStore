@@ -60,7 +60,7 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
         // This Order AggregateRoot's method "AddOrderitem()" should be the only way to add Items to the Order,
         // so any behavior (discounts, etc.) and validations are controlled by the AggregateRoot 
         // in order to maintain consistency between the whole Aggregate. 
-        public void AddOrderItem(int productId, string productName, decimal unitPrice, string pictureUrl, int units = 1) {
+        public void AddOrderItem(int productId, string productName, decimal unitPrice, string isbn13, int units = 1) {
             var existingOrderForProduct = OrderItems
                 .SingleOrDefault(o => o.ProductId == productId);
 
@@ -69,7 +69,7 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
                 existingOrderForProduct.AddUnits(units);
             } else {
                 //add validated new order item
-                var orderItem = new OrderItem(productId, productName, unitPrice, pictureUrl, units);
+                var orderItem = new OrderItem(productId, productName, unitPrice, isbn13, units);
                 _orderItems.Add(orderItem);
             }
         }

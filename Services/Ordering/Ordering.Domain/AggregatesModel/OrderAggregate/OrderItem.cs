@@ -9,11 +9,15 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
         public string ProductName { get; private set; }
         public decimal UnitPrice { get; private set; }
         public int Units { get; private set; }
-        public string PictureUrl { get; private set; }
+        public string ISBN13 { get; private set; }
 
         public int OrderId { get; set; }
 
-        public OrderItem(int productId, string productName, decimal unitPrice, string pictureUrl, int units = 1) {
+        protected OrderItem()
+        {
+        }
+
+        public OrderItem(int productId, string productName, decimal unitPrice, string isbn13, int units = 1) {
             if (units <= 0) {
                 throw new Exception("Invalid number of units");
             }
@@ -22,7 +26,7 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
             ProductName = productName;
             UnitPrice = unitPrice;
             Units = units;
-            PictureUrl = pictureUrl;
+            ISBN13 = isbn13;
         }
 
         public void AddUnits(int units) {
@@ -33,4 +37,4 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
             Units += units;
         }
     }
-}
+}   

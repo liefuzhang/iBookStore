@@ -13,6 +13,6 @@ namespace Basket.API.Models
 
         public decimal Price { get; set; }
 
-        public string PictureUrl { get; set; }
+        public string ISBN13 { get; set; }
     }
 }

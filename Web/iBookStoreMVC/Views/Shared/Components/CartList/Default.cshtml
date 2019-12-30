@@ -24,7 +24,7 @@
 
             <article class="basket-items row mt-3">
                 <section class="basket-item basket-item--middle col-lg-3">
-                    <img class="basket-image" src="~/images/book_placeholder.jpg" />
+                    <img class="basket-image" src=@("/images/books/"+ item.ISBN13 + ".jpg") />
                 </section>
                 <section class="basket-item basket-item--middle col-3">@item.ProductName</section>
                 <section class="basket-item basket-item--middle col-2">$ @item.UnitPrice.ToString("N2")</section>

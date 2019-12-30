@@ -6,10 +6,10 @@
         </article>
 
         <article class="orders_new-titles row mb-4">
-            <section class="orders_new-title col-4"></section>
-            <section class="orders_new-title col-4">Book</section>
-            <section class="orders_new-title col-1">Price</section>
-            <section class="orders_new-title col-1">Quantity</section>
+            <section class="orders_new-title col-3"></section>
+            <section class="orders_new-title col-3">Book</section>
+            <section class="orders_new-title col-2">Price</section>
+            <section class="orders_new-title col-2">Quantity</section>
             <section class="orders_new-title col-2">Cost</section>
         </article>
 
@@ -17,19 +17,19 @@
             var item = Model.OrderItems[i];
 
     <article class="orders_new-items orders_new-items--border row">
-        <section class="orders_new-item col-md-4 hidden-md-down">
-            <img class="orders_new-image" src="~/images/book_placeholder.jpg">
-            <input type="hidden" value="@item.PictureUrl" name=@("orderitems[" + i + "].PictureUrl") />
+        <section class="orders_new-item col-md-3 hidden-md-down">
+            <img class="orders_new-image" src=@("/images/books/"+ item.ISBN13 + ".jpg")>
+            <input type="hidden" value="@item.ISBN13" name=@("orderitems[" + i + "].ISBN13") />
         </section>
-        <section class="orders_new-item orders_new-item--middle col-4">
+        <section class="orders_new-item orders_new-item--middle col-3">
             @item.ProductName
             <input type="hidden" value="@item.ProductName" name=@("orderitems[" + i + "].ProductName") />
         </section>
-        <section class="orders_new-item orders_new-item--middle col-1">
+        <section class="orders_new-item orders_new-item--middle col-2">
             $ @item.UnitPrice.ToString("N2")
             <input type="hidden" value="@item.UnitPrice" name=@("orderitems[" + i + "].UnitPrice") />
         </section>
-        <section class="orders_new-item orders_new-item--middle col-1">
+        <section class="orders_new-item orders_new-item--middle col-2">
             @item.Units
             <input type="hidden" value="@item.Units" name=@("orderitems[" + i + "].Units") />
         </section>

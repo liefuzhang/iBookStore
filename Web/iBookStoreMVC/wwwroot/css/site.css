@@ -60,10 +60,6 @@ body {
     box-shadow: 0 1px 3px rgba(0,0,0,.1);
 }
 
-.btn.btn-primary {
-    width: 100%;
-}
-
 .catalog-item {
     padding: 40px;
 }
@@ -278,4 +274,8 @@ body {
 
         .rhs-detail .rhs-info .out-of-stock {
             color: #ff0072
+        }
+
+        .rhs-info .btn {
+            width: 100%;
         }

@@ -50,7 +50,7 @@ namespace Basket.API.Controllers
             // Step 3: Merge current status with new product
             currentBasket.Items.Add(new BasketItem() {
                 UnitPrice = item.Price,
-                PictureUrl = item.PictureUrl,
+                ISBN13 = item.ISBN13,
                 ProductId = item.Id.ToString(),
                 ProductName = item.Name,
                 Quantity = data.Quantity,

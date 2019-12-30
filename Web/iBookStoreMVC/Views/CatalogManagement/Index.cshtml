@@ -11,7 +11,7 @@
         {
             <div class="row flex-row manage-book-container pt-4">
                 <div class="manage-book-img col-2">
-                    <img src="~/images/book_placeholder.jpg" />
+                    <img src=@("/images/books/"+ item.ISBN13 + ".jpg") />
                 </div>
                 <span class="book-name col-3">@item.Name</span>
                 <span class="col-3">@item.Author</span>
