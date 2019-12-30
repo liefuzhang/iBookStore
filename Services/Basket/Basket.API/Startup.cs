@@ -8,6 +8,7 @@ using Basket.API.IntegrationEvents.EventHandling;
 using Basket.API.IntegrationEvents.Events;
 using Basket.API.Services;
 using EventBus;
+using iBookStoreCommon;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -68,6 +69,9 @@ namespace Basket.API
 
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<IBasketRepository, BasketRepository>();
+
+            services.AddTransient<ServiceRegistryRepository>();
+            services.AddTransient<ServiceRegistryRegistrationService>();
         }
 
         private void ConfigureAuthService(IServiceCollection services) {
@@ -104,6 +108,18 @@ namespace Basket.API
             app.UseMvc();
 
             ConfigureEventBus(app);
+
+            RegisterService(app, Configuration);
+        }
+
+        private static void RegisterService(IApplicationBuilder app, IConfiguration configuration)
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var serviceRegistryRegistrationService =
+                    scope.ServiceProvider.GetRequiredService<ServiceRegistryRegistrationService>();
+                serviceRegistryRegistrationService.Initialize(app, configuration["ApplicationName"]);
+            }
         }
 
         private void ConfigureEventBus(IApplicationBuilder app) {

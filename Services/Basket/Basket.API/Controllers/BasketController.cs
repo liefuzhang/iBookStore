@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Basket.API.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
     [Authorize]
     [ApiController]
     public class BasketController : ControllerBase
@@ -34,7 +34,7 @@ namespace Basket.API.Controllers
             _orderService = orderService;
         }
 
-        // POST api/v1/[controller]/items
+        // POST api/[controller]/items
         [HttpPost]
         [Route("items")]
         public async Task<ActionResult> AddItemToBasket([FromBody] AddBasketItemRequest data) {
@@ -63,7 +63,7 @@ namespace Basket.API.Controllers
             return Ok();
         }
 
-        // PUT api/v1/[controller]/items
+        // PUT api/[controller]/items
         [HttpPut]
         [Route("items")]
         public async Task<ActionResult<CustomerBasket>> UpdateBasket([FromBody] UpdateBasketItemsRequest data) {

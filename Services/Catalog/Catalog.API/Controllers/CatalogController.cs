@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.API.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CatalogController : ControllerBase
     {
@@ -24,7 +24,7 @@ namespace Catalog.API.Controllers
             _catalogIntegrationEventService = catalogIntegrationEventService;
         }
 
-        // GET api/v1/[controller]/catalogItems[?pageIndex=0&pageSize=10]
+        // GET api/[controller]/catalogItems[?pageIndex=0&pageSize=10]
         [HttpGet]
         [Route("catalogItems")]
         public async Task<IActionResult> CatalogItems([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0) {
@@ -38,7 +38,7 @@ namespace Catalog.API.Controllers
             return Ok(new PaginatedItemsViewModel<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
         }
 
-        // GET api/v1/[controller]/catalogItems/category/1[?pageIndex=0&pageSize=10]
+        // GET api/[controller]/catalogItems/category/1[?pageIndex=0&pageSize=10]
         [HttpGet]
         [Route("catalogItems/category/{categoryId}")]
         public async Task<IActionResult> CatalogItemsByCategoryId(int categoryId, [FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0) {
@@ -53,21 +53,21 @@ namespace Catalog.API.Controllers
             return Ok(new PaginatedItemsViewModel<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
         }
 
-        // GET api/v1/[controller]/items/{id}
+        // GET api/[controller]/items/{id}
         [HttpGet]
         [Route("items/{id}")]
         public async Task<CatalogItem> CatalogItem(int id) {
             return await _catalogContext.CatalogItems.FindAsync(id);
         }
 
-        // GET api/v1/[controller]/categories
+        // GET api/[controller]/categories
         [HttpGet]
         [Route("categories")]
         public async Task<ActionResult<List<Category>>> Categories() {
             return await _catalogContext.Categories.ToListAsync();
         }
 
-        //PUT api/v1/[controller]/items
+        //PUT api/[controller]/items
         [Route("items")]
         [HttpPut]
         public async Task<ActionResult> UpdateProductAsync([FromBody]CatalogItem productToUpdate) {

@@ -19,7 +19,7 @@ using Ordering.Infrastructure;
 
 namespace Ordering.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
     [Authorize]
     [ApiController]
     public class OrderController : ControllerBase
