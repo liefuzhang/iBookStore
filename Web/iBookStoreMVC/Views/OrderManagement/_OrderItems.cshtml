@@ -18,8 +18,8 @@
 
     <article class="orders_new-items orders_new-items--border row">
         <section class="orders_new-item col-md-4 hidden-md-down">
-            <img class="orders_new-image" src="~/images/book_placeholder.jpg">
-            <input type="hidden" value="@item.PictureUrl" name=@("orderitems[" + i + "].PictureUrl") />
+            <img class="orders_new-image" src=@("/images/books/"+ item.ISBN13 + ".jpg")>
+            <input type="hidden" value="@item.ISBN13" name=@("orderitems[" + i + "].ISBN13") />
         </section>
         <section class="orders_new-item orders_new-item--middle col-4">
             @item.ProductName

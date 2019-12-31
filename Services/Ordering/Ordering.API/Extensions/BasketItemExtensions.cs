@@ -18,7 +18,7 @@ namespace Ordering.API.Extensions
             return new OrderItemDTO() {
                 ProductId = int.TryParse(item.ProductId, out int id) ? id : -1,
                 ProductName = item.ProductName,
-                PictureUrl = item.PictureUrl,
+                ISBN13 = item.ISBN13,
                 UnitPrice = item.UnitPrice,
                 Units = item.Quantity
             };

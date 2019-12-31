@@ -17,7 +17,13 @@ namespace iBookStoreMVC.ViewModels
 
         public decimal Price { get; set; }
 
-        public string PictureUrl { get; set; }
+        public string ISBN13 { get; set; }
+
+        public int TotalPage { get; set; }
+
+        public DateTime PublicationDate { get; set; }
+
+        public int AvailableStock { get; set; }
 
         public Category Category { get; set; }
 

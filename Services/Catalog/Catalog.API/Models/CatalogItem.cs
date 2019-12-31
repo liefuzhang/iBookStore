@@ -14,7 +14,11 @@ namespace Catalog.API.Models
 
         public decimal Price { get; set; }
 
-        public string PictureUrl { get; set; }
+        public int TotalPage { get; set; }
+
+        public DateTime PublicationDate { get; set; }
+
+        public string ISBN13 { get; set; }
 
         public Category Category { get; set; }
 

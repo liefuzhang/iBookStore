@@ -51,23 +51,23 @@
             </article>
 
             <article class="orders_detail-items orders_detail-items--border row mb-2">
-                <section class="orders_detail-item col-md-4 hidden-md-down">
+                <section class="orders_detail-item col-md-3 hidden-md-down">
                 </section>
-                <section class="orders_detail-title orders_detail-item--middle col-4">Book</section>
-                <section class="orders_detail-title orders_detail-item--middle col-1">Price</section>
-                <section class="orders_detail-title orders_detail-item--middle col-1">Quantity</section>
+                <section class="orders_detail-title orders_detail-item--middle col-3">Book</section>
+                <section class="orders_detail-title orders_detail-item--middle col-2">Price</section>
+                <section class="orders_detail-title orders_detail-item--middle col-2">Quantity</section>
                 <section class="orders_detail-title orders_detail-item--middle col-2">Cost</section>
             </article>
 
             @for (int i = 0; i < Model.OrderItems.Count; i++) {
                 var item = Model.OrderItems[i];
                 <article class="orders_detail-items orders_detail-items--border row">
-                    <section class="orders_detail-item col-md-4 hidden-md-down">
-                        <img class="orders_detail-image" src="~/images/book_placeholder.jpg">
+                    <section class="orders_detail-item col-md-3 hidden-md-down">
+                        <img class="orders_detail-image" src=@("/images/books/"+ item.ISBN13 + ".jpg")>
                     </section>
-                    <section class="orders_detail-item orders_detail-item--middle col-4">@item.ProductName</section>
-                    <section class="orders_detail-item orders_detail-item--middle col-1">$ @item.UnitPrice.ToString("N2")</section>
-                    <section class="orders_detail-item orders_detail-item--middle col-1">@item.Units</section>
+                    <section class="orders_detail-item orders_detail-item--middle col-3">@item.ProductName</section>
+                    <section class="orders_detail-item orders_detail-item--middle col-2">$ @item.UnitPrice.ToString("N2")</section>
+                    <section class="orders_detail-item orders_detail-item--middle col-2">@item.Units</section>
                     <section class="orders_detail-item orders_detail-item--middle col-2">$ @Math.Round(item.Units * item.UnitPrice, 2).ToString("N2")</section>
                 </article>
             }

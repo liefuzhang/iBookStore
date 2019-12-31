@@ -8,7 +8,7 @@
 
         public decimal Price { get; set; }
 
-        public string PictureUrl { get; set; }
+        public string ISBN13 { get; set; }
 
         public int AvailableStock { get; set; }
     }

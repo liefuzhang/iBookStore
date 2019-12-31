@@ -37,7 +37,7 @@ namespace Ordering.API.Application.Commands
                 command.CardSecurityNumber, command.CardHolderName, command.CardExpiration);
             foreach (var item in command.OrderItems) {
                 order.AddOrderItem(item.ProductId, item.ProductName, item.UnitPrice,
-                    item.PictureUrl, item.Units);
+                    item.ISBN13, item.Units);
             }
 
             _orderingContext.Orders.Add(order);

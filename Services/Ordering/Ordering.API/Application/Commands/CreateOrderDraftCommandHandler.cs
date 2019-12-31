@@ -17,7 +17,7 @@ namespace Ordering.API.Application.Commands
             var order = Order.NewDraft();
             var orderItems = message.Items.Select(i => i.ToOrderItemDTO());
             foreach (var item in orderItems) {
-                order.AddOrderItem(item.ProductId, item.ProductName, item.UnitPrice, item.PictureUrl, item.Units);
+                order.AddOrderItem(item.ProductId, item.ProductName, item.UnitPrice, item.ISBN13, item.Units);
             }
 
             return Task.FromResult(OrderDraftDTO.FromOrder(order));

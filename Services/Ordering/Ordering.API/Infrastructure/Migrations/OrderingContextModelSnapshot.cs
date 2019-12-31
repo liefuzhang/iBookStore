@@ -15,7 +15,7 @@ namespace Ordering.API.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("Relational:Sequence:.buyerseq", "'buyerseq', '', '1', '10', '', '', 'Int64', 'False'")
                 .HasAnnotation("Relational:Sequence:.orderitemseq", "'orderitemseq', '', '1', '10', '', '', 'Int64', 'False'")
@@ -103,9 +103,9 @@ namespace Ordering.API.Infrastructure.Migrations
                         .HasAnnotation("SqlServer:HiLoSequenceName", "orderitemseq")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
-                    b.Property<int>("OrderId");
+                    b.Property<string>("ISBN13");
 
-                    b.Property<string>("PictureUrl");
+                    b.Property<int>("OrderId");
 
                     b.Property<int>("ProductId");
 

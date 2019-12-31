@@ -21,7 +21,7 @@
                 </article>
 
                 <article class="books_detail-items row">
-                    <section class="books_detail-item col-3 manage-book-img"><img src="~/images/book_placeholder.jpg" /></section>
+                    <section class="books_detail-item col-3 manage-book-img"><img src=@("/images/books/"+ Model.ISBN13 + ".jpg") /></section>
                     <section class="books_detail-item col-3"><input asp-for="Name" class="form-control form-input" type="text" /></section>
                     <section class="books_detail-item col-3"><input asp-for="Author" class="form-control form-input" type="text" /></section>
                     <section class="books_detail-item col-3 flex-row"><span>$</span><input asp-for="Price" type="number" class="form-control form-input  d-inline-block w-75" type="text" /></section>
@@ -46,7 +46,7 @@
             <input asp-for="Id" type="hidden" />
             <input asp-for="CategoryId" type="hidden" />
             <input asp-for="Description" type="hidden" />
-            <input asp-for="PictureUrl" type="hidden" />
+            <input asp-for="ISBN13" type="hidden" />
         </form>
     </div>
 

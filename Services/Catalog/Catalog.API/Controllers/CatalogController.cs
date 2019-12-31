@@ -86,7 +86,7 @@ namespace Catalog.API.Controllers
             catalogItem.Author = productToUpdate.Author;
             catalogItem.CategoryId = productToUpdate.CategoryId;
             catalogItem.Description = productToUpdate.Description;
-            catalogItem.PictureUrl = productToUpdate.PictureUrl;
+            catalogItem.ISBN13 = productToUpdate.ISBN13;
 
             if (raiseProductPriceChangedEvent) // Save product's data and publish integration event through the Event Bus if price has changed
             {

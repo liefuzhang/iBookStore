@@ -4,22 +4,47 @@
     ViewData["Title"] = "Book Detail";
 }
 
+<style>
+    body {
+        background-color: #f3f3f3;
+    }
+</style>
+
 <div>
-    <div class="h4 mb-4">Book Detail - @Model.Name</div>
     <div class="row">
-        <div class="col-3 p-5">
-            <form asp-controller="Cart" asp-action="AddToCart">
-                <div class="book-container" title="@Model.Description">
-                    <img class="book-img" src="~/images/book_placeholder.jpg" />
-                    <div class="p-2">
-                        <div class="book-name">@Model.Name</div>
-                        <div>@Model.Author</div>
-                        <div>$@Model.Price.ToString("N2")</div>
-                    </div>
+        <div class="col-9 p-2 panel lhs-detail">
+            <div class="book-img">
+                <img src=@("/images/books/"+ Model.ISBN13 + ".jpg") />
+            </div>
+            <div class="book-detail p-3">
+                <h4 class="book-name">@Model.Name</h4>
+                <div class="book-info pt-3">
+                    <div>@Model.TotalPage pages | Published on: @Model.PublicationDate.ToString("dd/MM/yyyy") | ISBN13: @Model.ISBN13</div>
+                    <div>By (author) @Model.Author</div>
+                    <div class="book-description pt-2">@Model.Description</div>
                 </div>
-                <input class="btn btn-primary @((!User.Identity.IsAuthenticated) ? "is-disabled" : "")" type="submit" value="Add to cart" />
-                <input type="hidden" asp-for="@Model.Id" name="id" />
-            </form>
+            </div>
+        </div>
+        <div class="col-3 pr-0">
+            <div class="rhs-detail panel p-3">
+                <h3 class="book-price">NZ$@Model.Price.ToString("N2")</h3>
+                <div class="rhs-info pt-1 pb-1">
+                    <div><i class="fa fa-truck"></i>Free delivery</div>
+                    <div><i class="fa fa-hand-holding-usd"></i>Price includes GST</div>
+                    @if (Model.AvailableStock > 0)
+                    {
+                        <div><i class="fas fa-check-circle"></i>Available</div>
+                    }
+                    else
+                    {
+                        <div class="out-of-stock"><i class="fas fa-exclamation-circle"></i>Out of stock</div>
+                    }
+                </div>
+                <form asp-controller="Cart" asp-action="AddToCart" class="pt-4">
+                    <input class="btn btn-primary" disabled=@(!User.Identity.IsAuthenticated || Model.AvailableStock == 0) type="submit" value="Add to cart" />
+                    <input type="hidden" asp-for="@Model.Id" name="id" />
+                </form>
+            </div>
         </div>
     </div>
 </div>
