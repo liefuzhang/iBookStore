@@ -104,6 +104,10 @@ body {
     max-height: 160px;
 }
 
+.basket-status {
+    display: inline-block;
+}
+
 .basket-status-image img {
     max-width: 40px;
     max-height: 40px;
