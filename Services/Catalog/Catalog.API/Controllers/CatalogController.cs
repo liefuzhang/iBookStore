@@ -84,9 +84,8 @@ namespace Catalog.API.Controllers
             catalogItem.Price = productToUpdate.Price;
             catalogItem.Name = productToUpdate.Name;
             catalogItem.Author = productToUpdate.Author;
-            catalogItem.CategoryId = productToUpdate.CategoryId;
+            catalogItem.AvailableStock = productToUpdate.AvailableStock;
             catalogItem.Description = productToUpdate.Description;
-            catalogItem.ISBN13 = productToUpdate.ISBN13;
 
             if (raiseProductPriceChangedEvent) // Save product's data and publish integration event through the Event Bus if price has changed
             {
@@ -102,6 +101,23 @@ namespace Catalog.API.Controllers
                 await _catalogContext.SaveChangesAsync();
 
             return CreatedAtAction(nameof(CatalogItem), new { id = productToUpdate.Id }, null);
+        }
+
+        // DELETE api/v1/[controller]/items/{id}
+        [HttpDelete]
+        [Route("items/{id}")]
+        public async Task<ActionResult> DeleteCatalogItem(int id)
+        {
+            var item = await _catalogContext.CatalogItems.FindAsync(id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            _catalogContext.CatalogItems.Remove(item);
+            await _catalogContext.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }

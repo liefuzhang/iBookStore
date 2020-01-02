@@ -14,17 +14,19 @@
         <form method="post" asp-controller="CatalogManagement" asp-action="Update">
             <section class="books_detail-section">
                 <article class="books_detail-titles row mb-3 mt-1">
-                    <section class="books_detail-title col-3">Picture</section>
+                    <section class="books_detail-title col-2">Picture</section>
                     <section class="books_detail-title col-3">Name</section>
                     <section class="books_detail-title col-3">Author</section>
-                    <section class="books_detail-title col-3">Price</section>
+                    <section class="books_detail-title col-2">Price</section>
+                    <section class="books_detail-title col-2">Available stock</section>
                 </article>
 
                 <article class="books_detail-items row">
-                    <section class="books_detail-item col-3 manage-book-img"><img src=@("/images/books/"+ Model.ISBN13 + ".jpg") /></section>
+                    <section class="books_detail-item col-2 manage-book-img"><img src=@("/images/books/"+ Model.ISBN13 + ".jpg") /></section>
                     <section class="books_detail-item col-3"><input asp-for="Name" class="form-control form-input" type="text" /></section>
                     <section class="books_detail-item col-3"><input asp-for="Author" class="form-control form-input" type="text" /></section>
-                    <section class="books_detail-item col-3 flex-row"><span>$</span><input asp-for="Price" type="number" class="form-control form-input  d-inline-block w-75" type="text" /></section>
+                    <section class="books_detail-item col-2 flex-row"><span>$</span><input asp-for="Price" type="number" class="form-control form-input  d-inline-block w-75" type="text" /></section>
+                    <section class="books_detail-item col-2"><input asp-for="AvailableStock" class="form-control form-input" type="number" /></section>
                 </article>
 
                 <div class="form-group mt-3">
@@ -44,9 +46,6 @@
             </section>
 
             <input asp-for="Id" type="hidden" />
-            <input asp-for="CategoryId" type="hidden" />
-            <input asp-for="Description" type="hidden" />
-            <input asp-for="ISBN13" type="hidden" />
         </form>
     </div>
 

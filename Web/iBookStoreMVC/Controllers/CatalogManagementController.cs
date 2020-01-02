@@ -43,6 +43,7 @@ namespace iBookStoreMVC.Controllers
         public async Task<IActionResult> Detail(int catalogItemId)
         {
             var item = await _catalogService.GetCatalogItem(catalogItemId);
+
             return View(item);
         }
 
@@ -50,7 +51,13 @@ namespace iBookStoreMVC.Controllers
         {
             await _catalogService.UpdateCatalogItem(catalogItem);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Detail", new { catalogItem.Id });
+        }
+
+        public async Task<IActionResult> Delete(int catalogItemId, int currentPage)
+        {
+            await _catalogService.DeleteCatalogItem(catalogItemId);
+            return RedirectToAction("Index", new { currentPage });
         }
     }
 }
