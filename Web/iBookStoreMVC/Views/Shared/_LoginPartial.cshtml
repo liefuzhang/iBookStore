@@ -14,10 +14,12 @@
                 {
                     <a asp-controller="OrderManagement" asp-action="Index" class="dropdown-item">Manage orders</a>
                     <a asp-controller="CatalogManagement" asp-action="Index" class="dropdown-item">Manage catalog</a>
+                    <a asp-controller="Wishlist" asp-action="Index" class="dropdown-item">My wishlist</a>
                 }
                 else
                 {
                     <a asp-controller="Order" asp-action="Index" class="dropdown-item">My orders</a>
+                    <a asp-controller="Wishlist" asp-action="Index" class="dropdown-item">My wishlist</a>
                 }
                 <form asp-area="" asp-controller="Account" asp-action="SignOut" method="post">
                     <button type="submit" class="btn-link dropdown-item">Log out</button>

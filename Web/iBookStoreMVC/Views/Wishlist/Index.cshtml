@@ -6,32 +6,32 @@
 
 <div class="wishlist-container">
     <div class="h4 mb-4">My wishlist</div>
-    @for (var i = 0; i < Model.Count(); i++)
-    {
-        var book = Model.Skip(i).Take(1).Single();
-        <div class="row">
-            <div class="col-2 book-img">
-                <img src=@("/images/books/"+ book.ISBN13 + ".jpg") />
-            </div>
-            <div class="col-10">
-                <h5 class="book-name">@book.ProductName</h5>
-                <div>By (author) @book.Author</div>
-                <h3 class="book-price">NZ$@book.UnitPrice.ToString("N2")</h3>
-                <div class="wishlist-buttons">
-                    <div class="col-md-2 mt-3">
+    <div class="d-flex flex-row flex-wrap">
+        @for (var i = 0; i < Model.Count(); i++)
+        {
+            var book = Model.Skip(i).Take(1).Single();
+            <div class="d-flex col-6 p-0 pr-4 mt-4 mb-4">
+                <div class="col-4 book-img pl-0">
+                    <a asp-controller="Catalog" asp-action="Detail" asp-route-catalogItemId="@book.ProductId">
+                        <img src=@("/images/books/" + book.ISBN13 + ".jpg") />
+                    </a>
+                </div>
+                <div class="col-8">
+                    <a class="book-name" asp-controller="Catalog" asp-action="Detail" asp-route-catalogItemId="@book.ProductId">@book.ProductName</a>
+                    <div class="pt-1">By (author) @book.Author</div>
+                    <h3 class="book-price">NZ$@book.UnitPrice.ToString("N2")</h3>
+                    <div class="wishlist-buttons">
                         <a class="btn btn-primary"
-                                asp-controller="Wishlist" asp-action="AddToCart" asp-route-productId="@book.ProductId">
+                           asp-controller="Wishlist" asp-action="AddToCart" asp-route-productId="@book.ProductId">
                             Add To Cart
                         </a>
-                    </div>
-                    <div class="col-md-2 mt-3">
-                        <a class="btn btn-secondary"
-                                asp-controller="Wishlist" asp-action="DeleteItem" asp-route-productId="@book.ProductId">
+                        <a class="btn btn-secondary ml-3"
+                           asp-controller="Wishlist" asp-action="DeleteItem" asp-route-productId="@book.ProductId">
                             Delete Item
                         </a>
                     </div>
                 </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>

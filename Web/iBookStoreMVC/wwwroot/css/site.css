@@ -293,6 +293,14 @@ body {
     font-size: 0.9em;
 }
 
+    .wishlist-container .book-name {
+        min-height: 50px;
+        font-size: 1.2rem;
+        font-weight: 500;
+        line-height: 26px;
+        color: #212529;
+    }
+
     .wishlist-container .book-img img {
         max-width: 100%;
         height: auto;
