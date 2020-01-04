@@ -68,6 +68,7 @@ namespace Basket.API
 
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<IBasketRepository, BasketRepository>();
+            services.AddTransient<IWishlistRepository, WishlistRepository>();
         }
 
         private void ConfigureAuthService(IServiceCollection services) {

@@ -14,5 +14,7 @@ namespace Basket.API.Models
         public decimal Price { get; set; }
 
         public string ISBN13 { get; set; }
+
+        public string Author { get; set; }
     }
 }

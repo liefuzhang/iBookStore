@@ -1,0 +1,26 @@
+﻿@model IEnumerable<iBookStoreMVC.ViewModels.WishlistItem>
+
+@{
+    ViewData["Title"] = "Wishlist";
+}
+
+<div class="wishlist-container">
+    <div class="h4 mb-4">My wishlist</div>
+    @for (var i = 0; i < Model.Count(); i++)
+    {
+        var book = Model.Skip(i).Take(1).Single();
+        <div class="row">
+            <div class="col-2 book-img">
+                <img src=@("/images/books/"+ book.ISBN13 + ".jpg") />
+            </div>
+            <div class="col-10">
+                <h5 class="book-name">@book.ProductName</h5>
+                <div>By (author) @book.Author</div>
+                <h3 class="book-price">NZ$@book.UnitPrice.ToString("N2")</h3>
+                <form method="post" asp-controller="Wishlist" asp-action="AddToCart">
+
+                </form>
+            </div>
+        </div>
+    }
+</div>

@@ -44,6 +44,10 @@
                     <input class="btn btn-primary" disabled=@(!User.Identity.IsAuthenticated || Model.AvailableStock == 0) type="submit" value="Add to cart" />
                     <input type="hidden" asp-for="@Model.Id" name="id" />
                 </form>
+                <form asp-controller="Wishlist" asp-action="AddToWishlist" class="pt-4">
+                    <input class="btn btn-secondary" disabled=@(!User.Identity.IsAuthenticated) type="submit" value="Add to wishlist" />
+                    <input type="hidden" asp-for="@Model.Id" name="id" />
+                </form>
             </div>
         </div>
     </div>

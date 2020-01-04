@@ -128,6 +128,12 @@ namespace iBookStoreMVC
                 .AddPolicyHandler(GetRetryPolicy())
                 .AddPolicyHandler(GetCircuitBreakerPolicy());
 
+            services.AddHttpClient<IWishlistService, WishlistService>()
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5)) //Sample. Default lifetime is 2 minutes
+                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+                .AddPolicyHandler(GetRetryPolicy())
+                .AddPolicyHandler(GetCircuitBreakerPolicy());
+
             services.AddHttpClient<IOrderingService, OrderingService>()
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5)) 
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()

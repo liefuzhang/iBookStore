@@ -285,6 +285,20 @@ body {
             color: #ff0072
         }
 
-        .rhs-detail .btn {
-            width: 100%;
-        }
+    .rhs-detail .btn {
+        width: 100%;
+    }
+
+.wishlist-container {
+    font-size: 0.9em;
+}
+
+    .wishlist-container .book-img img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .wishlist-container .book-price {
+        font-size: 24px;
+        line-height: 60px;
+    }

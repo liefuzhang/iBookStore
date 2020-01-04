@@ -18,6 +18,12 @@ namespace iBookStoreMVC.Infrastructure
             public static string GetOrderDraft(string baseUrl, string basketId) => $"{baseUrl}/orderDraft/{basketId}";
         }
 
+        public static class Wishlist
+        {
+            public static string AddItemToWishlist(string baseUrl) => $"{baseUrl}/items";
+            public static string GetWishlist(string baseUrl, string wishlistId) => $"{baseUrl}/{wishlistId}";
+        }
+
         public static class Catalog
         {
             public static string GetCatalogItems(string baseUrl, int page, int take, int? categoryId)
