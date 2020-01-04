@@ -13,6 +13,7 @@ namespace Basket.API.Infrastructure
     {
         private readonly ILogger<BasketRepository> _logger;
         private readonly ICacheService _cache;
+        private const string BasketCachePrefix = "Basket_";
 
         public BasketRepository(ILoggerFactory loggerFactory, ICacheService cache) {
             _logger = loggerFactory.CreateLogger<BasketRepository>();
@@ -20,11 +21,11 @@ namespace Basket.API.Infrastructure
         }
 
         public async Task DeleteBasketAsync(string customerId) {
-            await _cache.RemoveAsync(customerId);
+            await _cache.RemoveAsync(BasketCachePrefix + customerId);
         }
 
         public async Task<CustomerBasket> GetBasketAsync(string customerId) {
-            var data = await _cache.GetStringAsync(customerId);
+            var data = await _cache.GetStringAsync(BasketCachePrefix + customerId);
 
             if (data == null) {
                 return null;
@@ -34,7 +35,7 @@ namespace Basket.API.Infrastructure
         }
 
         public async Task<CustomerBasket> UpdateBasketAsync(CustomerBasket basket) {
-            await _cache.SetStringAsync(basket.BuyerId, JsonConvert.SerializeObject(basket));
+            await _cache.SetStringAsync(BasketCachePrefix + basket.BuyerId, JsonConvert.SerializeObject(basket));
 
             _logger.LogInformation("Basket item persisted succesfully.");
 

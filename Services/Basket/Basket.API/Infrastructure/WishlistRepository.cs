@@ -9,28 +9,33 @@ using System.Threading.Tasks;
 
 namespace Basket.API.Infrastructure
 {
-    public class WishlistRepository: IWishlistRepository
+    public class WishlistRepository : IWishlistRepository
     {
         private readonly ILogger<WishlistRepository> _logger;
         private readonly ICacheService _cache;
+        private const string WishlistCachePrefix = "Wishlist_";
 
-        public WishlistRepository(ILoggerFactory loggerFactory, ICacheService cache) {
+        public WishlistRepository(ILoggerFactory loggerFactory, ICacheService cache)
+        {
             _logger = loggerFactory.CreateLogger<WishlistRepository>();
             _cache = cache;
         }
 
-        public async Task<CustomerWishlist> GetWishlistAsync(string customerId) {
-            var data = await _cache.GetStringAsync(customerId);
+        public async Task<CustomerWishlist> GetWishlistAsync(string customerId)
+        {
+            var data = await _cache.GetStringAsync(WishlistCachePrefix + customerId);
 
-            if (data == null) {
+            if (data == null)
+            {
                 return null;
             }
 
             return JsonConvert.DeserializeObject<CustomerWishlist>(data);
         }
 
-        public async Task<CustomerWishlist> UpdateWishlistAsync(CustomerWishlist wishlist) {
-            await _cache.SetStringAsync(wishlist.BuyerId, JsonConvert.SerializeObject(wishlist));
+        public async Task<CustomerWishlist> UpdateWishlistAsync(CustomerWishlist wishlist)
+        {
+            await _cache.SetStringAsync(WishlistCachePrefix + wishlist.BuyerId, JsonConvert.SerializeObject(wishlist));
 
             _logger.LogInformation("Wishlist item persisted succesfully.");
 

@@ -17,9 +17,20 @@
                 <h5 class="book-name">@book.ProductName</h5>
                 <div>By (author) @book.Author</div>
                 <h3 class="book-price">NZ$@book.UnitPrice.ToString("N2")</h3>
-                <form method="post" asp-controller="Wishlist" asp-action="AddToCart">
-
-                </form>
+                <div class="wishlist-buttons">
+                    <div class="col-md-2 mt-3">
+                        <a class="btn btn-primary"
+                                asp-controller="Wishlist" asp-action="AddToCart" asp-route-productId="@book.ProductId">
+                            Add To Cart
+                        </a>
+                    </div>
+                    <div class="col-md-2 mt-3">
+                        <a class="btn btn-secondary"
+                                asp-controller="Wishlist" asp-action="DeleteItem" asp-route-productId="@book.ProductId">
+                            Delete Item
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     }

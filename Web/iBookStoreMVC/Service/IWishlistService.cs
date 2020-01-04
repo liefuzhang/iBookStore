@@ -7,5 +7,6 @@ namespace iBookStoreMVC.Service
     {
         Task AddItemToWishlist(ApplicationUser user, int productId);
         Task<Wishlist> GetWishlist(ApplicationUser user);
+        Task DeleteItemFromWishlist(ApplicationUser user, string productId);
     }
 }

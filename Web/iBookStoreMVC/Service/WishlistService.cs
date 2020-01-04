@@ -48,5 +48,12 @@ namespace iBookStoreMVC.Service
                 new Wishlist { BuyerId = user.Id } :
                 JsonConvert.DeserializeObject<Wishlist>(responseString);
         }
+
+        public async Task DeleteItemFromWishlist(ApplicationUser user, string productId)
+        {
+            var url = API.Wishlist.DeleteItemFromWishlist(_remoteServiceBaseUrl, user.Id, productId);
+
+            await _httpClient.DeleteAsync(url);
+        }
     }
 }

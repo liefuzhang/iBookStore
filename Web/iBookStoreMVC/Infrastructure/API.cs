@@ -22,6 +22,8 @@ namespace iBookStoreMVC.Infrastructure
         {
             public static string AddItemToWishlist(string baseUrl) => $"{baseUrl}/items";
             public static string GetWishlist(string baseUrl, string wishlistId) => $"{baseUrl}/{wishlistId}";
+
+            public static string DeleteItemFromWishlist(string baseUrl, string wishlistId, string productId) => $"{baseUrl}/{wishlistId}?productId={productId}";
         }
 
         public static class Catalog

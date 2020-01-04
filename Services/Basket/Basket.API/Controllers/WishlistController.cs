@@ -62,5 +62,25 @@ namespace Basket.API.Controllers
         public async Task<CustomerWishlist> GetWishlistByIdAsync(string id) {
             return await _repository.GetWishlistAsync(id) ?? new CustomerWishlist(id);
         }
+
+        // Delete api/v1/[controller]/{wishlistId}?productId={productId}
+        [HttpDelete]
+        [Route("{wishlistId}")]
+        public async Task<IActionResult> DeleteItemFromWishlist([FromRoute] string wishlistId, [FromQuery] string productId)
+        {
+            var wishlist = await _repository.GetWishlistAsync(wishlistId);
+            if (wishlist == null)
+                return null;
+
+            var product = wishlist.Items.Find(i => i.ProductId == productId);
+            if (product == null)
+                return null;
+
+            wishlist.Items.Remove(product);
+
+            await _repository.UpdateWishlistAsync(wishlist);
+
+            return Ok();
+        }
     }
 }

@@ -13,18 +13,23 @@ namespace iBookStoreMVC.Controllers
     [Authorize]
     public class WishlistController : Controller
     {
-        private readonly IWishlistService _wishlistSvc;
+        private readonly IWishlistService _wishlistSvc; 
+        private readonly IBasketService _basketSvc;
         private readonly ICatalogService _catalogService;
         private readonly IIdentityParser<ApplicationUser> _appUserParser;
         private readonly ILogger<CartController> _logger;
 
-        public WishlistController(IWishlistService wishlistSvc, ICatalogService catalogService, IIdentityParser<ApplicationUser> appUserParser,
+        public WishlistController(IWishlistService wishlistSvc,
+            IBasketService basketSvc,
+            ICatalogService catalogService,
+            IIdentityParser<ApplicationUser> appUserParser,
             ILogger<CartController> logger)
         {
             _wishlistSvc = wishlistSvc;
             _catalogService = catalogService;
             _appUserParser = appUserParser;
             _logger = logger;
+            _basketSvc = basketSvc;
         }
 
         public async Task<IActionResult> Index()
@@ -53,9 +58,43 @@ namespace iBookStoreMVC.Controllers
             return RedirectToAction("Index", "Wishlist", new { errorMsg = "Basket Service is inoperative, please try later on. (Business Msg Due to Circuit-Breaker)" });
         }
 
-        public IActionResult AddToCart()
+        public async Task<IActionResult> AddToCart(string productId)
         {
-            
+            try
+            {
+                if (productId != null)
+                {
+                    var user = _appUserParser.Parse(HttpContext.User);
+                    await _basketSvc.AddItemToBasket(user, int.Parse(productId));
+                    await DeleteItem(productId);
+                }
+                return RedirectToAction("Index", "Cart");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Add to cart failed");
+            }
+
+            return RedirectToAction("Index", "Wishlist", new { errorMsg = "Basket Service is inoperative, please try later on. (Business Msg Due to Circuit-Breaker)" });
+        }
+
+        public async Task<IActionResult> DeleteItem(string productId)
+        {
+            try
+            {
+                if (productId != null)
+                {
+                    var user = _appUserParser.Parse(HttpContext.User);
+                    await _wishlistSvc.DeleteItemFromWishlist(user, productId);
+                }
+                return RedirectToAction("Index", "Wishlist");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Delete from wishlist failed");
+            }
+
+            return RedirectToAction("Index", "Wishlist", new { errorMsg = "Basket Service is inoperative, please try later on. (Business Msg Due to Circuit-Breaker)" });
         }
     }
 }
