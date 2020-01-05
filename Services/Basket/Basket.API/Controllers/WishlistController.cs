@@ -40,18 +40,23 @@ namespace Basket.API.Controllers
             var item = await _catalogService.GetCatalogItemAsync(data.CatalogItemId);
 
             // Step 2: Get current wishlist status
-            var currentWishlist = await _repository.GetWishlistAsync(data.WishlistId) ?? new CustomerWishlist(data.WishlistId);
-            // Step 3: Merge current status with new product
-            currentWishlist.Items.Add(new WishlistItem {
-                UnitPrice = item.Price,
-                ISBN13 = item.ISBN13,
-                ProductId = item.Id.ToString(),
-                ProductName = item.Name,
-                Author = item.Author
-            });
+            var currentWishlist = await _repository.GetWishlistAsync(data.WishlistId) ??
+                                  new CustomerWishlist(data.WishlistId);
+            if (currentWishlist.Items.All(i => i.ProductId != item.Id.ToString()))
+            {
+                // Step 3: Merge current status with new product
+                currentWishlist.Items.Add(new WishlistItem
+                {
+                    UnitPrice = item.Price,
+                    ISBN13 = item.ISBN13,
+                    ProductId = item.Id.ToString(),
+                    ProductName = item.Name,
+                    Author = item.Author
+                });
 
-            // Step 4: Update wishlist
-            await _repository.UpdateWishlistAsync(currentWishlist);
+                // Step 4: Update wishlist
+                await _repository.UpdateWishlistAsync(currentWishlist);
+            }
 
             return Ok();
         }
