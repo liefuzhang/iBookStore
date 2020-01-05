@@ -69,6 +69,10 @@ body {
     padding: 40px;
 }
 
+.book-name {
+    color: #212529;
+}
+
 .book-container {
     cursor: pointer;
     font-size: 0.9em;
@@ -152,12 +156,12 @@ body {
     margin: 10px 0 0;
 }
 
-.orders_new-image {
+.orders-image {
     max-width: 100px;
     max-height: 100px;
 }
 
-.orders_new-title {
+.orders-title {
     font-weight: 600;
     font-size: 1.1rem;
 }
@@ -298,7 +302,7 @@ body {
         font-size: 1.2rem;
         font-weight: 500;
         line-height: 26px;
-        color: #212529;
+        display: inline-block;
     }
 
     .wishlist-container .book-img img {

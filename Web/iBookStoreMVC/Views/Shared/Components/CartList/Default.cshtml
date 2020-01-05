@@ -5,12 +5,15 @@
 }
 
 <div class="container mt-5">
-    @if (ViewBag.BasketInoperativeMsg != null) {
+    @if (ViewBag.BasketInoperativeMsg != null)
+    {
         <br />
         <div class="alert alert-warning" role="alert">
             &nbsp;@ViewBag.BasketInoperativeMsg
         </div>
-    } else {
+    }
+    else
+    {
         <article class="basket-titles row mb-4">
             <section class="basket-title col-3"></section>
             <section class="basket-title col-3">Book</section>
@@ -19,14 +22,21 @@
             <section class="basket-title col-2">Cost</section>
         </article>
 
-        @for (int i = 0; i < Model.Items.Count; i++) {
+        @for (int i = 0; i < Model.Items.Count; i++)
+        {
             var item = Model.Items[i];
 
             <article class="basket-items row mt-3">
                 <section class="basket-item basket-item--middle col-lg-3">
-                    <img class="basket-image" src=@("/images/books/"+ item.ISBN13 + ".jpg") />
+                    <a asp-controller="Catalog" asp-action="Detail" asp-route-catalogItemId="@item.ProductId">
+                        <img class="basket-image" src=@("/images/books/" + item.ISBN13 + ".jpg") />
+                    </a>
                 </section>
-                <section class="basket-item basket-item--middle col-3">@item.ProductName</section>
+                <section class="basket-item basket-item--middle col-3">
+                    <a class="book-name" asp-controller="Catalog" asp-action="Detail" asp-route-catalogItemId="@item.ProductId">
+                        @item.ProductName
+                    </a>
+                </section>
                 <section class="basket-item basket-item--middle col-2">$ @item.UnitPrice.ToString("N2")</section>
                 <section class="basket-item basket-item--middle col-2">
                     <input type="hidden" name="@("quantities[" + i +"].Key")" value="@item.Id" />

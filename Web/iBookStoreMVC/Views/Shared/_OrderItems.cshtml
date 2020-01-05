@@ -1,0 +1,60 @@
+﻿@model iBookStoreMVC.ViewModels.Order
+
+<section class="orders-section">
+    <article class="orders-titles row">
+        <section class="orders-title col-12"><h4>Order details</h4></section>
+    </article>
+
+    <article class="orders-titles row mb-4">
+        <section class="orders-title col-3"></section>
+        <section class="orders-title col-3">Book</section>
+        <section class="orders-title col-2">Price</section>
+        <section class="orders-title col-2">Quantity</section>
+        <section class="orders-title col-2">Cost</section>
+    </article>
+
+    @for (int i = 0; i < Model.OrderItems.Count; i++)
+    {
+        var item = Model.OrderItems[i];
+
+        <article class="orders-items orders-items--border row mb-3">
+            <section class="orders-item col-md-3 hidden-md-down">
+                <a asp-controller="Catalog" asp-action="Detail" asp-route-catalogItemId="@item.ProductId">
+                    <img class="orders-image" src=@("/images/books/" + item.ISBN13 + ".jpg")>
+                </a>
+                <input type="hidden" value="@item.ISBN13" name=@("orderitems[" + i + "].ISBN13") />
+            </section>
+            <section class="orders-item orders-item--middle col-3">
+                <a class="book-name" asp-controller="Catalog" asp-action="Detail" asp-route-catalogItemId="@item.ProductId">
+                    @item.ProductName
+                </a>
+                <input type="hidden" value="@item.ProductName" name=@("orderitems[" + i + "].ProductName") />
+            </section>
+            <section class="orders-item orders-item--middle col-2">
+                $@item.UnitPrice.ToString("N2")
+                <input type="hidden" value="@item.UnitPrice" name=@("orderitems[" + i + "].UnitPrice") />
+            </section>
+            <section class="orders-item orders-item--middle col-2">
+                @item.Units
+                <input type="hidden" value="@item.Units" name=@("orderitems[" + i + "].Units") />
+            </section>
+            <section class="orders-item orders-item--middle col-2">$@Math.Round(item.Units * item.UnitPrice, 2).ToString("N2")</section>
+            <input type="hidden" value="@item.ProductId" name=@("orderitems[" + i + "].ProductId") />
+        </article>
+    }
+</section>
+
+<section class="orders-section orders-section--right">
+    <article class="orders-titles row">
+        <section class="orders-title col-10"></section>
+        <section class="orders-title col-2">Total</section>
+    </article>
+
+    <article class="orders-items row">
+        <section class="orders-item col-10"></section>
+        <section class="orders-item orders-item--mark col-2">
+            $@Model.Total.ToString("N2")
+            <input type="hidden" value="@Model.Total" name="Total" />
+        </section>
+    </article>
+</section>

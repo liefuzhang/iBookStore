@@ -27,5 +27,11 @@ namespace iBookStoreMVC.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public async Task<IActionResult> Detail(string orderId)
+        {
+            var order = await _orderSvc.GetOrder(orderId);
+            return View(order);
+        }
     }
 }

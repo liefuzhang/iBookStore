@@ -46,16 +46,29 @@ namespace Ordering.API.Models
 
         public Guid RequestId { get; set; }
 
-        public static OrderDTO FromOrder(Order order) {
-            var orderDTO = new OrderDTO {
+        public static OrderDTO FromOrder(Order order)
+        {
+            var orderDTO = new OrderDTO
+            {
                 OrderNumber = order.Id.ToString(),
                 CreatedDate = order.CreatedDate,
                 Status = order.Status.ToString(),
                 Total = order.GetTotal()
             };
 
-            foreach(var item in order.OrderItems) {
-                orderDTO.OrderItems.Add(new OrderItemDTO {
+            if (order.Address != null)
+            {
+                orderDTO.Country = order.Address.Country;
+                orderDTO.State = order.Address.State;
+                orderDTO.City = order.Address.City;
+                orderDTO.Street = order.Address.Street;
+                orderDTO.ZipCode = order.Address.ZipCode;
+            }
+
+            foreach (var item in order.OrderItems)
+            {
+                orderDTO.OrderItems.Add(new OrderItemDTO
+                {
                     ProductId = item.ProductId,
                     ProductName = item.ProductName,
                     ISBN13 = item.ISBN13,
