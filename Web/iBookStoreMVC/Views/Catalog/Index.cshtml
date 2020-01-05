@@ -5,19 +5,30 @@
 }
 
 <div>
-    <div class="h4 mb-4">Books in store</div>
-    <section class="category-filters">
-        <div class="container">
-            <form asp-action="Index" asp-controller="Catalog" method="post">
-                <div class="form-group">
-                    <label class="catalog-label" data-title="category">
-                        <select asp-for="@Model.CategoryFilterApplied" asp-items="@Model.Categories" class="catalog-filter form-control"></select>
-                    </label>
-                    <button type="submit" class="btn btn-link category-button"><i class="fa fa-search" aria-hidden="true"></i></button>
-                </div>
-            </form>
+    <section class="category-filters pb-2">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Shop by category
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                @foreach (var category in @Model.Categories)
+                {
+                    <a asp-action="Index" asp-route-categoryFilterApplied="@category.Value" class="dropdown-item">@category.Text</a>
+                }
+            </div>
         </div>
     </section>
+
+    <h4 class="pt-4 border-top">
+        @if (Model.CategoryFilterApplied != null)
+        {
+            <span>Category: @Model.Categories.Single(c => c.Value == Model.CategoryFilterApplied.Value.ToString()).Text</span>
+        }
+        else
+        {
+            <span>All Books</span>
+        }
+    </h4>
 
     <div class="row">
         @foreach (var item in Model.CatalogItems)

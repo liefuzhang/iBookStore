@@ -31,7 +31,8 @@ namespace iBookStoreMVC.Controllers
                     ItemsPerPage = catalog.Data.Count,
                     TotalItems = catalog.Count,
                     TotalPages = (int)Math.Ceiling(((decimal)catalog.Count / itemsPerPage))
-                }
+                },
+                CategoryFilterApplied = categoryFilterApplied
             };
 
             vm.PaginationInfo.Next = (vm.PaginationInfo.ActualPage == vm.PaginationInfo.TotalPages - 1) ? "is-disabled" : "";
