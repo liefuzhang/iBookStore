@@ -17,7 +17,7 @@ namespace Ordering.API.Services
         }
 
         public async Task<CatalogItem> GetCatalogItemAsync(int id) {
-            var url = $"{_settings.Value.CatalogUrl}/api/catalog/items/{id}";
+            var url = $"{_settings.Value.ApiGatewayUrl}/api/catalog/items/{id}";
 
             var responseString = await _httpClient.GetStringAsync(url);
 
