@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Basket.API.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
     [Authorize]
     [ApiController]
     public class WishlistController: ControllerBase
@@ -28,7 +28,7 @@ namespace Basket.API.Controllers
             _catalogService = catalogService;
         }
 
-        // POST api/v1/[controller]/items
+        // POST api/[controller]/items
         [HttpPost]
         [Route("items")]
         public async Task<ActionResult> AddItemToWishlist([FromBody] AddWishlistItemRequest data) {
@@ -61,14 +61,14 @@ namespace Basket.API.Controllers
             return Ok();
         }
 
-        // GET api/vi/[controller]/{id}
+        // GET api/[controller]/{id}
         [HttpGet]
         [Route("{id}")]
         public async Task<CustomerWishlist> GetWishlistByIdAsync(string id) {
             return await _repository.GetWishlistAsync(id) ?? new CustomerWishlist(id);
         }
 
-        // Delete api/v1/[controller]/{wishlistId}?productId={productId}
+        // Delete api/[controller]/{wishlistId}?productId={productId}
         [HttpDelete]
         [Route("{wishlistId}")]
         public async Task<IActionResult> DeleteItemFromWishlist([FromRoute] string wishlistId, [FromQuery] string productId)

@@ -103,7 +103,7 @@ namespace Catalog.API.Controllers
             return CreatedAtAction(nameof(CatalogItem), new { id = productToUpdate.Id }, null);
         }
 
-        // DELETE api/v1/[controller]/items/{id}
+        // DELETE api/[controller]/items/{id}
         [HttpDelete]
         [Route("items/{id}")]
         public async Task<ActionResult> DeleteCatalogItem(int id)
