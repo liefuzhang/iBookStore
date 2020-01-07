@@ -16,7 +16,7 @@ namespace Ordering.BackgroundTasks.Services
         }
 
         public async Task SetOrderAwaitingValidation(int orderId) {
-            var url = $"{_settings.Value.OrderUrl}/api/v1/order/setOrderAwaitingValidation";
+            var url = $"{_settings.Value.OrderUrl}/api/order/setOrderAwaitingValidation";
 
             var content = new StringContent(JsonConvert.SerializeObject(orderId), System.Text.Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(url, content);

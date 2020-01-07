@@ -24,7 +24,7 @@ namespace iBookStoreMVC.Service
             _logger = logger;
             _settings = settings;
 
-            _remoteServiceBaseUrl = $"{_settings.Value.OrderUrl}/api/v1/order";
+            _remoteServiceBaseUrl = $"{_settings.Value.ApiGatewayUrl}/api/order";
         }
 
         public async Task PlaceOrder(Order order) {

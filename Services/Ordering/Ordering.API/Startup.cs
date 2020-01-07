@@ -2,6 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using EventBus;
+using iBookStoreCommon;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -79,6 +80,9 @@ namespace Ordering.API
 
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+
+            services.AddTransient<ServiceRegistryRepository>();
+            services.AddTransient<ServiceRegistryRegistrationService>();
         }
 
         private void ConfigureAuthService(IServiceCollection services)
@@ -122,6 +126,18 @@ namespace Ordering.API
             app.UseMvc();
 
             ConfigureEventBus(app);
+
+            RegisterService(app, Configuration);
+        }
+
+        private static void RegisterService(IApplicationBuilder app, IConfiguration configuration)
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var serviceRegistryRegistrationService =
+                    scope.ServiceProvider.GetRequiredService<ServiceRegistryRegistrationService>();
+                serviceRegistryRegistrationService.Initialize(configuration["ApplicationName"], new Uri(configuration["ApplicationUri"]));
+            }
         }
 
         private void ConfigureEventBus(IApplicationBuilder app)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Reflection;
 using Catalog.API.Infrastructure;
@@ -7,6 +8,7 @@ using Catalog.API.IntegrationEvents.EventHandling;
 using Catalog.API.IntegrationEvents.Events;
 using EventBus;
 using HealthChecks.UI.Client;
+using iBookStoreCommon;
 using IntegrationEventLogEF;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -76,6 +78,10 @@ namespace Catalog.API
                 sp => (DbConnection c) => new IntegrationEventLogService(c));
 
             services.AddTransient<ICatalogIntegrationEventService, CatalogIntegrationEventService>();
+            services.AddTransient<ServiceRegistryRepository>();
+            services.AddTransient<ServiceRegistryRegistrationService>();
+
+            services.AddHttpContextAccessor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -108,6 +114,18 @@ namespace Catalog.API
             app.UseMvc();
 
             ConfigureEventBus(app);
+
+            RegisterService(app, Configuration);
+        }
+
+        private static void RegisterService(IApplicationBuilder app, IConfiguration configuration)
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var serviceRegistryRegistrationService =
+                    scope.ServiceProvider.GetRequiredService<ServiceRegistryRegistrationService>();
+                serviceRegistryRegistrationService.Initialize(configuration["ApplicationName"], new Uri(configuration["ApplicationUri"]));
+            }
         }
 
         private void ConfigureEventBus(IApplicationBuilder app)

@@ -2,6 +2,6 @@
 {
     public class AppSettings
     {
-        public string CatalogUrl { get; set; }
+        public string ApiGatewayUrl { get; set; }
     }
 }

@@ -24,7 +24,7 @@ namespace iBookStoreMVC.Service
             _logger = logger;
             _settings = settings;
 
-            _remoteServiceBaseUrl = $"{_settings.Value.CatalogUrl}/api/v1/catalog";
+            _remoteServiceBaseUrl = $"{_settings.Value.ApiGatewayUrl}/api/catalog";
         }
 
         public async Task<CatalogItem> GetCatalogItem(int catalogItemId) {

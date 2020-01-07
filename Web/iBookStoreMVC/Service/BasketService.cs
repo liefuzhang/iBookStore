@@ -22,7 +22,7 @@ namespace iBookStoreMVC.Service
             _logger = logger;
             _settings = settings;
 
-            _remoteServiceBaseUrl = $"{_settings.Value.BasketUrl}/api/v1/basket";
+            _remoteServiceBaseUrl = $"{_settings.Value.ApiGatewayUrl}/api/basket";
         }
 
         public async Task AddItemToBasket(ApplicationUser user, int productId) {
