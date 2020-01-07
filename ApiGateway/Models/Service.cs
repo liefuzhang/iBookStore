@@ -39,6 +39,11 @@ namespace ApiGateway.Models
 
         public string ServiceName { get; }
 
+        public void AddRangeInstance(IEnumerable<ServiceInstance> instances)
+        {
+            foreach (var i in instances) AddInstance(i);
+        }
+
         public void AddInstance(IServiceInstance instance)
         {
             instance.Service = this;

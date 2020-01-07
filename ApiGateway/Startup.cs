@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiGateway;
+using ApiGateway.Infrastructure;
 using ApiGateway.Repositories;
 using ApiGateway.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -34,6 +36,9 @@ namespace iBookStoreApiGateway
 
             services.AddScoped<IServiceRegistryService, ServiceRegistryService>();
             services.AddScoped<IServiceRegistryRepository, ServiceRegistryRepository>();
+            services.AddTransient<IServiceOperationService, ServiceOperationService>();
+
+            services.AddHttpClient(nameof(ReverseProxyMiddleware));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +56,11 @@ namespace iBookStoreApiGateway
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            app.UseMiddleware<ReverseProxyMiddleware>();
+            // API Gateway ReverseProxy is the ultimate end of our middleware pipeline
+            // Nothing should be below this.
+            // ---------------------------------------------------------------------------------------------------
         }
     }
 }

@@ -70,6 +70,33 @@ namespace ApiGateway.Repositories
                     });
         }
 
+        public List<IServiceInstance> SelectAllInstances()
+        {
+            using (var conn = Connection)
+            {
+                using (var dataset = conn.QueryMultiple(
+                    "SELECT * FROM ServiceRegistry.Services; " +
+                    "SELECT * FROM ServiceRegistry.ServiceInstances;"))
+                {
+                    var serviceDtos = dataset.Read<ServiceDto>();
+                    var instanceDtos = dataset.Read<InstanceDto>();
+
+                    return serviceDtos.Select(s =>
+                        {
+                            var service = new Service(s.ServiceId, s.ServiceName);
+
+                            service.AddRangeInstance(instanceDtos
+                                .Where(i => i.ServiceId == service.ServiceId)
+                                .Select(i => new ServiceInstance(i.Scheme, i.IPAddress, i.Port)));
+
+                            return service;
+                        })
+                        .SelectMany(s => s.Instances)
+                        .ToList();
+                }
+            }
+        }
+
         public List<IServiceOperation> SelectAllOperations()
         {
             using (var conn = Connection)
@@ -101,6 +128,12 @@ namespace ApiGateway.Repositories
         {
             using (var conn = Connection)
                 conn.Execute("DELETE FROM ServiceRegistry.ServiceOperations WHERE ServiceID = @ServiceID", new { serviceId });
+        }
+
+        public void DeleteAllInstances(int serviceId)
+        {
+            using (var conn = Connection)
+                conn.Execute("DELETE FROM ServiceRegistry.ServiceInstances WHERE ServiceID = @ServiceID", new { serviceId });
         }
 
         public void BulkInsertServiceOperations(IEnumerable<IServiceOperation> serviceOperations)

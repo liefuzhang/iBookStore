@@ -10,6 +10,8 @@ namespace ApiGateway.Repositories
         void InsertInstance(IServiceInstance instance);
         List<IServiceOperation> SelectAllOperations();
         void DeleteAllOperations(int serviceId);
+        void DeleteAllInstances(int serviceId);
         void BulkInsertServiceOperations(IEnumerable<IServiceOperation> serviceOperations);
+        List<IServiceInstance> SelectAllInstances();
     }
 }

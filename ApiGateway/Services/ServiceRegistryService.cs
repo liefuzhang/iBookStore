@@ -26,6 +26,8 @@ namespace ApiGateway.Services
         public void RegisterInstance(IServiceInstance instance)
         {
             instance.EnsureInstanceIsValid();
+
+            _serviceRegistryRepository.DeleteAllInstances(instance.Service.ServiceId);
             _serviceRegistryRepository.InsertInstance(instance);
         }
 

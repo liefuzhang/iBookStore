@@ -23,19 +23,17 @@ namespace iBookStoreCommon
             _apiExplorer = apiExplorer;
         }
 
-        public async Task Initialize(IApplicationBuilder app, string appName)
+        public async Task Initialize(string appName, Uri appUri)
         {
-            var serverAddresses = app.ServerFeatures.Get<IServerAddressesFeature>();
-            var addressUri = new Uri(serverAddresses.Addresses.First());
-
-            if (string.IsNullOrWhiteSpace(appName)) throw new ArgumentNullException(nameof(appName));
+            if (string.IsNullOrWhiteSpace(appName) || appUri == null)
+                throw new ArgumentNullException(nameof(appName));
 
             _service = new ServiceInstance
             {
                 ServiceName = appName,
-                Scheme = addressUri.Scheme,
-                IpAddress = addressUri.Host,
-                Port = addressUri.Port
+                Scheme = appUri.Scheme,
+                IpAddress = appUri.Host == "127.0.0.1" ? "localhost" : appUri.Host,
+                Port = appUri.Port
             };
 
             _service.ServiceInstanceId = await _serviceRegistryRepository.RegisterService(_service);

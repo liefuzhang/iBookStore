@@ -124,7 +124,7 @@ namespace Catalog.API
             {
                 var serviceRegistryRegistrationService =
                     scope.ServiceProvider.GetRequiredService<ServiceRegistryRegistrationService>();
-                serviceRegistryRegistrationService.Initialize(app, configuration["ApplicationName"]);
+                serviceRegistryRegistrationService.Initialize(configuration["ApplicationName"], new Uri(configuration["ApplicationUri"]));
             }
         }
 
