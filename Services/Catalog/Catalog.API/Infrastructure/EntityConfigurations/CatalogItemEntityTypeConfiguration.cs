@@ -21,6 +21,8 @@ namespace Catalog.API.Infrastructure.EntityConfigurations
             builder.HasOne(ci => ci.Category)
                 .WithMany()
                 .HasForeignKey(ci => ci.CategoryId);
+
+            builder.Ignore(ci => ci.Rating);
         }
     }
 }

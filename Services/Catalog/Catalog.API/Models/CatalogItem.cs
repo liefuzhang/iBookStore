@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Catalog.API.Models
 {
@@ -19,6 +20,8 @@ namespace Catalog.API.Models
         public DateTime PublicationDate { get; set; }
 
         public string ISBN13 { get; set; }
+
+        public CatalogItemGoodreadRating Rating { get; set; }
 
         public Category Category { get; set; }
 

@@ -19,6 +19,7 @@
             <div class="book-detail p-3">
                 <h4 class="book-name">@Model.Name</h4>
                 <div class="book-info pt-3">
+                    <div class="mb-1"><a href="https://www.goodreads.com/book/show/@Model.Rating.GoodReadBookId" target="_blank"><span class="book-rating"></span></a><span>@Model.Rating.Rating (@Model.Rating.RatingCount ratings by Goodreads)</span></div>
                     <div>@Model.TotalPage pages | Published on: @Model.PublicationDate.ToString("dd/MM/yyyy") | ISBN13: @Model.ISBN13</div>
                     <div>By (author) @Model.Author</div>
                     <div class="book-description pt-2">@Model.Description</div>
@@ -52,3 +53,15 @@
         </div>
     </div>
 </div>
+
+
+@section Scripts {
+    <script>
+        $(".book-rating").starRating({
+            readOnly: true,
+            initialRating: @(Model.Rating.Rating),
+            starSize: 18
+        });
+
+    </script>
+}

@@ -252,6 +252,13 @@ body {
         font-size: 0.9em;
     }
 
+        .lhs-detail .book-info .book-rating {
+            position: relative;
+            bottom: 2px;
+            left: -3px;
+            margin-right: 3px;
+        }
+
 .rhs-detail {
     height: 100%;
     width: 100%;

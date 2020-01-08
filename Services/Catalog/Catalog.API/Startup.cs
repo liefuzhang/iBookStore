@@ -6,6 +6,7 @@ using Catalog.API.Infrastructure;
 using Catalog.API.IntegrationEvents;
 using Catalog.API.IntegrationEvents.EventHandling;
 using Catalog.API.IntegrationEvents.Events;
+using Catalog.API.Services;
 using EventBus;
 using HealthChecks.UI.Client;
 using iBookStoreCommon;
@@ -82,6 +83,8 @@ namespace Catalog.API
             services.AddTransient<ServiceRegistryRegistrationService>();
 
             services.AddHttpContextAccessor();
+
+            services.AddHttpClient<ICatalogItemRatingService, CatalogItemRatingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

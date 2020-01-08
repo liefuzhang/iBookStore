@@ -19,6 +19,8 @@ namespace iBookStoreMVC.ViewModels
 
         public string ISBN13 { get; set; }
 
+        public CatalogItemGoodreadRating Rating { get; set; }
+
         public int TotalPage { get; set; }
 
         public DateTime PublicationDate { get; set; }
