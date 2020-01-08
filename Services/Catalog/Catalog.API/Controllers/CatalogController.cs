@@ -66,7 +66,8 @@ namespace Catalog.API.Controllers
         [Route("items/{id}")]
         public async Task<CatalogItem> CatalogItem(int id)
         {
-            var item = await _catalogContext.CatalogItems.FindAsync(id);
+            var item = await _catalogContext.CatalogItems.Include(c => c.Category)
+                .SingleOrDefaultAsync(c => c.Id == id);
             item.Rating = await _catalogItemRatingService.GetBookRatingFromGoodreads(item.ISBN13);
 
             return item;

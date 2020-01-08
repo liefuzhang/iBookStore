@@ -12,9 +12,15 @@
 
 <div>
     <div class="row">
+        <div class="panel col-12 p-2 mb-2 pl-3 book-catagory">
+            Catagory: <a asp-action="Index" asp-controller="Catalog" asp-route-categoryFilterApplied="@Model.CategoryId">@Model.Category.Name</a>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-9 p-2 panel lhs-detail">
             <div class="book-img p-1">
-                <img src=@("/images/books/"+ Model.ISBN13 + ".jpg") />
+                <img src=@("/images/books/" + Model.ISBN13 + ".jpg") />
             </div>
             <div class="book-detail p-3">
                 <h4 class="book-name">@Model.Name</h4>
