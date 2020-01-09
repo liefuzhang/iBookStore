@@ -54,10 +54,10 @@ namespace iBookStoreMVC.Controllers
             return RedirectToAction("Detail", new { catalogItem.Id });
         }
 
-        public async Task<IActionResult> Delete(int catalogItemId, int currentPage)
+        public async Task<IActionResult> Delete(int catalogItemId, int page)
         {
             await _catalogService.DeleteCatalogItem(catalogItemId);
-            return RedirectToAction("Index", new { currentPage });
+            return RedirectToAction("Index", new { page });
         }
     }
 }

@@ -43,6 +43,11 @@ body {
     margin-bottom: 60px;
 }
 
+header .navbar {
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
 .footer {
     position: absolute;
     bottom: 0;
@@ -325,3 +330,15 @@ body {
         font-size: 24px;
         line-height: 60px;
     }
+
+.search-form .input-group-append {
+    margin-left: -2px;
+}
+
+.search-form .form-control:focus {
+    box-shadow: none;
+}
+
+.search-form input {
+    font-size: 0.9em;
+}

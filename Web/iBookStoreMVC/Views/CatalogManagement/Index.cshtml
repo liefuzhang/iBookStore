@@ -18,7 +18,7 @@
                 <span class="col-2">$@item.Price.ToString("N2")</span>
                 <a class="book-link pr-1" asp-controller="CatalogManagement" asp-action="Detail" asp-route-catalogItemId="@item.Id">Edit</a>
                 <a class="book-link pl-1" asp-controller="CatalogManagement" asp-action="Delete" 
-                   asp-route-catalogItemId="@item.Id" asp-route-currentPage="@Model.PaginationInfo.ActualPage" 
+                   asp-route-catalogItemId="@item.Id" asp-route-page="@Model.PaginationInfo.ActualPage" 
                    onclick="return confirm('Are you sure you want to delete this book?');">Delete</a>
             </div>
         }

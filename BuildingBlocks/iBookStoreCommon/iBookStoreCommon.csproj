@@ -5,8 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="microsoft.aspnetcore.hosting.server.abstractions" Version="2.2.0" />
+    <PackageReference Include="microsoft.aspnetcore.http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+    <PackageReference Include="microsoft.aspnetcore.mvc.apiexplorer" Version="2.2.0" />
+    <PackageReference Include="microsoft.extensions.logging.abstractions" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
