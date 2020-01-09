@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using EventBus;
-using Ordering.API.Application.Models;
-using Ordering.API.Models;
+using Recommendation.API.Models;
 
-namespace Ordering.API.Application.IntegrationEvents.Events
+namespace Recommendation.API.IntegrationEvents.Events
 {
     public class OrderStatusChangedToPaidIntegrationEvent : IntegrationEvent
     {
@@ -11,8 +10,7 @@ namespace Ordering.API.Application.IntegrationEvents.Events
         public IEnumerable<OrderStockItem> OrderStockItems { get; }
 
 
-        public OrderStatusChangedToPaidIntegrationEvent(int orderId, IEnumerable<OrderStockItem> orderStockItems)
-        {
+        public OrderStatusChangedToPaidIntegrationEvent(int orderId, IEnumerable<OrderStockItem> orderStockItems) {
             OrderId = orderId;
             OrderStockItems = orderStockItems;
         }

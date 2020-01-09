@@ -5,6 +5,7 @@ using EventBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ordering.API.Application.IntegrationEvents.Events;
+using Ordering.API.Application.Models;
 using Ordering.API.Models;
 using Ordering.Infrastructure;
 

@@ -1,4 +1,4 @@
-﻿namespace Ordering.API.Application.Models
+﻿namespace Recommendation.API.Models
 {
     public class OrderStockItem
     {
