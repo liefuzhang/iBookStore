@@ -64,6 +64,8 @@ namespace Recommendation.API
 
             services.AddTransient<ServiceRegistryRepository>();
             services.AddTransient<ServiceRegistryRegistrationService>();
+
+            services.AddHttpClient<ICatalogService, CatalogService>();
         }
 
         private void ConfigureAuthService(IServiceCollection services)

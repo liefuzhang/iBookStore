@@ -73,6 +73,23 @@ namespace Catalog.API.Controllers
             return item;
         }
 
+        // GET api/[controller]/items/{ids}
+        [HttpGet]
+        [Route("items/{ids}")]
+        public async Task<List<CatalogItem>> CatalogItems(string ids)
+        {
+            var idList = ids.Split(',').ToList();
+            var items = await _catalogContext.CatalogItems.Include(c => c.Category)
+                .Where(c => idList.Contains(c.Id.ToString()))
+                .ToListAsync();
+            foreach (var item in items)
+            {
+                item.Rating = await _catalogItemRatingService.GetBookRatingFromGoodreads(item.ISBN13);
+            }
+
+            return items;
+        }
+
         // GET api/[controller]/categories
         [HttpGet]
         [Route("categories")]

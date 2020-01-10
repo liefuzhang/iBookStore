@@ -92,5 +92,13 @@ namespace iBookStoreMVC.Infrastructure
                 return $"{baseUrl}/shipOrder";
             }
         }
+
+        public static class Recommendation
+        {
+            public static string GetRecommendedBooks(string baseUrl)
+            {
+                return $"{baseUrl}/recommendedBooks";
+            }
+        }
     }
 }

@@ -141,6 +141,12 @@ namespace iBookStoreMVC
                 .AddPolicyHandler(GetRetryPolicy())
                 .AddPolicyHandler(GetCircuitBreakerPolicy());
 
+            services.AddHttpClient<IRecommendationService, RecommendationService>()
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+                .AddPolicyHandler(GetRetryPolicy())
+                .AddPolicyHandler(GetCircuitBreakerPolicy());
+
             return services;
         }
 

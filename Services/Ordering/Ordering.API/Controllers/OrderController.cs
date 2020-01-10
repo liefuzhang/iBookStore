@@ -44,7 +44,7 @@ namespace Ordering.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        // POST api/vi/[controller]/draft
+        // POST api/[controller]/draft
         [HttpPost]
         [Route("draft")]
         public async Task<ActionResult<OrderDraftDTO>> CreateOrderDraftFromBasketDataAsync([FromBody] CreateOrderDraftCommand createOrderDraftCommand)
@@ -59,7 +59,7 @@ namespace Ordering.Controllers
             return await _mediator.Send(createOrderDraftCommand);
         }
 
-        // POST api/vi/[controller]/placeOrder
+        // POST api/[controller]/placeOrder
         [HttpPost]
         [Route("placeOrder")]
         public async Task<IActionResult> PlaceOrder([FromBody] CreateOrderCommand command)
@@ -104,7 +104,7 @@ namespace Ordering.Controllers
             return Ok(orders);
         }
 
-        // POST api/vi/[controller]/cancelOrder
+        // POST api/[controller]/cancelOrder
         [HttpPost]
         [Route("cancelOrder")]
         public async Task<IActionResult> CancelOrder([FromBody] CancelOrderCommand command)
@@ -143,7 +143,7 @@ namespace Ordering.Controllers
             }
         }
 
-        // POST api/vi/[controller]/shipOrder
+        // POST api/[controller]/shipOrder
         [HttpPost]
         [Route("shipOrder")]
         public async Task<IActionResult> ShipOrder([FromBody] ShipOrderCommand command, [FromHeader(Name = "x-requestid")] string requestId)
