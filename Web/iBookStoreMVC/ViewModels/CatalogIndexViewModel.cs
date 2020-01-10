@@ -11,6 +11,7 @@ namespace iBookStoreMVC.ViewModels
         public IEnumerable<CatalogItem> CatalogItems { get; set; }
         public IEnumerable<SelectListItem> Categories { get; set; }
         public int? CategoryFilterApplied { get; set; }
+        public string SearchTerm { get; set; }
         public PaginationInfo PaginationInfo { get; set; }
     }
 }

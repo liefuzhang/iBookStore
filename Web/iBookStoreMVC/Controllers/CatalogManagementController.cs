@@ -20,7 +20,7 @@ namespace iBookStoreMVC.Controllers
         public async Task<IActionResult> Index(int? page)
         {
             const int itemsPerPage = 12;
-            var catalog = await _catalogService.GetCatalogItems(page ?? 0, itemsPerPage, null);
+            var catalog = await _catalogService.GetCatalogItems(page ?? 0, itemsPerPage, null, null);
 
             var vm = new CatalogManagementIndexViewModel()
             {

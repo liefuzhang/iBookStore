@@ -18,21 +18,24 @@ namespace iBookStoreMVC.Controllers
             _catalogService = catalogService;
         }
 
-        public async Task<IActionResult> Index(int? page, int? categoryFilterApplied)
+        public async Task<IActionResult> Index(int? page, int? categoryFilterApplied, string searchTerm)
         {
             const int itemsPerPage = 12;
-            var catalog = await _catalogService.GetCatalogItems(page ?? 0, itemsPerPage, categoryFilterApplied);
+            var catalog = await _catalogService.GetCatalogItems(page ?? 0, itemsPerPage, categoryFilterApplied, searchTerm);
 
-            var vm = new CatalogIndexViewModel() {
+            var vm = new CatalogIndexViewModel()
+            {
                 CatalogItems = catalog.Data,
                 Categories = await _catalogService.GetCategories(),
-                PaginationInfo = new PaginationInfo() {
+                PaginationInfo = new PaginationInfo()
+                {
                     ActualPage = page ?? 0,
                     ItemsPerPage = catalog.Data.Count,
                     TotalItems = catalog.Count,
                     TotalPages = (int)Math.Ceiling(((decimal)catalog.Count / itemsPerPage))
                 },
-                CategoryFilterApplied = categoryFilterApplied
+                CategoryFilterApplied = categoryFilterApplied,
+                SearchTerm = searchTerm
             };
 
             vm.PaginationInfo.Next = (vm.PaginationInfo.ActualPage == vm.PaginationInfo.TotalPages - 1) ? "is-disabled" : "";
@@ -41,7 +44,8 @@ namespace iBookStoreMVC.Controllers
             return View(vm);
         }
 
-        public async Task<IActionResult> Detail(int catalogItemId) {
+        public async Task<IActionResult> Detail(int catalogItemId)
+        {
             var vm = await _catalogService.GetCatalogItem(catalogItemId);
 
             return View(vm);

@@ -57,9 +57,9 @@ namespace iBookStoreMVC.Service
             return items;
         }
 
-        public async Task<Catalog> GetCatalogItems(int page, int take, int? categoryId)
+        public async Task<Catalog> GetCatalogItems(int page, int take, int? categoryId, string searchTerm)
         {
-            var url = API.Catalog.GetCatalogItems(_remoteServiceBaseUrl, page, take, categoryId);
+            var url = API.Catalog.GetCatalogItems(_remoteServiceBaseUrl, page, take, categoryId, searchTerm);
 
             var responseString = await _httpClient.GetStringAsync(url);
 

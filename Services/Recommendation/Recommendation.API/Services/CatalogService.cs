@@ -21,7 +21,7 @@ namespace Recommendation.API.Services
 
         public async Task<List<CatalogItem>> GetCatalogItemsAsync(List<int> ids)
         {
-            var url = $"{_settings.Value.ApiGatewayUrl}/api/catalog/items/" + string.Join(',', ids);
+            var url = $"{_settings.Value.ApiGatewayUrl}/api/catalog/multipleItems/" + string.Join(',', ids);
 
             var responseString = await _httpClient.GetStringAsync(url);
 

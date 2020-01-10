@@ -28,10 +28,14 @@ namespace iBookStoreMVC.Infrastructure
 
         public static class Catalog
         {
-            public static string GetCatalogItems(string baseUrl, int page, int take, int? categoryId)
+            public static string GetCatalogItems(string baseUrl, int page, int take, int? categoryId, string searchTerm)
             {
                 var filter = "";
-                if (categoryId.HasValue)
+                if (!string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    filter = $"/search/{searchTerm}";
+                }
+                else if (categoryId.HasValue)
                 {
                     filter = $"/category/{categoryId.Value}";
                 }

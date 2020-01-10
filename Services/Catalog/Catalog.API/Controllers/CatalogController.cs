@@ -61,6 +61,22 @@ namespace Catalog.API.Controllers
             return Ok(new PaginatedItemsViewModel<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
         }
 
+        // GET api/[controller]/catalogItems/search/somebook[?pageIndex=0&pageSize=10]
+        [HttpGet]
+        [Route("catalogItems/search/{searchTerm}")]
+        public async Task<IActionResult> CatalogItemsBySearchTerm(string searchTerm, [FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)
+        {
+            var root = _catalogContext.CatalogItems.Where(ci => ci.Name.ToLower().Contains(searchTerm.ToLower())
+                                                                || ci.ISBN13 == searchTerm);
+            var totalItems = await root.LongCountAsync();
+            var itemsOnPage = await root
+                .Skip(pageSize * pageIndex)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return Ok(new PaginatedItemsViewModel<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
+        }
+
         // GET api/[controller]/items/{id}
         [HttpGet]
         [Route("items/{id}")]
@@ -73,10 +89,10 @@ namespace Catalog.API.Controllers
             return item;
         }
 
-        // GET api/[controller]/items/{ids}
+        // GET api/[controller]/multipleItems/{ids}
         [HttpGet]
-        [Route("items/{ids}")]
-        public async Task<List<CatalogItem>> CatalogItems(string ids)
+        [Route("multipleItems/{ids}")]
+        public async Task<List<CatalogItem>> CatalogMultipleItems(string ids)
         {
             var idList = ids.Split(',').ToList();
             var items = await _catalogContext.CatalogItems.Include(c => c.Category)

@@ -7,7 +7,7 @@ namespace iBookStoreMVC.Service
 {
     public interface ICatalogService
     {
-        Task<Catalog> GetCatalogItems(int page, int take, int? categoryFilterApplied);
+        Task<Catalog> GetCatalogItems(int page, int take, int? categoryFilterApplied, string searchTerm);
         Task<CatalogItem> GetCatalogItem(int catalogItemId);
         Task<IEnumerable<SelectListItem>> GetCategories();
         Task UpdateCatalogItem(CatalogItem catalogItem);
