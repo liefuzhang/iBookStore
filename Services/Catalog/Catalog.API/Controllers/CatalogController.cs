@@ -42,6 +42,8 @@ namespace Catalog.API.Controllers
                 .Take(pageSize)
                 .ToListAsync();
 
+            await PopulateBookRatings(itemsOnPage);
+
             return Ok(new PaginatedItemsViewModel<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
         }
 
@@ -58,6 +60,8 @@ namespace Catalog.API.Controllers
                 .Take(pageSize)
                 .ToListAsync();
 
+            await PopulateBookRatings(itemsOnPage);
+
             return Ok(new PaginatedItemsViewModel<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
         }
 
@@ -73,6 +77,8 @@ namespace Catalog.API.Controllers
                 .Skip(pageSize * pageIndex)
                 .Take(pageSize)
                 .ToListAsync();
+
+            await PopulateBookRatings(itemsOnPage);
 
             return Ok(new PaginatedItemsViewModel<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
         }
@@ -98,10 +104,7 @@ namespace Catalog.API.Controllers
             var items = await _catalogContext.CatalogItems.Include(c => c.Category)
                 .Where(c => idList.Contains(c.Id.ToString()))
                 .ToListAsync();
-            foreach (var item in items)
-            {
-                item.Rating = await _catalogItemRatingService.GetBookRatingFromGoodreads(item.ISBN13);
-            }
+            await PopulateBookRatings(items);
 
             return items;
         }
@@ -168,6 +171,14 @@ namespace Catalog.API.Controllers
             await _catalogContext.SaveChangesAsync();
 
             return Ok();
+        }
+        
+        private async Task PopulateBookRatings(List<CatalogItem> items)
+        {
+            foreach (var item in items)
+            {
+                item.Rating = await _catalogItemRatingService.GetBookRatingFromGoodreads(item.ISBN13);
+            }
         }
     }
 }

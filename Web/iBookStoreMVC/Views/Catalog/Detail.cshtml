@@ -25,7 +25,12 @@
             <div class="book-detail p-3">
                 <h4 class="book-name">@Model.CatalogItem.Name</h4>
                 <div class="book-info pt-3">
-                    <div class="mb-1"><a href="https://www.goodreads.com/book/show/@Model.CatalogItem.Rating.GoodReadBookId" target="_blank"><span class="book-rating"></span></a><span>@Model.CatalogItem.Rating.Rating (@Model.CatalogItem.Rating.RatingCount ratings by Goodreads)</span></div>
+                    <div class="mb-1">
+                        <a href="https://www.goodreads.com/book/show/@Model.CatalogItem.Rating.GoodReadBookId" target="_blank">
+                            <span class="book-info-rating"></span>
+                        </a>
+                        <span>@Model.CatalogItem.Rating.Rating (@Model.CatalogItem.Rating.RatingCount ratings by Goodreads)</span>
+                    </div>
                     <div>@Model.CatalogItem.TotalPage pages | Published on: @Model.CatalogItem.PublicationDate.ToString("dd/MM/yyyy") | ISBN13: @Model.CatalogItem.ISBN13</div>
                     <div>By (author) @Model.CatalogItem.Author</div>
                     <div class="book-description pt-2">@Model.CatalogItem.Description</div>
@@ -62,21 +67,24 @@
     <div class="row">
         <div class="panel col-12 p-2 mb-2 pl-3 recommended-books">
             <div class="recommended-books-title">People who bought this also bought</div>
-            @foreach (var item in Model.RecommendedItems)
-            {
-                @Html.Partial("_catalogItemCard", item)
-            }
+            <div class="d-flex justify-content-start align-items-center">
+                @foreach (var item in Model.RecommendedItems)
+                {
+                    <div class="col-2">
+                        @Html.Partial("_catalogItemCard", item)
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
-        $(".book-rating").starRating({
+        $(".book-info-rating").starRating({
             readOnly: true,
             initialRating: @(Model.CatalogItem.Rating.Rating),
             starSize: 18
         });
-
     </script>
 }

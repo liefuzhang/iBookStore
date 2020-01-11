@@ -45,7 +45,9 @@
         <div class="row">
             @foreach (var item in Model.CatalogItems)
             {
-                @Html.Partial("_catalogItemCard", item)
+                <div class="col-3">
+                    @Html.Partial("_catalogItemCard", item)
+                </div>
             }
         </div>
         @Html.Partial("_pagination", Model.PaginationInfo)

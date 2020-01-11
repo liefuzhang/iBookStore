@@ -16,6 +16,8 @@ namespace Recommendation.API.Models
 
         public string ISBN13 { get; set; }
 
+        public int AvailableStock { get; set; }
+
         public CatalogItemGoodreadRating Rating { get; set; }
 
         public int TotalPage { get; set; }
