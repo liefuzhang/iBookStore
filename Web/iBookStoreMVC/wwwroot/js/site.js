@@ -12,4 +12,22 @@ $(".book-rating").each(function () {
     });
 });
 
-//$(".add-to-cart").on("click", )
+toastr.options = {
+    "positionClass": "toast-top-center",
+    "timeOut": "3000"
+};
+
+$(".add-to-cart").on("click", function () {
+    var id = $(this).attr("data-catalog-item-id");
+    $.post("/cart/addToCart", { itemId: id })
+        .done(function (data) {
+            toastr.success('Book added to cart');
+            var cart = $(".basket-status");
+            cart.removeClass("is-disabled");
+            var badge = cart.find(".basket-status-badge");
+            badge.text(+badge.text() + 1);
+        })
+        .fail(function () {
+            toastr.error("Error happened");
+        });
+});

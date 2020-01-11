@@ -22,26 +22,33 @@ namespace iBookStoreMVC.Controllers
         private readonly ILogger<CartController> _logger;
 
         public CartController(IBasketService basketSvc, ICatalogService catalogService, IIdentityParser<ApplicationUser> appUserParser,
-            ILogger<CartController> logger) {
+            ILogger<CartController> logger)
+        {
             _basketSvc = basketSvc;
             _catalogService = catalogService;
             _appUserParser = appUserParser;
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index() {
+        public async Task<IActionResult> Index()
+        {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(Dictionary<string, int> quantities, string action) {
-            try {
+        public async Task<IActionResult> Index(Dictionary<string, int> quantities, string action)
+        {
+            try
+            {
                 var user = _appUserParser.Parse(HttpContext.User);
                 await _basketSvc.SetQuantities(user, quantities);
-                if (action == "Checkout") {
+                if (action == "Checkout")
+                {
                     return RedirectToAction("Create", "Order");
                 }
-            } catch (BrokenCircuitException e) {
+            }
+            catch (BrokenCircuitException e)
+            {
                 // Catch error when Basket.api is in circuit-opened mode                 
                 ViewBag.BasketInoperativeMsg = "Basket Service is inoperative, please try later on. (Business Msg Due to Circuit-Breaker)";
             }
@@ -49,14 +56,19 @@ namespace iBookStoreMVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> AddToCart(CatalogItem item) {
-            try {
-                if (item?.Id != null) {
+        public async Task<IActionResult> AddToCart(int itemId)
+        {
+            try
+            {
+                if (itemId > 0)
+                {
                     var user = _appUserParser.Parse(HttpContext.User);
-                    await _basketSvc.AddItemToBasket(user, item.Id);
+                    await _basketSvc.AddItemToBasket(user, itemId);
                 }
                 return RedirectToAction("Index", "Cart");
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 _logger.LogError(e, "Add to cart failed");
             }
 

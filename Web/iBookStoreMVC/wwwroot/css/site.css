@@ -48,15 +48,20 @@ header .navbar {
     padding-bottom: 12px;
 }
 
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    white-space: nowrap;
-    /* Set the fixed height of the footer here */
-    height: 60px;
-    line-height: 60px; /* Vertically center the text there */
-}
+    header .navbar .input-group-append button {
+        border-bottom-right-radius: 0.25rem !important;
+        border-top-right-radius: 0.25rem !important;
+    }
+
+    .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        white-space: nowrap;
+        /* Set the fixed height of the footer here */
+        height: 60px;
+        line-height: 60px; /* Vertically center the text there */
+    }
 
 .panel {
     background: #fff;
@@ -71,7 +76,7 @@ header .navbar {
 }
 
 .catalog-item {
-    padding: 40px;
+    padding: 35px 40px;
 }
 
 .book-name {
@@ -355,4 +360,9 @@ header .navbar {
 
 .recommended-books .catalog-item {
     padding: 0;
+}
+
+.recommended-books h5 {
+    font-size: 18px;
+    border-bottom: 1px solid #eee;
 }
