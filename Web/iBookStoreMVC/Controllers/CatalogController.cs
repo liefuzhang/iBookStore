@@ -12,10 +12,12 @@ namespace iBookStoreMVC.Controllers
     public class CatalogController : Controller
     {
         private readonly ICatalogService _catalogService;
+        private readonly IRecommendationService _recommendationService;
 
-        public CatalogController(ICatalogService catalogService)
+        public CatalogController(ICatalogService catalogService, IRecommendationService recommendationService)
         {
             _catalogService = catalogService;
+            _recommendationService = recommendationService;
         }
 
         public async Task<IActionResult> Index(int? page, int? categoryFilterApplied, string searchTerm)
@@ -46,7 +48,13 @@ namespace iBookStoreMVC.Controllers
 
         public async Task<IActionResult> Detail(int catalogItemId)
         {
-            var vm = await _catalogService.GetCatalogItem(catalogItemId);
+            var catalogItem = await _catalogService.GetCatalogItem(catalogItemId);
+            var recommendedItems = await _recommendationService.GetRecommendedBooks(catalogItemId);
+            var vm = new CatalogItemDetailViewModel
+            {
+                CatalogItem = catalogItem,
+                RecommendedItems = recommendedItems
+            };
 
             return View(vm);
         }

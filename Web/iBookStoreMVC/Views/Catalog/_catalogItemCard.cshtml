@@ -1,0 +1,17 @@
+﻿@model iBookStoreMVC.ViewModels.CatalogItem
+
+<div class="col-3 catalog-item">
+    <form asp-controller="Cart" asp-action="AddToCart">
+        <a asp-action="Detail" asp-route-catalogItemId="@Model.Id" class="book-container">
+            <img class="book-img" src=@("/images/books/" + Model.ISBN13 + ".jpg") />
+            <div class="pt-2 pb-2">
+                <div class="book-name" title="@Model.Name">@Model.Name</div>
+                <div class="author-name" title="@Model.Author">@Model.Author</div>
+                <div class="book-price">NZ$@Model.Price.ToString("N2")</div>
+            </div>
+        </a>
+        <input class="btn btn-primary" disabled=@(!User.Identity.IsAuthenticated || Model.AvailableStock == 0)
+               title=@Html.Raw(Model.AvailableStock == 0 ? "'Out of stock'" : "'Add to cart'") type="submit" value="Add to cart" />
+        <input type="hidden" asp-for="@Model.Id" name="id" />
+    </form>
+</div>

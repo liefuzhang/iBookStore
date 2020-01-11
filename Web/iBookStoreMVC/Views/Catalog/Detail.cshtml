@@ -1,4 +1,4 @@
-﻿@model iBookStoreMVC.ViewModels.CatalogItem
+﻿@model iBookStoreMVC.ViewModels.CatalogItemDetailViewModel
 
 @{
     ViewData["Title"] = "Book Detail";
@@ -13,32 +13,32 @@
 <div>
     <div class="row">
         <div class="panel col-12 p-2 mb-2 pl-3 book-catagory">
-            Catagory: <a asp-action="Index" asp-controller="Catalog" asp-route-categoryFilterApplied="@Model.CategoryId">@Model.Category.Name</a>
+            Catagory: <a asp-action="Index" asp-controller="Catalog" asp-route-categoryFilterApplied="@Model.CatalogItem.CategoryId">@Model.CatalogItem.Category.Name</a>
         </div>
     </div>
 
     <div class="row">
         <div class="col-9 p-2 panel lhs-detail">
             <div class="book-img p-1">
-                <img src=@("/images/books/" + Model.ISBN13 + ".jpg") />
+                <img src=@("/images/books/" + Model.CatalogItem.ISBN13 + ".jpg") />
             </div>
             <div class="book-detail p-3">
-                <h4 class="book-name">@Model.Name</h4>
+                <h4 class="book-name">@Model.CatalogItem.Name</h4>
                 <div class="book-info pt-3">
-                    <div class="mb-1"><a href="https://www.goodreads.com/book/show/@Model.Rating.GoodReadBookId" target="_blank"><span class="book-rating"></span></a><span>@Model.Rating.Rating (@Model.Rating.RatingCount ratings by Goodreads)</span></div>
-                    <div>@Model.TotalPage pages | Published on: @Model.PublicationDate.ToString("dd/MM/yyyy") | ISBN13: @Model.ISBN13</div>
-                    <div>By (author) @Model.Author</div>
-                    <div class="book-description pt-2">@Model.Description</div>
+                    <div class="mb-1"><a href="https://www.goodreads.com/book/show/@Model.CatalogItem.Rating.GoodReadBookId" target="_blank"><span class="book-rating"></span></a><span>@Model.CatalogItem.Rating.Rating (@Model.CatalogItem.Rating.RatingCount ratings by Goodreads)</span></div>
+                    <div>@Model.CatalogItem.TotalPage pages | Published on: @Model.CatalogItem.PublicationDate.ToString("dd/MM/yyyy") | ISBN13: @Model.CatalogItem.ISBN13</div>
+                    <div>By (author) @Model.CatalogItem.Author</div>
+                    <div class="book-description pt-2">@Model.CatalogItem.Description</div>
                 </div>
             </div>
         </div>
         <div class="col-3 pr-0">
             <div class="rhs-detail panel p-3">
-                <h3 class="book-price">NZ$@Model.Price.ToString("N2")</h3>
+                <h3 class="book-price">NZ$@Model.CatalogItem.Price.ToString("N2")</h3>
                 <div class="rhs-info pt-1 pb-1">
                     <div><i class="fa fa-truck"></i>Free delivery</div>
                     <div><i class="fa fa-hand-holding-usd"></i>Price includes GST</div>
-                    @if (Model.AvailableStock > 0)
+                    @if (Model.CatalogItem.AvailableStock > 0)
                     {
                         <div><i class="fas fa-check-circle"></i>Available</div>
                     }
@@ -48,24 +48,33 @@
                     }
                 </div>
                 <form asp-controller="Cart" asp-action="AddToCart" class="pt-4">
-                    <input class="btn btn-primary" disabled=@(!User.Identity.IsAuthenticated || Model.AvailableStock == 0) type="submit" value="Add to cart" />
-                    <input type="hidden" asp-for="@Model.Id" name="id" />
+                    <input class="btn btn-primary" disabled=@(!User.Identity.IsAuthenticated || Model.CatalogItem.AvailableStock == 0) type="submit" value="Add to cart" />
+                    <input type="hidden" asp-for="@Model.CatalogItem.Id" name="id" />
                 </form>
                 <form asp-controller="Wishlist" asp-action="AddToWishlist" class="pt-4">
                     <input class="btn btn-secondary" disabled=@(!User.Identity.IsAuthenticated) type="submit" value="Add to wishlist" />
-                    <input type="hidden" asp-for="@Model.Id" name="id" />
+                    <input type="hidden" asp-for="@Model.CatalogItem.Id" name="id" />
                 </form>
             </div>
         </div>
     </div>
-</div>
 
+    <div class="row">
+        <div class="panel col-12 p-2 mb-2 pl-3 recommended-books">
+            <div class="recommended-books-title">People who bought this also bought</div>
+            @foreach (var item in Model.RecommendedItems)
+            {
+                @Html.Partial("_catalogItemCard", item)
+            }
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script>
         $(".book-rating").starRating({
             readOnly: true,
-            initialRating: @(Model.Rating.Rating),
+            initialRating: @(Model.CatalogItem.Rating.Rating),
             starSize: 18
         });
 

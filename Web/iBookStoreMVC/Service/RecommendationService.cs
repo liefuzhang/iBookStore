@@ -26,7 +26,7 @@ namespace iBookStoreMVC.Service
         }
 
         public async Task<List<CatalogItem>> GetRecommendedBooks(int catalogItemId) {
-            var url = API.Recommendation.GetRecommendedBooks(_remoteServiceBaseUrl);
+            var url = API.Recommendation.GetRecommendedBooks(_remoteServiceBaseUrl, catalogItemId);
 
             var responseString = await _httpClient.GetStringAsync(url);
 

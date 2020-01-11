@@ -99,9 +99,9 @@ namespace iBookStoreMVC.Infrastructure
 
         public static class Recommendation
         {
-            public static string GetRecommendedBooks(string baseUrl)
+            public static string GetRecommendedBooks(string baseUrl, int catalogItemId)
             {
-                return $"{baseUrl}/recommendedBooks";
+                return $"{baseUrl}/recommendedBooks/{catalogItemId}";
             }
         }
     }

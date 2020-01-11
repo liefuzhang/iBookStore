@@ -23,15 +23,16 @@ namespace Recommendation.API.Controllers
             _catalogService = catalogService;
         }
 
-        // GET api/[controller]/recommendedBooks
+        // GET api/[controller]/recommendedBooks/1
         [HttpGet]
-        [Route("recommendedBooks")]
+        [Route("recommendedBooks/{bookId}")]
         public async Task<IEnumerable<CatalogItem>> GetRecommendedBooks(int bookId)
         {
             var recommendedBookIds = await _cacheService.GetRecommendedBookIdsForBook(bookId);
-            var recommendedBooks = await _catalogService.GetCatalogItemsAsync(recommendedBookIds);
+            if (recommendedBookIds == null || recommendedBookIds.Count == 0)
+                return new List<CatalogItem>();
 
-            return recommendedBooks;
+            return await _catalogService.GetCatalogItemsAsync(recommendedBookIds);
         }
     }
 }

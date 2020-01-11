@@ -27,7 +27,8 @@ namespace iBookStoreMVC.Service
             _remoteServiceBaseUrl = $"{_settings.Value.ApiGatewayUrl}/api/catalog";
         }
 
-        public async Task<CatalogItem> GetCatalogItem(int catalogItemId) {
+        public async Task<CatalogItem> GetCatalogItem(int catalogItemId)
+        {
             var url = API.Catalog.GetCatalogItem(_remoteServiceBaseUrl, catalogItemId);
 
             var responseString = await _httpClient.GetStringAsync(url);
@@ -47,8 +48,10 @@ namespace iBookStoreMVC.Service
             items.Add(new SelectListItem() { Value = null, Text = "All", Selected = true });
 
             var categories = JArray.Parse(responseString);
-            foreach (var category in categories.Children<JObject>()) {
-                items.Add(new SelectListItem() {
+            foreach (var category in categories.Children<JObject>())
+            {
+                items.Add(new SelectListItem()
+                {
                     Value = category.Value<string>("id"),
                     Text = category.Value<string>("name")
                 });
