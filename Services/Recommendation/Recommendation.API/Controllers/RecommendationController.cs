@@ -34,5 +34,13 @@ namespace Recommendation.API.Controllers
 
             return await _catalogService.GetCatalogItemsAsync(recommendedBookIds);
         }
+
+        // Delete api/[controller]/recommendedBooks/1
+        [HttpDelete]
+        [Route("recommendedBooks/{bookId}")]
+        public async Task DeleteRecommendedBook(int bookId)
+        {
+            await _cacheService.DeleteRecommendedBook(bookId);
+        }
     }
 }

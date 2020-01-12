@@ -7,5 +7,6 @@ namespace Recommendation.API.Infrastructure
     {
         Task UpdateBookRelations(IEnumerable<int> ids);
         Task<List<int>> GetRecommendedBookIdsForBook(int id);
+        Task DeleteRecommendedBook(int bookId);
     }
 }

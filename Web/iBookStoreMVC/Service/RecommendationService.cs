@@ -34,5 +34,14 @@ namespace iBookStoreMVC.Service
 
             return catalogItems;
         }
+
+        public async Task DeleteCatalogItem(int catalogItemId)
+        {
+            var url = API.Recommendation.DeleteCatalogItem(_remoteServiceBaseUrl, catalogItemId);
+
+            var response = await _httpClient.DeleteAsync(url);
+
+            response.EnsureSuccessStatusCode();
+        }
     }
 }

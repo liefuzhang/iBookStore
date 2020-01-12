@@ -7,5 +7,6 @@ namespace iBookStoreMVC.Service
     public interface IRecommendationService
     {
         Task<List<CatalogItem>> GetRecommendedBooks(int catalogItemId);
+        Task DeleteCatalogItem(int catalogItemId);
     }
 }

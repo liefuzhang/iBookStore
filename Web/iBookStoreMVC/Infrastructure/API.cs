@@ -103,6 +103,11 @@ namespace iBookStoreMVC.Infrastructure
             {
                 return $"{baseUrl}/recommendedBooks/{catalogItemId}";
             }
+
+            public static string DeleteCatalogItem(string baseUrl, int catalogItemId)
+            {
+                return $"{baseUrl}/recommendedBooks/{catalogItemId}";
+            }
         }
     }
 }

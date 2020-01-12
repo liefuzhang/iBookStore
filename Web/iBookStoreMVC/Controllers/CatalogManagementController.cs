@@ -11,10 +11,12 @@ namespace iBookStoreMVC.Controllers
     public class CatalogManagementController : Controller
     {
         private readonly ICatalogService _catalogService;
+        private readonly IRecommendationService _recommendationService;
 
-        public CatalogManagementController(ICatalogService catalogSvc)
+        public CatalogManagementController(ICatalogService catalogSvc, IRecommendationService recommendationService)
         {
             _catalogService = catalogSvc;
+            _recommendationService = recommendationService;
         }
 
         public async Task<IActionResult> Index(int? page)
@@ -57,6 +59,8 @@ namespace iBookStoreMVC.Controllers
         public async Task<IActionResult> Delete(int catalogItemId, int page)
         {
             await _catalogService.DeleteCatalogItem(catalogItemId);
+            await _recommendationService.DeleteCatalogItem(catalogItemId);
+
             return RedirectToAction("Index", new { page });
         }
     }

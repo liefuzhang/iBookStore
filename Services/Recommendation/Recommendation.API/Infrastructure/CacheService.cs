@@ -57,5 +57,22 @@ namespace Recommendation.API.Infrastructure
 
             return Task.FromResult(books);
         }
+
+        public Task DeleteRecommendedBook(int bookId)
+        {
+            if (_cache.ContainsKey(bookId))
+            {
+                var relatedBooks = _cache[bookId];
+                var relatedBookIds = relatedBooks.Select(b => b.Key);
+                _cache.Remove(bookId, out _);
+            
+                foreach (var relatedBookId in relatedBookIds)
+                {
+                    _cache[relatedBookId].Remove(bookId, out _);
+                }
+            }
+
+            return Task.CompletedTask;
+        }
     }
 }
