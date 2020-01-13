@@ -31,3 +31,15 @@ $(".add-to-cart").on("click", function () {
             toastr.error("Error happened");
         });
 });
+
+$('.simple-pagination').each(function () {
+    var totalPages = $(this).attr("data-total-pages");
+    var currentPage = $(this).attr("data-current-page");
+    $(this).pagination({
+        pages: totalPages,
+        currentPage: currentPage,
+        cssStyle: 'light-theme',
+        ellipsePageSet: false,
+        hrefTextPrefix: '?page='
+    });
+});

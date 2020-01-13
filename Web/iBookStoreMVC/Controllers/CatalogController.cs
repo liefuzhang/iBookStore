@@ -23,7 +23,7 @@ namespace iBookStoreMVC.Controllers
         public async Task<IActionResult> Index(int? page, int? categoryFilterApplied, string searchTerm)
         {
             const int itemsPerPage = 12;
-            var catalog = await _catalogService.GetCatalogItems(page ?? 0, itemsPerPage, categoryFilterApplied, searchTerm);
+            var catalog = await _catalogService.GetCatalogItems(page ?? 1, itemsPerPage, categoryFilterApplied, searchTerm);
 
             var vm = new CatalogIndexViewModel()
             {
@@ -31,7 +31,7 @@ namespace iBookStoreMVC.Controllers
                 Categories = await _catalogService.GetCategories(),
                 PaginationInfo = new PaginationInfo()
                 {
-                    ActualPage = page ?? 0,
+                    ActualPage = page ?? 1,
                     ItemsPerPage = catalog.Data.Count,
                     TotalItems = catalog.Count,
                     TotalPages = (int)Math.Ceiling(((decimal)catalog.Count / itemsPerPage))
@@ -39,9 +39,6 @@ namespace iBookStoreMVC.Controllers
                 CategoryFilterApplied = categoryFilterApplied,
                 SearchTerm = searchTerm
             };
-
-            vm.PaginationInfo.Next = (vm.PaginationInfo.ActualPage == vm.PaginationInfo.TotalPages - 1) ? "is-disabled" : "";
-            vm.PaginationInfo.Previous = (vm.PaginationInfo.ActualPage == 0) ? "is-disabled" : "";
 
             return View(vm);
         }

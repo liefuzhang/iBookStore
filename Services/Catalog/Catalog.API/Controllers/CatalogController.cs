@@ -30,15 +30,15 @@ namespace Catalog.API.Controllers
             _catalogItemRatingService = catalogItemRatingService;
         }
 
-        // GET api/[controller]/catalogItems[?pageIndex=0&pageSize=10]
+        // GET api/[controller]/catalogItems[?pageIndex=1&pageSize=10]
         [HttpGet]
         [Route("catalogItems")]
-        public async Task<IActionResult> CatalogItems([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)
+        public async Task<IActionResult> CatalogItems([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 1)
         {
             var totalItems = await _catalogContext.CatalogItems
                 .LongCountAsync();
             var itemsOnPage = await _catalogContext.CatalogItems
-                .Skip(pageSize * pageIndex)
+                .Skip(pageSize * (pageIndex - 1))
                 .Take(pageSize)
                 .ToListAsync();
 
@@ -47,16 +47,16 @@ namespace Catalog.API.Controllers
             return Ok(new PaginatedItemsViewModel<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
         }
 
-        // GET api/[controller]/catalogItems/category/1[?pageIndex=0&pageSize=10]
+        // GET api/[controller]/catalogItems/category/1[?pageIndex=1&pageSize=10]
         [HttpGet]
         [Route("catalogItems/category/{categoryId}")]
-        public async Task<IActionResult> CatalogItemsByCategoryId(int categoryId, [FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)
+        public async Task<IActionResult> CatalogItemsByCategoryId(int categoryId, [FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 1)
         {
             var root = _catalogContext.CatalogItems.Where(ci => ci.CategoryId == categoryId);
 
             var totalItems = await root.LongCountAsync();
             var itemsOnPage = await root
-                .Skip(pageSize * pageIndex)
+                .Skip(pageSize * (pageIndex - 1))
                 .Take(pageSize)
                 .ToListAsync();
 
@@ -65,16 +65,16 @@ namespace Catalog.API.Controllers
             return Ok(new PaginatedItemsViewModel<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage));
         }
 
-        // GET api/[controller]/catalogItems/search/somebook[?pageIndex=0&pageSize=10]
+        // GET api/[controller]/catalogItems/search/somebook[?pageIndex=1&pageSize=10]
         [HttpGet]
         [Route("catalogItems/search/{searchTerm}")]
-        public async Task<IActionResult> CatalogItemsBySearchTerm(string searchTerm, [FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0)
+        public async Task<IActionResult> CatalogItemsBySearchTerm(string searchTerm, [FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 1)
         {
             var root = _catalogContext.CatalogItems.Where(ci => ci.Name.ToLower().Contains(searchTerm.ToLower())
                                                                 || ci.ISBN13 == searchTerm);
             var totalItems = await root.LongCountAsync();
             var itemsOnPage = await root
-                .Skip(pageSize * pageIndex)
+                .Skip(pageSize * (pageIndex - 1))
                 .Take(pageSize)
                 .ToListAsync();
 
@@ -172,7 +172,7 @@ namespace Catalog.API.Controllers
 
             return Ok();
         }
-        
+
         private async Task PopulateBookRatings(List<CatalogItem> items)
         {
             foreach (var item in items)
