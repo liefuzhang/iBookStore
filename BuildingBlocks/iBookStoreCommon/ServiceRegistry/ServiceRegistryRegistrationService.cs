@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting.Server.Features;
-using System.Net.Http;
-using iBookStoreCommon.Dtos;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
-namespace iBookStoreCommon
+namespace iBookStoreCommon.ServiceRegistry
 {
     public class ServiceRegistryRegistrationService
     {

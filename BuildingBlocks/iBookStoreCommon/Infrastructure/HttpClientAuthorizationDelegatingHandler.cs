@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
-namespace Recommendation.API.Infrastructure
+namespace iBookStoreCommon.Infrastructure
 {
     public class HttpClientAuthorizationDelegatingHandler
         : DelegatingHandler

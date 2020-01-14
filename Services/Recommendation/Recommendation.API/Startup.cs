@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using EventBus;
 using iBookStoreCommon;
+using iBookStoreCommon.Infrastructure;
+using iBookStoreCommon.ServiceRegistry;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

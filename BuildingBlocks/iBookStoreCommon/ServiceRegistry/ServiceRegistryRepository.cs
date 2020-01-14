@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using iBookStoreCommon.Dtos;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System.Linq;
-using iBookStoreCommon.Dtos;
 
-namespace iBookStoreCommon
+namespace iBookStoreCommon.ServiceRegistry
 {
     public class ServiceRegistryRepository
     {

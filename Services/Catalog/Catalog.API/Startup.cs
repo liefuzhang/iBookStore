@@ -10,6 +10,7 @@ using Catalog.API.Services;
 using EventBus;
 using HealthChecks.UI.Client;
 using iBookStoreCommon;
+using iBookStoreCommon.ServiceRegistry;
 using IntegrationEventLogEF;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;

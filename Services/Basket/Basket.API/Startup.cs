@@ -9,6 +9,8 @@ using Basket.API.IntegrationEvents.Events;
 using Basket.API.Services;
 using EventBus;
 using iBookStoreCommon;
+using iBookStoreCommon.Infrastructure;
+using iBookStoreCommon.ServiceRegistry;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

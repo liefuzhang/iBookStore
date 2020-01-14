@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace iBookStoreCommon
+﻿namespace iBookStoreCommon.ServiceRegistry
 {
     public class ServiceInstance
     {

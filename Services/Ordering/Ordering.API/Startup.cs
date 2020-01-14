@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using EventBus;
 using iBookStoreCommon;
+using iBookStoreCommon.ServiceRegistry;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
