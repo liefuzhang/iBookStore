@@ -40,6 +40,9 @@ $('.simple-pagination').each(function () {
         currentPage: currentPage,
         cssStyle: 'light-theme',
         ellipsePageSet: false,
-        hrefTextPrefix: '?page='
+        hrefTextPrefix: '?page=',
+        onPageClick: function() {
+            $('.spinner-container').removeClass('d-none');
+        }
     });
 });

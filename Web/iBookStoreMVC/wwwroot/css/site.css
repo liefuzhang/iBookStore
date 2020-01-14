@@ -70,6 +70,17 @@ header .navbar {
     box-shadow: 0 1px 3px rgba(0,0,0,.1);
 }
 
+.spinner-container {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+}
+
 .is-disabled {
     pointer-events: none;
     color: grey;
