@@ -39,10 +39,17 @@ $('.simple-pagination').each(function () {
         pages: totalPages,
         currentPage: currentPage,
         cssStyle: 'light-theme',
+        hrefTextPrefix: '#',
+        selectOnClick: false,
         ellipsePageSet: false,
-        hrefTextPrefix: '?page=',
-        onPageClick: function() {
+        onPageClick: function (pageNumber, event) {
             $('.spinner-container').removeClass('d-none');
+            var search = window.location.search;
+            var queryParams = new URLSearchParams(search);
+            queryParams.set('page', pageNumber);
+            search = queryParams.toString();
+            var url = location.origin + '?' + search;
+            window.location.href = url;
         }
     });
 });

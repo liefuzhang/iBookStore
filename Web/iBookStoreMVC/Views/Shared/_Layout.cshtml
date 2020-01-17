@@ -24,7 +24,7 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-2">
-            <div class="container">
+            <div class="container pl-0">
                 <a class="navbar-brand" asp-area="" asp-controller="Catalog" asp-action="Index">iBookStore</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,9 @@
         </nav>
     </header>
     <div class="container">
+        <div class="main-header border-bottom row">
+            @await Component.InvokeAsync("CategoryFilter")
+        </div>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

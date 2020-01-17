@@ -60,6 +60,17 @@ namespace iBookStoreMVC.Service
             return items;
         }
 
+        public async Task<List<CatalogItem>> GetBestSellers(int top)
+        {
+            var url = API.Catalog.GetBestSellers(_remoteServiceBaseUrl, top);
+
+            var responseString = await _httpClient.GetStringAsync(url);
+
+            var catalogItems = JsonConvert.DeserializeObject<List<CatalogItem>>(responseString);
+
+            return catalogItems;
+        }
+
         public async Task<Catalog> GetCatalogItems(int page, int take, int? categoryId, string searchTerm)
         {
             var url = API.Catalog.GetCatalogItems(_remoteServiceBaseUrl, page, take, categoryId, searchTerm);

@@ -1,0 +1,20 @@
+﻿@model IEnumerable<iBookStoreMVC.ViewModels.CatalogItem>
+
+@{
+    ViewData["Title"] = "Best Sellers";
+}
+
+<div>
+    <h4 class="pt-4 border-top">
+        <span>Best Sellers</span>
+    </h4>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-3">
+                @Html.Partial("_CatalogItemCardPartial", item)
+            </div>
+        }
+    </div>
+</div>

@@ -12,5 +12,6 @@ namespace iBookStoreMVC.Service
         Task<IEnumerable<SelectListItem>> GetCategories();
         Task UpdateCatalogItem(CatalogItem catalogItem);
         Task DeleteCatalogItem(int catalogItemId);
+        Task<List<CatalogItem>> GetBestSellers(int top);
     }
 }

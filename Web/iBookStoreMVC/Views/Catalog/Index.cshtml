@@ -5,21 +5,7 @@
 }
 
 <div>
-    <section class="category-filters pb-2">
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Shop by category
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenu">
-                @foreach (var category in @Model.Categories)
-                {
-                    <a asp-action="Index" asp-route-categoryFilterApplied="@category.Value" class="dropdown-item">@category.Text</a>
-                }
-            </div>
-        </div>
-    </section>
-
-    <h4 class="pt-4 border-top">
+    <h4 class="pt-4">
         @if (!String.IsNullOrWhiteSpace(Model.SearchTerm))
         {
             <span>Search results for @Model.SearchTerm</span>
