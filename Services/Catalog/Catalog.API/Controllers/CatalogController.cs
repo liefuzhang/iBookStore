@@ -131,6 +131,20 @@ namespace Catalog.API.Controllers
             return catalogItems;
         }
 
+        // GET api/[controller]/newReleases?latest=10
+        [HttpGet]
+        [Route("newReleases")]
+        public async Task<ActionResult<List<CatalogItem>>> NewReleases([FromQuery]int latest)
+        {
+            var catalogItems = await _catalogContext.CatalogItems
+                .OrderByDescending(ci => ci.PublicationDate)
+                .Take(latest)
+                .ToListAsync();
+            await PopulateBookRatings(catalogItems);
+
+            return catalogItems;
+        }
+
         //PUT api/[controller]/items
         [Route("items")]
         [HttpPut]

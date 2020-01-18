@@ -1,7 +1,7 @@
 ﻿@model iBookStoreMVC.ViewModels.CatalogItem
 
 <div class="catalog-item">
-    <a asp-action="Detail" asp-route-catalogItemId="@Model.Id" class="book-container">
+    <a asp-controller="Catalog" asp-action="Detail" asp-route-catalogItemId="@Model.Id" class="book-container">
         <img class="book-img" src=@("/images/books/" + Model.ISBN13 + ".jpg") />
         <div class="pt-2 pb-2">
             <div class="book-name" title="@Model.Name">@Model.Name</div>

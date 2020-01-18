@@ -8,19 +8,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace iBookStoreMVC.Controllers
 {
-    public class BestSellerController : Controller
+    public class NewReleaseController : Controller
     {
         private readonly ICatalogService _catalogService;
 
-        public BestSellerController(ICatalogService catalogService)
+        public NewReleaseController(ICatalogService catalogService)
         {
             _catalogService = catalogService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var topBestSellers = 20;
-            var catalogItems = await _catalogService.GetBestSellers(topBestSellers);
+            var latestNewReleases = 20;
+            var catalogItems = await _catalogService.GetNewReleases(latestNewReleases);
 
             return View(catalogItems);
         }

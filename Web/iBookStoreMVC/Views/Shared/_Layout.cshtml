@@ -38,8 +38,8 @@
     <div class="container">
         <div class="main-header border-bottom row pb-2">
             @await Component.InvokeAsync("CategoryFilter")
-            <a type="button" class="btn btn-link ml-3" asp-controller="BestSeller" asp-action="Index">Bestsellers</a>
-            <a type="button" class="btn btn-link ml-3" asp-controller="NewRelease" asp-action="Index">New Releases</a>
+            <a type="button" class="btn btn-link ml-4" asp-controller="BestSeller" asp-action="Index">Bestsellers</a>
+            <a type="button" class="btn btn-link ml-2" asp-controller="NewRelease" asp-action="Index">New Releases</a>
         </div>
         <main role="main" class="pb-3">
             @RenderBody()

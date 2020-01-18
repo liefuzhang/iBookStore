@@ -13,5 +13,6 @@ namespace iBookStoreMVC.Service
         Task UpdateCatalogItem(CatalogItem catalogItem);
         Task DeleteCatalogItem(int catalogItemId);
         Task<List<CatalogItem>> GetBestSellers(int top);
+        Task<List<CatalogItem>> GetNewReleases(int latestNewReleases);
     }
 }

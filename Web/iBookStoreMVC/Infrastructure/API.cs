@@ -67,6 +67,11 @@ namespace iBookStoreMVC.Infrastructure
             {
                 return $"{baseUrl}/bestSellers?top={top}";
             }
+
+            public static string GetNewReleases(string baseUrl, int latestNewReleases)
+            {
+                return $"{baseUrl}/newReleases?latest={latestNewReleases}";
+            }
         }
 
         public static class Order
