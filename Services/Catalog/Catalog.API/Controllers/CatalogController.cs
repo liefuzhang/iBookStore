@@ -122,12 +122,15 @@ namespace Catalog.API.Controllers
         [Route("bestSellers")]
         public async Task<ActionResult<List<CatalogItem>>> BestSellers([FromQuery]int top)
         {
-            return await _catalogContext.CatalogItems
+            var catalogItems = await _catalogContext.CatalogItems
                 .OrderByDescending(ci => ci.HistoricSaleCount)
                 .Take(top)
                 .ToListAsync();
+            await PopulateBookRatings(catalogItems);
+
+            return catalogItems;
         }
-        
+
         //PUT api/[controller]/items
         [Route("items")]
         [HttpPut]
