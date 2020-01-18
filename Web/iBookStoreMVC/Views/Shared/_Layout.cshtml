@@ -25,11 +25,10 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-2">
             <div class="container pl-0">
-                <a class="navbar-brand" asp-area="" asp-controller="Catalog" asp-action="Index">iBookStore</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <div class="mr-3 d-flex align-items-center">
+                    <a class="navbar-brand" asp-area="" asp-controller="Catalog" asp-action="Index">iBookStore</a>
+                    <img class="navbar-book-icon" src="~/images/book.png" />
+                </div>
                 @await Html.PartialAsync("_SearchPartial")
                 @await Html.PartialAsync("_LoginPartial")
             </div>

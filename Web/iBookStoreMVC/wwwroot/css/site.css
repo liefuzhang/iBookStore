@@ -5,6 +5,7 @@ a.navbar-brand {
     white-space: normal;
     text-align: center;
     word-break: break-all;
+    margin-right: 0;
 }
 
 /* Sticky footer styles
@@ -46,6 +47,11 @@ body {
 header .navbar {
     padding-top: 12px;
     padding-bottom: 12px;
+}
+
+.navbar-book-icon {
+    width: 40px;
+    height: auto;
 }
 
     header .navbar .input-group-append button {
