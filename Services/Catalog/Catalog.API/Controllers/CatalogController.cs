@@ -117,6 +117,34 @@ namespace Catalog.API.Controllers
             return await _catalogContext.Categories.ToListAsync();
         }
 
+        // GET api/[controller]/bestSellers?top=10
+        [HttpGet]
+        [Route("bestSellers")]
+        public async Task<ActionResult<List<CatalogItem>>> BestSellers([FromQuery]int top)
+        {
+            var catalogItems = await _catalogContext.CatalogItems
+                .OrderByDescending(ci => ci.HistoricSaleCount)
+                .Take(top)
+                .ToListAsync();
+            await PopulateBookRatings(catalogItems);
+
+            return catalogItems;
+        }
+
+        // GET api/[controller]/newReleases?latest=10
+        [HttpGet]
+        [Route("newReleases")]
+        public async Task<ActionResult<List<CatalogItem>>> NewReleases([FromQuery]int latest)
+        {
+            var catalogItems = await _catalogContext.CatalogItems
+                .OrderByDescending(ci => ci.PublicationDate)
+                .Take(latest)
+                .ToListAsync();
+            await PopulateBookRatings(catalogItems);
+
+            return catalogItems;
+        }
+
         //PUT api/[controller]/items
         [Route("items")]
         [HttpPut]

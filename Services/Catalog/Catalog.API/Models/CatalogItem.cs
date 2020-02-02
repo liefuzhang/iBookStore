@@ -29,6 +29,8 @@ namespace Catalog.API.Models
 
         // Quantity in stock
         public int AvailableStock { get; set; }
+        
+        public int HistoricSaleCount { get; set; }
 
         public int RemoveStock(int quantityDesired)
         {
@@ -43,6 +45,7 @@ namespace Catalog.API.Models
             var removed = Math.Min(quantityDesired, this.AvailableStock);
 
             AvailableStock -= removed;
+            HistoricSaleCount += removed;
 
             return removed;
         }
