@@ -1,9 +1,11 @@
-﻿<form asp-controller="Catalog" asp-action="Index" class="input-group search-form pl-0 col-4">
-    <input class="form-control my-0 py-1" name="searchTerm" type="text" placeholder="Search for books by title / ISBN" aria-label="Search">
-    <div class="input-group-append">
-        <button type="submit" class="input-group-text">
-            <i class="fas fa-search text-grey"
-               aria-hidden="true"></i>
-        </button>
+﻿<form asp-controller="Catalog" asp-action="Index" class="search-form pl-0 col-4">
+    <div class="input-group ">
+        <input class="form-control my-0 py-1" name="searchTerm" type="text" placeholder="Search for books by title / ISBN" aria-label="Search">
+        <div class="input-group-append">
+            <button type="submit" class="input-group-text">
+                <i class="fas fa-search text-grey"
+                   aria-hidden="true"></i>
+            </button>
+        </div>
     </div>
 </form>

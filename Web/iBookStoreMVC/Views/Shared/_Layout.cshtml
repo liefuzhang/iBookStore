@@ -39,6 +39,7 @@
             @await Component.InvokeAsync("CategoryFilter")
             <a type="button" class="btn btn-link ml-4" asp-controller="BestSeller" asp-action="Index">Bestsellers</a>
             <a type="button" class="btn btn-link ml-2" asp-controller="NewRelease" asp-action="Index">New Releases</a>
+            @await Html.PartialAsync("_CurrencySelectPartial")
         </div>
         <main role="main" class="pb-3">
             @RenderBody()
