@@ -9,6 +9,8 @@ namespace Basket.API.Models
     {
         public string BuyerId { get; set; }
         public List<BasketItem> Items { get; set; }
+        public string Currency { get; set; }
+        public decimal CurrencyRate { get; set; }
 
         public CustomerBasket(string customerId) {
             BuyerId = customerId;

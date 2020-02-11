@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using iBookStoreMVC.Models;
 using iBookStoreMVC.Service;
 using iBookStoreMVC.ViewModels;
+using Microsoft.AspNetCore.Http;
+using static System.Decimal;
 
 namespace iBookStoreMVC.Controllers
 {
@@ -24,6 +26,16 @@ namespace iBookStoreMVC.Controllers
         {
             const int itemsPerPage = 12;
             var catalog = await _catalogService.GetCatalogItems(page ?? 1, itemsPerPage, categoryFilterApplied, searchTerm);
+
+            if (HttpContext.Session.GetString("currencyRate") != null)
+            {
+                TryParse(HttpContext.Session.GetString("currencyRate"), out decimal rate);
+                catalog.Data.ForEach(i => i.ConvertedPrice = i.Price * rate);
+            }
+            else
+            {
+                catalog.Data.ForEach(i => i.ConvertedPrice = i.Price);
+            }
 
             var vm = new CatalogIndexViewModel()
             {
@@ -47,6 +59,17 @@ namespace iBookStoreMVC.Controllers
         {
             var catalogItem = await _catalogService.GetCatalogItem(catalogItemId);
             var recommendedItems = await _recommendationService.GetRecommendedBooks(catalogItemId);
+
+            if (HttpContext.Session.GetString("currencyRate") != null)
+            {
+                TryParse(HttpContext.Session.GetString("currencyRate"), out decimal rate);
+                catalogItem.ConvertedPrice = catalogItem.Price * rate;
+            }
+            else
+            {
+                catalogItem.ConvertedPrice = catalogItem.Price;
+            }
+
             var vm = new CatalogItemDetailViewModel
             {
                 CatalogItem = catalogItem,

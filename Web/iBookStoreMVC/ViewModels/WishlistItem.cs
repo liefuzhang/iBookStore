@@ -12,6 +12,7 @@ namespace iBookStoreMVC.ViewModels
         public string ProductName { get; set; }
         public string Author { get; set; }
         public decimal UnitPrice { get; set; }
+        public decimal ConvertedPrice { get; set; }
         public string ISBN13 { get; set; }
         public string Note { get; set; }
     }

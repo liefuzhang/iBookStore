@@ -14,7 +14,7 @@ namespace iBookStoreMVC.ViewModels
         public string BuyerId { get; set; }
 
         public decimal Total() {
-            return Math.Round(Items.Sum(x => x.UnitPrice * x.Quantity), 2);
+            return Math.Round(Items.Sum(i => i.ConvertedPrice * i.Quantity), 2);
         }
     }
 }

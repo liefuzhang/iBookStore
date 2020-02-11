@@ -8,6 +8,10 @@ namespace Basket.API.Models
 
         public ICollection<UpdateBasketItemData> Updates { get; set; }
 
+        public string Currency { get; set; }
+
+        public decimal CurrencyRate { get; set; }
+
         public UpdateBasketItemsRequest() {
             Updates = new List<UpdateBasketItemData>();
         }

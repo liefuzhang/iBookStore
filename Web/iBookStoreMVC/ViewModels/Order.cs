@@ -22,6 +22,10 @@ namespace iBookStoreMVC.ViewModels
 
         public decimal Total { get; set; }
 
+        public string Currency { get; set; }
+
+        public decimal CurrencyRate { get; set; }
+
         [Required]
         public string City { get; set; }
 

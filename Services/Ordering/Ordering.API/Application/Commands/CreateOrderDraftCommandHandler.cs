@@ -13,12 +13,17 @@ namespace Ordering.API.Application.Commands
     public class CreateOrderDraftCommandHandler
         : IRequestHandler<CreateOrderDraftCommand, OrderDraftDTO>
     {
-        public Task<OrderDraftDTO> Handle(CreateOrderDraftCommand message, CancellationToken cancellationToken) {
+        public Task<OrderDraftDTO> Handle(CreateOrderDraftCommand message, CancellationToken cancellationToken)
+        {
             var order = Order.NewDraft();
             var orderItems = message.Items.Select(i => i.ToOrderItemDTO());
-            foreach (var item in orderItems) {
+            foreach (var item in orderItems)
+            {
                 order.AddOrderItem(item.ProductId, item.ProductName, item.UnitPrice, item.ISBN13, item.Units);
             }
+
+            order.SetCurrency(message.Currency);
+            order.SetCurrencyRate(message.CurrencyRate);
 
             return Task.FromResult(OrderDraftDTO.FromOrder(order));
         }

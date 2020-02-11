@@ -9,6 +9,8 @@ namespace Ordering.API.Models
     public class OrderDraftDTO
     {
         public IEnumerable<OrderItemDTO> OrderItems { get; set; }
+        public string Currency { get; set; }
+        public decimal CurrencyRate { get; set; }
         public decimal Total { get; set; }
         public OrderStatus Status { get; set; }
 
@@ -21,6 +23,8 @@ namespace Ordering.API.Models
                     Units = oi.Units,
                     ProductName = oi.ProductName
                 }),
+                Currency = order.Currency,
+                CurrencyRate = order.CurrencyRate,
                 Total = order.GetTotal(),
                 Status = order.Status
             };

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using iBookStoreMVC.Service;
 using iBookStoreMVC.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static System.Decimal;
 
 namespace iBookStoreMVC.Controllers
 {
@@ -21,6 +23,16 @@ namespace iBookStoreMVC.Controllers
         {
             var topBestSellers = 20;
             var catalogItems = await _catalogService.GetBestSellers(topBestSellers);
+
+            if (HttpContext.Session.GetString("currencyRate") != null)
+            {
+                TryParse(HttpContext.Session.GetString("currencyRate"), out decimal rate);
+                catalogItems.ForEach(i => i.ConvertedPrice = i.Price * rate);
+            }
+            else
+            {
+                catalogItems.ForEach(i => i.ConvertedPrice = i.Price);
+            }
 
             return View(catalogItems);
         }

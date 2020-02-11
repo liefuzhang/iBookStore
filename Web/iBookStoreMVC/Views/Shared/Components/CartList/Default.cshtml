@@ -1,4 +1,6 @@
-﻿@model iBookStoreMVC.ViewModels.Basket
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@model iBookStoreMVC.ViewModels.Basket
 
 @{
     ViewData["Title"] = "My Cart";
@@ -37,12 +39,12 @@
                         @item.ProductName
                     </a>
                 </section>
-                <section class="basket-item basket-item--middle col-2">$ @item.UnitPrice.ToString("N2")</section>
+                <section class="basket-item basket-item--middle col-2">@(HttpContextAccessor.HttpContext.Session.GetString("currency") ?? "NZD") @(item.ConvertedPrice.ToString("N2"))</section>
                 <section class="basket-item basket-item--middle col-2">
                     <input type="hidden" name="@("quantities[" + i +"].Key")" value="@item.Id" />
                     <input type="number" class="basket-input col-9" min="1" name="@("quantities[" + i +"].Value")" value="@item.Quantity" />
                 </section>
-                <section class="basket-item basket-item--middle basket-item--mark col-2">$ @Math.Round(item.Quantity * item.UnitPrice, 2).ToString("N2")</section>
+                <section class="basket-item basket-item--middle basket-item--mark col-2">@(HttpContextAccessor.HttpContext.Session.GetString("currency") ?? "NZD") @Math.Round(item.Quantity * item.ConvertedPrice, 2).ToString("N2")</section>
             </article>
         }
 
@@ -54,7 +56,7 @@
 
             <article class="basket-items row">
                 <section class="basket-item col-10"></section>
-                <section class="basket-item basket-item--mark col-2">$ @Model.Total()</section>
+                <section class="basket-item basket-item--mark col-2">@(HttpContextAccessor.HttpContext.Session.GetString("currency") ?? "NZD") @Model.Total()</section>
             </article>
 
             <article class="basket-items row mt-5">

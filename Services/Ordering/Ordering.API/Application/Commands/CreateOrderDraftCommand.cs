@@ -10,6 +10,10 @@ namespace Ordering.API.Application.Commands
 
         public IEnumerable<BasketItem> Items { get; private set; }
 
+        public string Currency { get; set; }
+
+        public decimal CurrencyRate { get; set; }
+
         public CreateOrderDraftCommand(string buyerId, IEnumerable<BasketItem> items) {
             BuyerId = buyerId;
             Items = items;

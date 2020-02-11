@@ -86,6 +86,9 @@ namespace Basket.API.Controllers
                 basketItem.Quantity = update.NewQuantity;
             }
 
+            currentBasket.Currency = data.Currency;
+            currentBasket.CurrencyRate = data.CurrencyRate;
+
             // Save the updated basket
             await _repository.UpdateBasketAsync(currentBasket);
 

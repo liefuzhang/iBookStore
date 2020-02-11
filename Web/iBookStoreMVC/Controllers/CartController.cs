@@ -8,8 +8,10 @@ using iBookStoreMVC.Models;
 using iBookStoreMVC.Service;
 using Microsoft.AspNetCore.Authorization;
 using iBookStoreMVC.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Polly.CircuitBreaker;
+using static System.Decimal;
 
 namespace iBookStoreMVC.Controllers
 {
@@ -41,7 +43,13 @@ namespace iBookStoreMVC.Controllers
             try
             {
                 var user = _appUserParser.Parse(HttpContext.User);
-                await _basketSvc.SetQuantities(user, quantities);
+                decimal rate = 1;
+                if (HttpContext.Session.GetString("currencyRate") != null)
+                {
+                    TryParse(HttpContext.Session.GetString("currencyRate"), out rate);
+                }
+
+                await _basketSvc.SetQuantities(user, quantities, HttpContext.Session.GetString("currency") ?? "NZD", rate);
                 if (action == "Checkout")
                 {
                     return RedirectToAction("Create", "Order");

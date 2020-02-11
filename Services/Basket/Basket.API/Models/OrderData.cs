@@ -9,6 +9,8 @@ namespace Basket.API.Models
         public DateTime CreatedDate { get; set; }
         public string Status { get; set; }
         public decimal Total { get; set; }
+        public string Currency { get; set; }
+        public decimal CurrencyRate { get; set; }
         public string City { get; set; }
         public string Street { get; set; }
         public string State { get; set; }

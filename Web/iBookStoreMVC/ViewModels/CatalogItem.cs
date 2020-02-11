@@ -17,6 +17,8 @@ namespace iBookStoreMVC.ViewModels
 
         public decimal Price { get; set; }
 
+        public decimal ConvertedPrice { get; set; }
+
         public string ISBN13 { get; set; }
 
         public CatalogItemGoodreadRating Rating { get; set; }

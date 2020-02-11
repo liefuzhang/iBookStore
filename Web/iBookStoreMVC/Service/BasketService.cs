@@ -50,7 +50,7 @@ namespace iBookStoreMVC.Service
                 JsonConvert.DeserializeObject<Basket>(responseString);
         }
 
-        public async Task<Basket> SetQuantities(ApplicationUser user, Dictionary<string, int> quantities)
+        public async Task<Basket> SetQuantities(ApplicationUser user, Dictionary<string, int> quantities, string currency, decimal currencyRate)
         {
             var url = API.Basket.UpdateBasketItem(_remoteServiceBaseUrl);
 
@@ -60,7 +60,9 @@ namespace iBookStoreMVC.Service
                 {
                     BasketItemId = kvp.Key,
                     NewQuantity = kvp.Value
-                }).ToArray()
+                }).ToArray(),
+                Currency = currency,
+                CurrencyRate = currencyRate
             };
 
             var basketContent = new StringContent(JsonConvert.SerializeObject(basketUpdate), System.Text.Encoding.UTF8, "application/json");

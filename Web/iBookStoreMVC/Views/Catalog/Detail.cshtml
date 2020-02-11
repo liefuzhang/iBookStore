@@ -1,4 +1,6 @@
 ﻿@model iBookStoreMVC.ViewModels.CatalogItemDetailViewModel
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
 
 @{
     ViewData["Title"] = "Book Detail";
@@ -39,7 +41,7 @@
         </div>
         <div class="col-3 pr-0">
             <div class="rhs-detail panel p-3">
-                <h3 class="book-price">NZ$@Model.CatalogItem.Price.ToString("N2")</h3>
+                <h3 class="book-price">@(HttpContextAccessor.HttpContext.Session.GetString("currency") ?? "NZD") @(Model.CatalogItem.ConvertedPrice.ToString("N2"))</h3>
                 <div class="rhs-info pt-1 pb-1">
                     <div><i class="fa fa-truck"></i>Free delivery</div>
                     <div><i class="fa fa-hand-holding-usd"></i>Price includes GST</div>

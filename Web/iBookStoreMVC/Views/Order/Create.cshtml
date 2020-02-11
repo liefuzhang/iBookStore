@@ -12,7 +12,8 @@
     <form method="post" asp-controller="Order" asp-action="PlaceOrder">
         <section class="orders_new-section">
             <div class="row">
-                @foreach (var error in ViewData.ModelState.Values.SelectMany(err => err.Errors)) {
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(err => err.Errors))
+                {
                     <div class="alert alert-warning" role="alert">
                         &nbsp;@error.ErrorMessage
                     </div>
@@ -101,6 +102,8 @@
         <input asp-for="CardType" type="hidden" />
         <input asp-for="CardExpiration" type="hidden" />
         <input asp-for="RequestId" type="hidden" value="@Guid.NewGuid().ToString()" />
+        <input asp-for="Currency" type="hidden" />
+        <input asp-for="CurrencyRate" type="hidden" />
     </form>
 </div>
 

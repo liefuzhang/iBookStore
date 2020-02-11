@@ -34,7 +34,7 @@ namespace Ordering.API.Application.Commands
             var address = new Address(command.Street, command.City, command.State,
                 command.Country, command.ZipCode);
             var order = new Order(command.UserId, command.UserName, address, (int)command.CardType, command.CardNumber,
-                command.CardSecurityNumber, command.CardHolderName, command.CardExpiration);
+                command.CardSecurityNumber, command.CardHolderName, command.CardExpiration, command.Currency, command.CurrencyRate);
             foreach (var item in command.OrderItems) {
                 order.AddOrderItem(item.ProductId, item.ProductName, item.UnitPrice,
                     item.ISBN13, item.Units);

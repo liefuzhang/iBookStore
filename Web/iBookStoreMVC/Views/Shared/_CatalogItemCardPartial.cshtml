@@ -1,4 +1,6 @@
-﻿@model iBookStoreMVC.ViewModels.CatalogItem
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@model iBookStoreMVC.ViewModels.CatalogItem
 
 <div class="catalog-item">
     <a asp-controller="Catalog" asp-action="Detail" asp-route-catalogItemId="@Model.Id" class="book-container">
@@ -7,7 +9,7 @@
             <div class="book-name" title="@Model.Name">@Model.Name</div>
             <div class="author-name" title="@Model.Author">@Model.Author</div>
             <div class="book-rating" data-rating="@Model.Rating.Rating"></div>
-            <div class="book-price">NZ$@Model.Price.ToString("N2")</div>
+            <div class="book-price">@(HttpContextAccessor.HttpContext.Session.GetString("currency") ?? "NZD") @(Model.ConvertedPrice.ToString("N2"))</div>
         </div>
     </a>
     <input class="btn btn-primary add-to-cart" disabled=@(!User.Identity.IsAuthenticated || Model.AvailableStock == 0)

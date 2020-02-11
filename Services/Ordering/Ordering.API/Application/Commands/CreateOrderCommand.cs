@@ -45,6 +45,10 @@ namespace Ordering.API.Models
 
         public List<OrderItemDTO> OrderItems { get; } = new List<OrderItemDTO>();
 
+        public string Currency { get; set; }
+
+        public decimal CurrencyRate { get; set; }
+
         public Guid RequestId { get; set; }
     }
 }

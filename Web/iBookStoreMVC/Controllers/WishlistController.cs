@@ -7,13 +7,15 @@ using Polly.CircuitBreaker;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using static System.Decimal;
 
 namespace iBookStoreMVC.Controllers
 {
     [Authorize]
     public class WishlistController : Controller
     {
-        private readonly IWishlistService _wishlistSvc; 
+        private readonly IWishlistService _wishlistSvc;
         private readonly IBasketService _basketSvc;
         private readonly ICatalogService _catalogService;
         private readonly IIdentityParser<ApplicationUser> _appUserParser;
@@ -36,6 +38,17 @@ namespace iBookStoreMVC.Controllers
         {
             var user = _appUserParser.Parse(HttpContext.User);
             var wishlist = await _wishlistSvc.GetWishlist(user);
+
+            if (HttpContext.Session.GetString("currencyRate") != null)
+            {
+                TryParse(HttpContext.Session.GetString("currencyRate"), out decimal rate);
+                wishlist.Items.ForEach(i => i.ConvertedPrice = i.UnitPrice * rate);
+            }
+            else
+            {
+                wishlist.Items.ForEach(i => i.ConvertedPrice = i.UnitPrice);
+            }
+
             return View(wishlist.Items);
         }
 

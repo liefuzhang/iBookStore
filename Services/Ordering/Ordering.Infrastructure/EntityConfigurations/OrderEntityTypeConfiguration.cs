@@ -7,7 +7,8 @@ namespace Ordering.Infrastructure.EntityConfigurations
 {
     public class OrderEntityTypeConfiguration : IEntityTypeConfiguration<Order>
     {
-        public void Configure(EntityTypeBuilder<Order> builder) {
+        public void Configure(EntityTypeBuilder<Order> builder)
+        {
             builder.Property(o => o.Id)
                 .ForSqlServerUseSequenceHiLo("orderseq");
 
@@ -16,6 +17,9 @@ namespace Ordering.Infrastructure.EntityConfigurations
 
             builder.Property<int?>("BuyerId").IsRequired(false);
             builder.Property<int?>("PaymentMethodId").IsRequired(false);
+
+            builder.Property(o => o.Currency).HasDefaultValue("NZD");
+            builder.Property(o => o.CurrencyRate).HasDefaultValue(1);
 
             builder.HasOne<PaymentMethod>()
                 .WithMany()

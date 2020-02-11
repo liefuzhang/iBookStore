@@ -53,3 +53,8 @@ $('.simple-pagination').each(function () {
         }
     });
 });
+
+$('#currencySelect').each(function () {
+    var currency = $(this).attr("data-currency");
+    $(this).val(currency);
+});
