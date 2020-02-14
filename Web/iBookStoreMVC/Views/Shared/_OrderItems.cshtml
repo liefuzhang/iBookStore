@@ -31,14 +31,14 @@
                 <input type="hidden" value="@item.ProductName" name=@("orderitems[" + i + "].ProductName") />
             </section>
             <section class="orders-item orders-item--middle col-2">
-                $@item.UnitPrice.ToString("N2")
+                @Model.Currency @item.ConvertedPrice.ToString("N2")
                 <input type="hidden" value="@item.UnitPrice" name=@("orderitems[" + i + "].UnitPrice") />
             </section>
             <section class="orders-item orders-item--middle col-2">
                 @item.Units
                 <input type="hidden" value="@item.Units" name=@("orderitems[" + i + "].Units") />
             </section>
-            <section class="orders-item orders-item--middle col-2">$@Math.Round(item.Units * item.UnitPrice, 2).ToString("N2")</section>
+            <section class="orders-item orders-item--middle col-2">@Model.Currency @Math.Round(item.Units * item.ConvertedPrice, 2).ToString("N2")</section>
             <input type="hidden" value="@item.ProductId" name=@("orderitems[" + i + "].ProductId") />
         </article>
     }
@@ -53,7 +53,7 @@
     <article class="orders-items row">
         <section class="orders-item col-10"></section>
         <section class="orders-item orders-item--mark col-2">
-            $@Model.Total.ToString("N2")
+            @Model.Currency @Model.Total.ToString("N2")
             <input type="hidden" value="@Model.Total" name="Total" />
         </section>
     </article>

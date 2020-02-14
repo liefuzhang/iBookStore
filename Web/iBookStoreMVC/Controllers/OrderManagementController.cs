@@ -31,6 +31,8 @@ namespace iBookStoreMVC.Controllers
         public async Task<IActionResult> Detail(string orderId)
         {
             var order = await _orderSvc.GetOrder(orderId);
+            order.OrderItems.ForEach(i => i.ConvertedPrice = i.UnitPrice * order.CurrencyRate);
+
             return View(order);
         }
     }

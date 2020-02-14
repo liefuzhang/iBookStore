@@ -12,5 +12,6 @@ namespace Ordering.API.Models
         public DateTime CreatedDate { get; set; }
         public OrderStatus Status { get; set; }
         public decimal Total { get; set; }
+        public string Currency { get; set; }
     }
 }

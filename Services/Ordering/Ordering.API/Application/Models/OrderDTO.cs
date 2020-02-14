@@ -44,6 +44,10 @@ namespace Ordering.API.Models
 
         public List<OrderItemDTO> OrderItems { get; } = new List<OrderItemDTO>();
 
+        public string Currency { get; private set; }
+
+        public decimal CurrencyRate { get; private set; }
+
         public Guid RequestId { get; set; }
 
         public static OrderDTO FromOrder(Order order)
@@ -53,7 +57,9 @@ namespace Ordering.API.Models
                 OrderNumber = order.Id.ToString(),
                 CreatedDate = order.CreatedDate,
                 Status = order.Status.ToString(),
-                Total = order.GetTotal()
+                Total = order.GetTotal(),
+                CurrencyRate = order.CurrencyRate,
+                Currency = order.Currency
             };
 
             if (order.Address != null)

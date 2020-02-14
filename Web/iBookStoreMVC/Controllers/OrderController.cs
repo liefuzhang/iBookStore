@@ -27,6 +27,8 @@ namespace iBookStoreMVC.Controllers
         {
             var user = _appUserParser.Parse(HttpContext.User);
             var order = await _basketSvc.GetOrderDraft(user.Id);
+            order.OrderItems.ForEach(i => i.ConvertedPrice = i.UnitPrice * order.CurrencyRate);
+
             var vm = _orderSvc.MapUserInfoIntoOrder(user, order);
             vm.CardExpirationShortFormat();
 
@@ -65,6 +67,8 @@ namespace iBookStoreMVC.Controllers
 
         public async Task<IActionResult> Detail(string orderId) {
             var order = await _orderSvc.GetOrder(orderId);
+            order.OrderItems.ForEach(i => i.ConvertedPrice = i.UnitPrice * order.CurrencyRate);
+
             return View(order);
         }
     }

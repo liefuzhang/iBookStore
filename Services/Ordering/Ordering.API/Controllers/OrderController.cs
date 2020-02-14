@@ -10,14 +10,11 @@ using Microsoft.Extensions.Logging;
 using Ordering.API.Application.Commands;
 using Ordering.API.Application.MediatRBehaviors;
 using Ordering.API.Application.Queries;
-using Ordering.API.Extensions;
 using Ordering.API.Models;
 using Ordering.API.Services;
-using Ordering.Domain.AggregatesModel.BuyerAggregate;
-using Ordering.Domain.AggregatesModel.OrderAggregate;
 using Ordering.Infrastructure;
 
-namespace Ordering.Controllers
+namespace Ordering.API.Controllers
 {
     [Route("api/[controller]")]
     [Authorize]
@@ -93,13 +90,16 @@ namespace Ordering.Controllers
         [Route("allOrders")]
         public async Task<ActionResult<IEnumerable<OrderSummary>>> GetAllOrdersAsync()
         {
-            var orders = _orderingContext.Orders.Select(o => new OrderSummary
-            {
-                CreatedDate = o.CreatedDate,
-                OrderNumber = o.Id,
-                Status = o.Status,
-                Total = o.GetTotal()
-            });
+            var orders = _orderingContext.Orders
+                .Include(o => o.OrderItems)
+                .Select(o => new OrderSummary
+                {
+                    CreatedDate = o.CreatedDate,
+                    OrderNumber = o.Id,
+                    Status = o.Status,
+                    Total = o.GetTotal(),
+                    Currency = o.Currency
+                });
 
             return Ok(orders);
         }
