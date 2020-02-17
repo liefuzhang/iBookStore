@@ -19,7 +19,7 @@ namespace Ordering.Infrastructure.EntityConfigurations
             builder.Property<int?>("PaymentMethodId").IsRequired(false);
 
             builder.Property(o => o.Currency).HasDefaultValue("NZD");
-            builder.Property(o => o.CurrencyRate).HasDefaultValue(1);
+            builder.Property(o => o.CurrencyRate).HasColumnType("decimal(18, 8)").HasDefaultValue(1);
 
             builder.HasOne<PaymentMethod>()
                 .WithMany()

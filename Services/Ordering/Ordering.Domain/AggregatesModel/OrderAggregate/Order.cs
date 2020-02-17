@@ -3,6 +3,7 @@ using Ordering.Domain.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static System.Decimal;
 
 namespace Ordering.Domain.AggregatesModel.OrderAggregate
 {
@@ -100,7 +101,7 @@ namespace Ordering.Domain.AggregatesModel.OrderAggregate
 
         public decimal GetTotal()
         {
-            return OrderItems.Sum(oi => oi.Units * oi.UnitPrice * CurrencyRate);
+            return OrderItems.Sum(oi => oi.Units * Round(oi.UnitPrice * CurrencyRate, 2));
         }
 
         public void SetCancelledStatus()

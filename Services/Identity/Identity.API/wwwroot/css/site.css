@@ -35,3 +35,12 @@ body {
         display: none;
     }
 }
+
+.account-login-container {
+    padding-top: 20px;
+}
+
+    .account-login-container p {
+        margin-right: -15px;
+        margin-left: -15px;
+    }
