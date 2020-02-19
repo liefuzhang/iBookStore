@@ -19,6 +19,10 @@ namespace iBookStoreMVC
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging((context, logging) =>
+                {
+                    logging.AddEventLog();
+                })
                 .UseStartup<Startup>();
     }
 }

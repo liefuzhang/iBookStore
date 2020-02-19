@@ -10,6 +10,8 @@ using Catalog.API.Services;
 using EventBus;
 using HealthChecks.UI.Client;
 using iBookStoreCommon;
+using iBookStoreCommon.Infrastructure;
+using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using iBookStoreCommon.ServiceRegistry;
 using IntegrationEventLogEF;
 using Microsoft.AspNetCore.Builder;
@@ -66,7 +68,10 @@ namespace Catalog.API
                     });
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(config =>
+            {
+                config.Filters.AddService<RequestResponseLoggingFilter>();
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -90,6 +95,8 @@ namespace Catalog.API
             services.AddTransient<ServiceRegistryRepository>();
             services.AddTransient<ServiceRegistryRegistrationService>();
 
+            services.AddScoped<RequestResponseLoggingFilter>();
+
             services.AddHttpContextAccessor();
 
             services.AddHttpClient<ICatalogItemRatingService, CatalogItemRatingService>();
@@ -107,6 +114,8 @@ namespace Catalog.API
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseMiddleware<GlobalTraceLoggingMiddleware>();
 
             app.UseHttpsRedirection();
 

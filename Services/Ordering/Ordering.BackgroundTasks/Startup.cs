@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EventBus;
+using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -44,6 +45,8 @@ namespace Ordering.BackgroundTasks
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMiddleware<GlobalTraceLoggingMiddleware>();
         }
     }
 }

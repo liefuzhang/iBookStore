@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using EventBus;
 using iBookStoreCommon;
+using iBookStoreCommon.Infrastructure;
+using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,13 +42,18 @@ namespace Payment.API
                         .AllowCredentials());
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(config =>
+                {
+                    config.Filters.AddService<RequestResponseLoggingFilter>();
+                }
+            ).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp => {
                 var queueName = Configuration["MessageQueueName"];
                 return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
             });
             services.AddScoped<OrderStatusChangedToStockConfirmedIntegrationEventHandler>();
+            services.AddScoped<RequestResponseLoggingFilter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +64,8 @@ namespace Payment.API
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseMiddleware<GlobalTraceLoggingMiddleware>();
 
             app.UseHttpsRedirection();
 

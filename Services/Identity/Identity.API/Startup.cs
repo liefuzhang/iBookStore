@@ -16,6 +16,8 @@ using Microsoft.Extensions.DependencyInjection;
 using IdentityServer4.Services;
 using Identity.API.Configuration;
 using System.Reflection;
+using iBookStoreCommon.Infrastructure;
+using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using Identity.API.Services;
 
 namespace Identity.API
@@ -43,9 +45,15 @@ namespace Identity.API
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(config =>
+                {
+                    config.Filters.AddService<RequestResponseLoggingFilter>();
+                }
+            ).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddTransient<ILoginService<ApplicationUser>, EFLoginService>();
+
+            services.AddScoped<RequestResponseLoggingFilter>();
 
             //// Adds IdentityServer
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
@@ -78,6 +86,8 @@ namespace Identity.API
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            app.UseMiddleware<GlobalTraceLoggingMiddleware>();
 
             app.UseIdentityServer();
             app.UseHttpsRedirection();

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Ordering.API
 {
@@ -14,6 +15,10 @@ namespace Ordering.API
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging((context, logging) =>
+                {
+                    logging.AddEventLog();
+                })
                 .UseStartup<Startup>();
     }
 }

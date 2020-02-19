@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using iBookStoreCommon.Infrastructure;
+using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using iBookStoreMVC.Infrastructure;
 using iBookStoreMVC.Service;
 using iBookStoreMVC.ViewModels;
@@ -47,12 +48,17 @@ namespace iBookStoreMVC
                 options.Cookie.IsEssential = true;
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(config =>
+            {
+                config.Filters.AddService<RequestResponseLoggingFilter>();
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddHttpClientServices(Configuration);
 
             services.AddTransient<IIdentityParser<ApplicationUser>, IdentityParser>();
             services.AddTransient<ICurrencyService, CurrencyService>();
+
+            services.AddScoped<RequestResponseLoggingFilter>();
 
             services.AddCustomAuthentication(Configuration);
 
@@ -75,6 +81,8 @@ namespace iBookStoreMVC
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseMiddleware<GlobalTraceLoggingMiddleware>();
 
             app.UseAuthentication();
 

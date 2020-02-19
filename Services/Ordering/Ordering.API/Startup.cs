@@ -3,6 +3,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using EventBus;
 using iBookStoreCommon;
+using iBookStoreCommon.Infrastructure;
+using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using iBookStoreCommon.ServiceRegistry;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -59,11 +61,17 @@ namespace Ordering.API
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(config =>
+                {
+                    config.Filters.AddService<RequestResponseLoggingFilter>();
+                }
+            ).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             ConfigureAuthService(services);
 
             services.AddTransient<IIdentityService, IdentityService>();
+
+            services.AddScoped<RequestResponseLoggingFilter>();
 
             services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp =>
             {
@@ -117,6 +125,8 @@ namespace Ordering.API
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseMiddleware<GlobalTraceLoggingMiddleware>();
 
             app.UseHttpsRedirection();
 

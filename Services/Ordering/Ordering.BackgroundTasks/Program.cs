@@ -15,12 +15,17 @@ namespace Ordering.BackgroundTasks
         public static readonly string Namespace = typeof(Program).Namespace;
         public static readonly string AppName = Namespace;
 
-        public static void Main(string[] args) {
+        public static void Main(string[] args)
+        {
             CreateWebHostBuilder(args).Build().Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging((context, logging) =>
+                {
+                    logging.AddEventLog();
+                })
                 .UseStartup<Startup>();
     }
 }

@@ -6,6 +6,8 @@ using ApiGateway;
 using ApiGateway.Infrastructure;
 using ApiGateway.Repositories;
 using ApiGateway.Services;
+using iBookStoreCommon.Infrastructure;
+using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -32,12 +34,17 @@ namespace iBookStoreApiGateway
         {
             services.Configure<ApiGatewaySettings>(Configuration);
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(config =>
+            {
+                config.Filters.AddService<RequestResponseLoggingFilter>();
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddScoped<IServiceRegistryService, ServiceRegistryService>();
             services.AddScoped<IServiceRegistryRepository, ServiceRegistryRepository>();
             services.AddTransient<IServiceOperationService, ServiceOperationService>();
 
+            services.AddScoped<RequestResponseLoggingFilter>();
+            
             services.AddHttpClient(nameof(ReverseProxyMiddleware));
         }
 
@@ -53,6 +60,8 @@ namespace iBookStoreApiGateway
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseMiddleware<GlobalTraceLoggingMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseMvc();
