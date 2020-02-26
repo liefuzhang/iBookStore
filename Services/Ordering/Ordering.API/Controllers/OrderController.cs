@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Ordering.API.Application.Commands;
 using Ordering.API.Application.MediatRBehaviors;
 using Ordering.API.Application.Queries;
+using Ordering.API.Extensions;
 using Ordering.API.Models;
 using Ordering.API.Services;
 using Ordering.Infrastructure;
@@ -82,6 +83,10 @@ namespace Ordering.API.Controllers
         {
             var userId = _identityService.GetUserIdentity();
             var orders = await _orderQueries.GetOrdersForUserAsync(userId);
+            foreach (var orderSummary in orders)
+            {
+                orderSummary.CreatedDate = orderSummary.CreatedDate.ConvertToNzTimeZone();
+            }
 
             return Ok(orders);
         }
@@ -94,7 +99,7 @@ namespace Ordering.API.Controllers
                 .Include(o => o.OrderItems)
                 .Select(o => new OrderSummary
                 {
-                    CreatedDate = o.CreatedDate,
+                    CreatedDate = o.CreatedDate.ConvertToNzTimeZone(),
                     OrderNumber = o.Id,
                     Status = o.Status,
                     Total = o.GetTotal(),
