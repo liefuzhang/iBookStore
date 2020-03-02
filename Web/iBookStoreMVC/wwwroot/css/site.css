@@ -374,6 +374,10 @@ header .navbar .input-group-append button {
     font-size: 0.9em;
 }
 
+.search-form button:focus {
+    outline: none;
+}
+
 .book-rating {
     position: relative;
     bottom: 3px;
@@ -387,4 +391,16 @@ header .navbar .input-group-append button {
 .recommended-books h5 {
     font-size: 18px;
     border-bottom: 1px solid #eee;
+}
+
+.page-link:focus {
+    box-shadow: none !important;
+}
+
+.empty-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20px;
+    font-size: 18px;
 }

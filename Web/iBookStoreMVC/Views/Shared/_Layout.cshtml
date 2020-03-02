@@ -41,7 +41,7 @@
             <a type="button" class="btn btn-link ml-2" asp-controller="NewRelease" asp-action="Index">New Releases</a>
             @await Html.PartialAsync("_CurrencySelectPartial")
         </div>
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-3 pt-4">
             @RenderBody()
         </main>
     </div>
@@ -54,7 +54,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - iBookStore
+            &copy;&nbsp;@(DateTime.Now.Year + " iBookStore")
         </div>
     </footer>
 

@@ -7,18 +7,19 @@
 }
 
 <h4>My Orders</h4>
-<div class="orders">
-    <div class="container">
-        <article class="orders-titles row">
-            <section class="orders-title col-2">Order number</section>
-            <section class="orders-title col-4">Date</section>
-            <section class="orders-title col-2">Total</section>
-            <section class="orders-title col-2">Status</section>
-            <section class="orders-title col-2"></section>
-        </article>
-        @if (Model != null && Model.Any())
-        {
-            foreach (var item in Model)
+
+@if (Model != null && Model.Any())
+{
+    <div class="orders">
+        <div class="container">
+            <article class="orders-titles row">
+                <section class="orders-title col-2">Order number</section>
+                <section class="orders-title col-4">Date</section>
+                <section class="orders-title col-2">Total</section>
+                <section class="orders-title col-2">Status</section>
+                <section class="orders-title col-2"></section>
+            </article>
+            @foreach (var item in Model)
             {
                 <article class="orders-items row">
                     <section class="orders-item col-2">@Html.DisplayFor(modelItem => item.OrderNumber)</section>
@@ -36,10 +37,15 @@
                     </section>
                 </article>
             }
-        }
+        </div>
     </div>
-</div>
-
+}
+else
+{
+    <div class="empty-text">
+        There is no order yet
+    </div>
+}
 
 
 
