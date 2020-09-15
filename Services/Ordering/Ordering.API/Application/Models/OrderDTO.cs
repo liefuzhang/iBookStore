@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Ordering.API.Extensions;
 
 namespace Ordering.API.Models
 {
@@ -55,7 +56,7 @@ namespace Ordering.API.Models
             var orderDTO = new OrderDTO
             {
                 OrderNumber = order.Id.ToString(),
-                CreatedDate = order.CreatedDate,
+                CreatedDate = order.CreatedDate.ConvertToNzTimeZone(),
                 Status = order.Status.ToString(),
                 Total = order.GetTotal(),
                 CurrencyRate = order.CurrencyRate,
