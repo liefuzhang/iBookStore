@@ -44,6 +44,9 @@
         <main role="main" class="pb-3 pt-4">
             @RenderBody()
         </main>
+        <div class="main-footer">
+            @await Html.PartialAsync("_NewsLetterPartial")
+        </div>
     </div>
 
     <div class="spinner-container d-none">

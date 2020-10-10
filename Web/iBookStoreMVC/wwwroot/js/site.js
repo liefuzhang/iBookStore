@@ -58,3 +58,17 @@ $('#currencySelect').each(function () {
     var currency = $(this).attr("data-currency");
     $(this).val(currency);
 });
+
+$('.newsletter button').on("click", () => {
+    var email = $('.newsletter input').val();
+    if (!email)
+        return;
+
+    $.post("/userManagement/signUpNewsletter", { email: email })
+        .done(function (data) {
+            toastr.success('Email added to newsletter list');
+        })
+        .fail(function () {
+            toastr.error("Error happened");
+        });
+});

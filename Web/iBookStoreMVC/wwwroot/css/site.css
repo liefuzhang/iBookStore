@@ -60,6 +60,10 @@ header .navbar .input-group-append button {
     border-top-right-radius: 0.25rem !important;
 }
 
+.form-control:focus {
+    box-shadow: none;
+}
+
 .footer {
     position: absolute;
     bottom: 0;
@@ -366,10 +370,6 @@ header .navbar .input-group-append button {
     margin-left: -2px;
 }
 
-.search-form .form-control:focus {
-    box-shadow: none;
-}
-
 .search-form input {
     font-size: 0.9em;
 }
@@ -403,4 +403,19 @@ header .navbar .input-group-append button {
     align-items: center;
     padding-top: 20px;
     font-size: 18px;
+}
+
+.newsletter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .newsletter .input-group {
+        width: auto;
+    }
+
+.newsletter-text {
+    max-width: 240px;
+    font-size: 0.9rem;
 }

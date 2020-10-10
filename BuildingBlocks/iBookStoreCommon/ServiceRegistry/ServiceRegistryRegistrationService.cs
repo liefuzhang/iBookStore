@@ -35,9 +35,11 @@ namespace iBookStoreCommon.ServiceRegistry
             // Try to create ApiDescriptionServiceOperation object here so that we can make sure we have valid service operation. 
             var serviceOperations = _apiExplorer.ApiDescriptionGroups.Items
                 .SelectMany(adg => adg.Items)
-                .Select(ad => new ServiceOperation(ad.HttpMethod, ad.RelativePath));
+                .Select(ad => new ServiceOperation(ad.HttpMethod, ad.RelativePath))
+                .ToList();
 
-            await _serviceRegistryRepository.RegisterAllOperations(_service.ServiceName, serviceOperations);
+            if (serviceOperations.Any())
+                await _serviceRegistryRepository.RegisterAllOperations(_service.ServiceName, serviceOperations);
         }
     }
 }
