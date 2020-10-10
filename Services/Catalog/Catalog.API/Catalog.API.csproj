@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\**" />
+    <Content Remove="Migrations\**" />
+    <EmbeddedResource Remove="Migrations\**" />
+    <None Remove="Migrations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.Rabbitmq" Version="2.2.0" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="2.2.0" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="2.2.0" />
@@ -23,7 +30,6 @@
 
   <ItemGroup>
     <Folder Include="Infrastructure\IntegrationEventMigrations\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
