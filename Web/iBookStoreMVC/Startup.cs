@@ -180,6 +180,10 @@ namespace iBookStoreMVC
                 .AddPolicyHandler(GetRetryPolicy())
                 .AddPolicyHandler(GetCircuitBreakerPolicy());
 
+            services.AddHttpClient<IUserManagementService, UserManagementService>()
+                .AddPolicyHandler(GetRetryPolicy())
+                .AddPolicyHandler(GetCircuitBreakerPolicy());
+
             return services;
         }
 

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using UserManagement.API.Models;
+using UserManagement.API.Service;
 
 namespace UserManagement.API.Controllers
 {
@@ -10,6 +8,18 @@ namespace UserManagement.API.Controllers
     [ApiController]
     public class UserManagementController : ControllerBase
     {
-        
+        private readonly INewsletterService _newsletterService;
+
+        public UserManagementController(INewsletterService newsletterService)
+        {
+            _newsletterService = newsletterService;
+        }
+
+        [Route("signUpNewsletter")]
+        [HttpPost]
+        public void SignUpNewsletter([FromBody] SignUpNewsletterVm vm)
+        {
+            _newsletterService.SignUpNewsletter(vm.Email);
+        }
     }
 }

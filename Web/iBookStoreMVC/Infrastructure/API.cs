@@ -119,5 +119,13 @@ namespace iBookStoreMVC.Infrastructure
                 return $"{baseUrl}/recommendedBooks/{catalogItemId}";
             }
         }
+
+        public static class UserManagement
+        {
+            public static string SignUpNewsletter(string baseUrl)
+            {
+                return $"{baseUrl}/signUpNewsletter";
+            }
+        }
     }
 }

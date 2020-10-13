@@ -21,15 +21,4 @@ namespace Catalog.API.Infrastructure
             builder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
         }
     }
-
-    public class CatalogItemContextDesignFactory : IDesignTimeDbContextFactory<CatalogContext>
-    {
-        public CatalogContext CreateDbContext(string[] args)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<CatalogContext>()
-                .UseSqlServer("Server=.;Initial Catalog=iBookStore.Services.CatalogDb;Integrated Security=true");
-
-            return new CatalogContext(optionsBuilder.Options);
-        }
-    }
 }

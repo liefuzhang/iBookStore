@@ -14,10 +14,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using UserManagement.API.Infrastructure;
+using UserManagement.API.Service;
 
 namespace Recommendation.API
 {
@@ -45,6 +48,15 @@ namespace Recommendation.API
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
 
+            services.AddDbContext<UserManagementContext>(options =>
+            {
+                options.UseSqlServer(Configuration["ConnectionString"],
+                    sqlServerOptionsAction: sqlOptions =>
+                    {
+                        sqlOptions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                    });
+            });
+
             services.AddMvc(config =>
             {
                 config.Filters.AddService<RequestResponseLoggingFilter>();
@@ -60,6 +72,8 @@ namespace Recommendation.API
 
             services.AddTransient<ServiceRegistryRepository>();
             services.AddTransient<ServiceRegistryRegistrationService>();
+
+            services.AddTransient<INewsletterService, NewsletterService>();
         }
 
         private void ConfigureAuthService(IServiceCollection services)

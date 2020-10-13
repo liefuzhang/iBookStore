@@ -1,11 +1,12 @@
 ﻿using System;
 using NUnit.Framework;
+using UserManagement.API.Models;
 using UserManagement.API.Service;
 
 namespace UserManagement.UnitTests.Service
 {
     [TestFixture]
-    public class NewsletterServiceTests
+    public class NewsletterSubsriptionTests
     {
         [Test]
         [TestCase("")]
@@ -14,22 +15,18 @@ namespace UserManagement.UnitTests.Service
         [TestCase("dd@dd")]
         [TestCase("dd.dd@dd")]
         [TestCase("dd@dd@dd")]
-        public void AddEmailToBag_ThrowsException_WhenEmailInvalid(string email)
+        public void NewsletterSubscription_ThrowsException_WhenEmailInvalid(string email)
         {
-            var service = new NewsletterService();
-
-            Assert.Throws<ArgumentException>(() => service.AddEmailToBag(email));
+            Assert.Throws<ArgumentException>(() => new NewsletterSubscription(email));
         }
 
         [Test]
         [TestCase("valid_email@dd.dd")]
         [TestCase("valid_email@dd.dd.dd")]
         [TestCase("dd.dd@dd.dd")]
-        public void AddEmailToBag_NotThrowException_WhenEmailValid(string email)
+        public void NewsletterSubscription_NotThrowException_WhenEmailValid(string email)
         {
-            var service = new NewsletterService();
-
-            service.AddEmailToBag(email);
+            var subscription = new NewsletterSubscription(email);
         }
     }
 }

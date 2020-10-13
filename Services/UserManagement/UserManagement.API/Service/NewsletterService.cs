@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
+using UserManagement.API.Infrastructure;
+using UserManagement.API.Models;
 
 namespace UserManagement.API.Service
 {
     public class NewsletterService : INewsletterService
     {
-        private readonly ConcurrentBag<string> _emailBag = new ConcurrentBag<string>();
+        private readonly UserManagementContext _userManagementContext;
 
-        public void AddEmailToBag(string email)
+        public NewsletterService(UserManagementContext userManagementContext)
         {
-            if (string.IsNullOrWhiteSpace(email) || !IsValidEmail(email))
-                throw new ArgumentException(nameof(email));
-
-            _emailBag.Add(email);
+            _userManagementContext = userManagementContext;
         }
 
-        private bool IsValidEmail(string email)
+        public void SignUpNewsletter(string email)
         {
-            return Regex.IsMatch(email,
-                @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
-                RegexOptions.IgnoreCase);
+            _userManagementContext.NewsletterSubsriptions.Add(new NewsletterSubscription(email));
+
+            _userManagementContext.SaveChanges();
         }
     }
 }

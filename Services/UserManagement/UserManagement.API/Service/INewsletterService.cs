@@ -5,5 +5,6 @@ namespace UserManagement.API.Service
 {
     public interface INewsletterService
     {
+        void SignUpNewsletter(string email);
     }
 }
