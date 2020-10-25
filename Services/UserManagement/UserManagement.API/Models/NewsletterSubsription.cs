@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using iBookStoreCommon.Infrastructure;
 
 namespace UserManagement.API.Models
 {
@@ -11,7 +12,7 @@ namespace UserManagement.API.Models
         public NewsletterSubscription(string email)
         {
             if (string.IsNullOrWhiteSpace(email) || !IsValidEmail(email))
-                throw new ArgumentException(nameof(email));
+                throw new HttpResponseException("Email is invalid.");
         }
 
         private bool IsValidEmail(string email)

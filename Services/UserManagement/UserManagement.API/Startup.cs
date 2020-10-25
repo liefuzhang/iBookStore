@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using EventBus;
 using iBookStoreCommon;
@@ -10,6 +11,7 @@ using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware
 using iBookStoreCommon.ServiceRegistry;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -60,6 +62,7 @@ namespace Recommendation.API
             services.AddMvc(config =>
             {
                 config.Filters.AddService<RequestResponseLoggingFilter>();
+                config.Filters.AddService<HttpResponseExceptionFilter>();
             }
             ).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -68,6 +71,7 @@ namespace Recommendation.API
                 return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
             });
             services.AddScoped<RequestResponseLoggingFilter>();
+            services.AddScoped<HttpResponseExceptionFilter>();
             ConfigureAuthService(services);
 
             services.AddTransient<ServiceRegistryRepository>();

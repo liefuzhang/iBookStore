@@ -42,6 +42,9 @@ namespace ApiGateway.Infrastructure
             var route = new RouteIdentifier(context.Request);
             var serviceInstance = serviceOperationService.GetServiceInstanceForRoute(route);
 
+            if (serviceInstance == null)
+                throw new Exception("Service not found for given route");
+
             await ProxyRequestAsync(context, serviceInstance);
         }
 

@@ -1,5 +1,8 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
+using iBookStoreCommon.Infrastructure;
 using iBookStoreMVC.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -28,9 +31,10 @@ namespace iBookStoreMVC.Service
             var url = API.UserManagement.SignUpNewsletter(_remoteServiceBaseUrl);
             var content = new StringContent(JsonConvert.SerializeObject(new { email }), System.Text.Encoding.UTF8, "application/json");
 
+
             var response = await _httpClient.PostAsync(url, content);
 
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessfulResultAsync();
         }
     }
 }

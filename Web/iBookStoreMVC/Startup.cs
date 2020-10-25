@@ -22,17 +22,20 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Extensions.Http;
+using Polly.NoOp;
 
 namespace iBookStoreMVC
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
+            HostingEnvironment = environment;
         }
 
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment HostingEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -51,14 +54,16 @@ namespace iBookStoreMVC
             services.AddMvc(config =>
             {
                 config.Filters.AddService<RequestResponseLoggingFilter>();
+                config.Filters.AddService<HttpResponseExceptionFilter>();
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddHttpClientServices(Configuration);
+            services.AddHttpClientServices(Configuration, HostingEnvironment);
 
             services.AddTransient<IIdentityParser<ApplicationUser>, IdentityParser>();
             services.AddTransient<ICurrencyService, CurrencyService>();
 
             services.AddScoped<RequestResponseLoggingFilter>();
+            services.AddScoped<HttpResponseExceptionFilter>();
 
             services.AddCustomAuthentication(Configuration);
 
@@ -142,7 +147,8 @@ namespace iBookStoreMVC
         }
 
         // Adds all Http client services (like Service-Agents) using resilient Http requests based on HttpClient factory and Polly's policies 
-        public static IServiceCollection AddHttpClientServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddHttpClientServices(this IServiceCollection services,
+            IConfiguration configuration, IHostingEnvironment env)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -152,51 +158,59 @@ namespace iBookStoreMVC
 
             //add http client services
             services.AddHttpClient<ICatalogService, CatalogService>()
-                .AddPolicyHandler(GetRetryPolicy())
-                .AddPolicyHandler(GetCircuitBreakerPolicy());
+                .AddPolicyHandler(GetRetryPolicy(env))
+                .AddPolicyHandler(GetCircuitBreakerPolicy(env));
 
             services.AddHttpClient<IBasketService, BasketService>()
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5)) //Sample. Default lifetime is 2 minutes
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-                .AddPolicyHandler(GetRetryPolicy())
-                .AddPolicyHandler(GetCircuitBreakerPolicy());
+                .AddPolicyHandler(GetRetryPolicy(env))
+                .AddPolicyHandler(GetCircuitBreakerPolicy(env));
 
             services.AddHttpClient<IWishlistService, WishlistService>()
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5)) //Sample. Default lifetime is 2 minutes
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-                .AddPolicyHandler(GetRetryPolicy())
-                .AddPolicyHandler(GetCircuitBreakerPolicy());
+                .AddPolicyHandler(GetRetryPolicy(env))
+                .AddPolicyHandler(GetCircuitBreakerPolicy(env));
 
             services.AddHttpClient<IOrderingService, OrderingService>()
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5))
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
                 .AddHttpMessageHandler<HttpClientRequestIdDelegatingHandler>()
-                .AddPolicyHandler(GetRetryPolicy())
-                .AddPolicyHandler(GetCircuitBreakerPolicy());
+                .AddPolicyHandler(GetRetryPolicy(env))
+                .AddPolicyHandler(GetCircuitBreakerPolicy(env));
 
             services.AddHttpClient<IRecommendationService, RecommendationService>()
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5))
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-                .AddPolicyHandler(GetRetryPolicy())
-                .AddPolicyHandler(GetCircuitBreakerPolicy());
+                .AddPolicyHandler(GetRetryPolicy(env))
+                .AddPolicyHandler(GetCircuitBreakerPolicy(env));
 
             services.AddHttpClient<IUserManagementService, UserManagementService>()
-                .AddPolicyHandler(GetRetryPolicy())
-                .AddPolicyHandler(GetCircuitBreakerPolicy());
+                .AddPolicyHandler(GetRetryPolicy(env))
+                .AddPolicyHandler(GetCircuitBreakerPolicy(env));
 
             return services;
         }
 
-        static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(IHostingEnvironment env)
         {
+            if (env.IsDevelopment())
+            {
+                return Policy.NoOpAsync().AsAsyncPolicy<HttpResponseMessage>();
+            }
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
                 .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
                 .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 
         }
-        static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
+        static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy(IHostingEnvironment env)
         {
+            if (env.IsDevelopment())
+            {
+                return Policy.NoOpAsync().AsAsyncPolicy<HttpResponseMessage>();
+            }
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
                 .CircuitBreakerAsync(5, TimeSpan.FromSeconds(30));

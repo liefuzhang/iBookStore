@@ -68,7 +68,7 @@ $('.newsletter button').on("click", () => {
         .done(function (data) {
             toastr.success('Email added to newsletter list');
         })
-        .fail(function () {
-            toastr.error("Error happened");
+        .fail(function (error) {
+            toastr.error(error.responseText);
         });
 });

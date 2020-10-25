@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\iBookStoreCommon\iBookStoreCommon.csproj" />
+    <ProjectReference Include="..\..\Services\UserManagement\UserManagement.API\UserManagement.API.csproj" />
   </ItemGroup>
 
 </Project>

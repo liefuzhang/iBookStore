@@ -29,14 +29,7 @@ namespace iBookStoreMVC.Controllers
 
         public async Task SignUpNewsletter(string email)
         {
-            try
-            {
-                await _userManagementService.SignUpNewsletter(email);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Sign up newsletter failed");
-            }
+           await _userManagementService.SignUpNewsletter(email);
         }
     }
 }
