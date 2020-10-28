@@ -23,8 +23,12 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      // needs two urls here for Program.Main to run on startup - when launch browser turned off
       "applicationUrl": "http://localhost:32334;http://localhost:32335"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/values",
+      "publishAllPorts": true
     }
   }
 }
