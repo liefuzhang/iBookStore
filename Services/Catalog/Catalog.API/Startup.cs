@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Common;
 using System.Reflection;
 using Catalog.API.Infrastructure;
@@ -8,21 +7,14 @@ using Catalog.API.IntegrationEvents.EventHandling;
 using Catalog.API.IntegrationEvents.Events;
 using Catalog.API.Services;
 using EventBus;
-using HealthChecks.UI.Client;
-using iBookStoreCommon;
-using iBookStoreCommon.Infrastructure;
-using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
-using iBookStoreCommon.ServiceRegistry;
+using iBookStoreCommon.Extensions;
 using IntegrationEventLogEF;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.OpenApi.Models;
 
 namespace Catalog.API
 {
@@ -38,14 +30,13 @@ namespace Catalog.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
+            services.ConfigureCommonIBookStoreServices(Configuration);
+
+            services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp =>
             {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder
-                        .SetIsOriginAllowed((host) => true)
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials());
+                var queueName = Configuration["MessageQueueName"];
+
+                return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
             });
 
             services.AddDbContext<CatalogContext>(options =>
@@ -69,94 +60,24 @@ namespace Catalog.API
                     });
             });
 
-            services.AddMvc(config =>
-            {
-                config.Filters.AddService<RequestResponseLoggingFilter>();
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalog API", Version = "v1" });
-            });
-
             services.AddCustomHealthCheck(Configuration);
 
-            services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp =>
-            {
-                var queueName = Configuration["MessageQueueName"];
-                return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
-            });
             services.AddScoped<OrderStatusChangedToPaidIntegrationEventHandler>();
 
             services.AddTransient<Func<DbConnection, IIntegrationEventLogService>>(
                 sp => (DbConnection c) => new IntegrationEventLogService(c));
 
             services.AddTransient<ICatalogIntegrationEventService, CatalogIntegrationEventService>();
-            services.AddTransient<ServiceRegistryRepository>();
-            services.AddTransient<ServiceRegistryRegistrationService>();
-
-            services.AddScoped<RequestResponseLoggingFilter>();
-
-            services.AddHttpContextAccessor();
-
+            
             services.AddHttpClient<ICatalogItemRatingService, CatalogItemRatingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
-            app.UseMiddleware<GlobalTraceLoggingMiddleware>();
-
-            app.UseHttpsRedirection();
-
-            app.UseHealthChecks("/hc", new HealthCheckOptions()
-            {
-                Predicate = _ => true,
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-            });
-
-            app.UseHealthChecks("/liveness", new HealthCheckOptions
-            {
-                Predicate = r => r.Name.Contains("self")
-            });
-
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog API V1");
-            });
-
-            app.UseCors("CorsPolicy");
-            app.UseMvc();
-
+            app.UseCommonIBookStoreServices(env, Configuration);
+            
             ConfigureEventBus(app);
-
-            RegisterService(app, Configuration);
-        }
-
-        private static void RegisterService(IApplicationBuilder app, IConfiguration configuration)
-        {
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var serviceRegistryRegistrationService =
-                    scope.ServiceProvider.GetRequiredService<ServiceRegistryRegistrationService>();
-                serviceRegistryRegistrationService.Initialize(configuration["ApplicationName"], new Uri(configuration["ApplicationUri"]));
-            }
         }
 
         private void ConfigureEventBus(IApplicationBuilder app)
