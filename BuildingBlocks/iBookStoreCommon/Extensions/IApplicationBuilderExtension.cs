@@ -88,6 +88,5 @@ namespace iBookStoreCommon.Extensions
                 serviceRegistryRegistrationService.Initialize(configuration["ApplicationName"], new Uri(configuration["ApplicationUri"]));
             }
         }
-
     }
 }

@@ -31,7 +31,7 @@ namespace EventBusRabbitMQ
         }
 
         public void Publish(IntegrationEvent @event) {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory() { HostName = "rabbitmq" };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel()) {
                 channel.ExchangeDeclare(exchange: BrokerName, type: ExchangeType.Direct);
@@ -58,7 +58,7 @@ namespace EventBusRabbitMQ
         }
 
         private IModel CreateConsumerChannel() {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory() { HostName = "rabbitmq" };
             var connection = factory.CreateConnection();
             var channel = connection.CreateModel();
             channel.ExchangeDeclare(exchange: BrokerName, type: ExchangeType.Direct);

@@ -6,19 +6,43 @@ services:
     build:
       context: .
       dockerfile: Services/Catalog/Catalog.API/Dockerfile
+    depends_on:
+      - "rabbitmq"
+      - "apigateway"
+    environment:
+      - IdentityUrl=identity.api
+      - ApplicationName=Catalog.API
+      - ApplicationUri=catalog.api
+      - EventBusConnection=rabbitmq
+
 
   basket.api:
     image: ${DOCKER_REGISTRY-}basketapi
     build:
       context: .
       dockerfile: Services/Basket/Basket.API/Dockerfile
-
+    depends_on:
+      - "rabbitmq"
+      - "apigateway"
+    environment:
+      - IdentityUrl=identity.api
+      - ApplicationName=Basket.API
+      - ApplicationUri=basket.api
+      - ApiGatewayUrl=apigateway
 
   identity.api:
     image: ${DOCKER_REGISTRY-}identityapi
     build:
       context: .
       dockerfile: Services/Identity/Identity.API/Dockerfile
+    depends_on:
+      - "rabbitmq"
+      - "apigateway"
+    environment:
+      - ApplicationName=Identity.API
+      - ApplicationUri=identity.api
+      - MvcClient=ibookstoremvc
+      - BasketApiClient=basket.api
 
 
   ordering.api:
@@ -26,6 +50,14 @@ services:
     build:
       context: .
       dockerfile: Services/Ordering/Ordering.API/Dockerfile
+    depends_on:
+      - "rabbitmq"
+      - "apigateway"
+    environment:
+      - ApplicationName=Ordering.API
+      - ApplicationUri=ordering.api
+      - IdentityUrl=identity.api
+      - ApiGatewayUrl=apigateway
 
 
   ordering.backgroundtasks:
@@ -33,6 +65,11 @@ services:
     build:
       context: .
       dockerfile: Services/Ordering/Ordering.BackgroundTasks/Dockerfile
+    depends_on:
+      - "rabbitmq"
+      - "apigateway"
+    environment:
+      - IdentityUrl=ordering.api
 
 
   payment.api:
@@ -40,6 +77,12 @@ services:
     build:
       context: .
       dockerfile: Services/Payment/Payment.API/Dockerfile
+    depends_on:
+      - "rabbitmq"
+      - "apigateway"
+    environment:
+      - ApplicationName=Payment.API
+      - ApplicationUri=payment.api
 
 
   recommendation.api:
@@ -47,6 +90,14 @@ services:
     build:
       context: .
       dockerfile: Services/Recommendation/Recommendation.API/Dockerfile
+    depends_on:
+      - "rabbitmq"
+      - "apigateway"
+    environment:
+      - ApplicationName=Recommendation.API
+      - ApplicationUri=recommendation.api
+      - IdentityUrl=identity.api
+      - ApiGatewayUrl=apigateway
 
 
   usermanagement.api:
@@ -54,6 +105,14 @@ services:
     build:
       context: .
       dockerfile: Services/UserManagement/UserManagement.API/Dockerfile
+    depends_on:
+      - "rabbitmq"
+      - "apigateway"
+    environment:
+      - ApplicationName=Usermanagement.API
+      - ApplicationUri=usermanagement.api
+      - IdentityUrl=identity.api
+      - ApiGatewayUrl=apigateway
 
 
   ibookstoremvc:
@@ -61,6 +120,13 @@ services:
     build:
       context: .
       dockerfile: Web/iBookStoreMVC/Dockerfile
+    depends_on:
+      - "rabbitmq"
+      - "apigateway"
+    environment:
+      - IdentityUrl=identity.api
+      - ApiGatewayUrl=apigateway
+      - CallbackUrl=ibookstoremvc
 
 
   apigateway:
@@ -68,4 +134,19 @@ services:
     build:
       context: .
       dockerfile: ApiGateway/Dockerfile
+    depends_on:
+      - "rabbitmq"
 
+
+  rabbitmq: # login guest:guest
+    image: rabbitmq:3-management
+    hostname: "rabbitmq"
+    labels:
+      NAME: "rabbitmq"
+    ports:
+      - "4369:4369"
+      - "5671:5671"
+      - "5672:5672"
+      - "25672:25672"
+      - "15671:15671"
+      - "15672:15672"
