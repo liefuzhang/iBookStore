@@ -1,31 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EventBus;
-using iBookStoreCommon;
 using iBookStoreCommon.Extensions;
-using iBookStoreCommon.Infrastructure;
-using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
-using iBookStoreCommon.ServiceRegistry;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using UserManagement.API.Infrastructure;
 using UserManagement.API.Service;
 
-namespace Recommendation.API
+namespace UserManagement.API
 {
     public class Startup
     {

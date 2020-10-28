@@ -1,28 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Threading.Tasks;
 using Basket.API.Infrastructure;
 using Basket.API.IntegrationEvents.EventHandling;
 using Basket.API.IntegrationEvents.Events;
 using Basket.API.Services;
 using EventBus;
-using iBookStoreCommon;
 using iBookStoreCommon.Extensions;
 using iBookStoreCommon.Infrastructure;
-using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
-using iBookStoreCommon.ServiceRegistry;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Payment.API.IntegrationEvents.Events;
 
 namespace Basket.API
@@ -65,9 +55,6 @@ namespace Basket.API
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<IBasketRepository, BasketRepository>();
             services.AddTransient<IWishlistRepository, WishlistRepository>();
-
-            services.AddTransient<ServiceRegistryRepository>();
-            services.AddTransient<ServiceRegistryRegistrationService>();
         }
 
         private void ConfigureAuthService(IServiceCollection services) {

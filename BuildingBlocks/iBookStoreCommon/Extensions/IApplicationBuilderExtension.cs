@@ -1,22 +1,9 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Reflection;
-using System.Threading.Tasks;
-using EventBus;
-using HealthChecks.UI.Client;
-using iBookStoreCommon.Infrastructure;
+﻿using HealthChecks.UI.Client;
 using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
-using iBookStoreCommon.ServiceRegistry;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.OpenApi.Models;
 
 namespace iBookStoreCommon.Extensions
 {
@@ -75,18 +62,6 @@ namespace iBookStoreCommon.Extensions
             }
 
             app.UseMvc();
-
-            RegisterService(app, configuration);
-        }
-
-        private static void RegisterService(IApplicationBuilder app, IConfiguration configuration)
-        {
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var serviceRegistryRegistrationService =
-                    scope.ServiceProvider.GetRequiredService<ServiceRegistryRegistrationService>();
-                serviceRegistryRegistrationService.Initialize(configuration["ApplicationName"], new Uri(configuration["ApplicationUri"]));
-            }
         }
     }
 }

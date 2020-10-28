@@ -1,16 +1,7 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Reflection;
-using System.Threading.Tasks;
-using EventBus;
-using iBookStoreCommon.Infrastructure;
-using iBookStoreCommon.ServiceRegistry;
+﻿using iBookStoreCommon.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 
 namespace iBookStoreCommon.Extensions
@@ -28,7 +19,7 @@ namespace iBookStoreCommon.Extensions
                         .AllowAnyHeader()
                         .AllowCredentials());
             });
-            
+
             services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
 
             services.AddMvc(config =>
@@ -43,9 +34,6 @@ namespace iBookStoreCommon.Extensions
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = configuration["ApplicationName"], Version = "v1" });
             });
-
-            services.AddTransient<ServiceRegistryRepository>();
-            services.AddTransient<ServiceRegistryRegistrationService>();
 
             services.AddScoped<RequestResponseLoggingFilter>();
             services.AddScoped<HttpResponseExceptionFilter>();

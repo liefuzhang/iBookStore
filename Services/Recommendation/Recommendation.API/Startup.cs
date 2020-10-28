@@ -1,15 +1,9 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using EventBus;
 using iBookStoreCommon.Extensions;
-using iBookStoreCommon.Infrastructure;
-using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
-using iBookStoreCommon.ServiceRegistry;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Recommendation.API.Infrastructure;
@@ -37,7 +31,8 @@ namespace Recommendation.API
 
             services.AddSingleton<ICacheService, CacheService>();
 
-            services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp => {
+            services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp =>
+            {
                 var queueName = Configuration["MessageQueueName"];
                 return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
             });
@@ -46,9 +41,6 @@ namespace Recommendation.API
             ConfigureAuthService(services);
 
             services.AddTransient<IIdentityService, IdentityService>();
-
-            services.AddTransient<ServiceRegistryRepository>();
-            services.AddTransient<ServiceRegistryRegistrationService>();
 
             services.AddHttpClient<ICatalogService, CatalogService>();
         }
@@ -60,10 +52,12 @@ namespace Recommendation.API
 
             var identityUrl = Configuration.GetValue<string>("IdentityUrl");
 
-            services.AddAuthentication(options => {
+            services.AddAuthentication(options =>
+            {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options => {
+            }).AddJwtBearer(options =>
+            {
                 options.Authority = identityUrl;
                 options.RequireHttpsMetadata = false;
                 options.Audience = "recommendation";
@@ -78,7 +72,7 @@ namespace Recommendation.API
 
             ConfigureEventBus(app);
         }
-        
+
         private void ConfigureEventBus(IApplicationBuilder app)
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();

@@ -1,24 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ApiGateway;
-using ApiGateway.Infrastructure;
-using ApiGateway.Repositories;
-using ApiGateway.Services;
+﻿using ApiGateway.Infrastructure;
 using iBookStoreCommon.Infrastructure;
 using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
-namespace iBookStoreApiGateway
+namespace ApiGateway
 {
     public class Startup
     {
@@ -38,10 +27,6 @@ namespace iBookStoreApiGateway
             {
                 config.Filters.AddService<RequestResponseLoggingFilter>();
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            services.AddScoped<IServiceRegistryService, ServiceRegistryService>();
-            services.AddScoped<IServiceRegistryRepository, ServiceRegistryRepository>();
-            services.AddTransient<IServiceOperationService, ServiceOperationService>();
 
             services.AddScoped<RequestResponseLoggingFilter>();
             
