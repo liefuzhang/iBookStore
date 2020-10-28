@@ -13,6 +13,8 @@ namespace UserManagement.API.Models
         {
             if (string.IsNullOrWhiteSpace(email) || !IsValidEmail(email))
                 throw new HttpResponseException("Email is invalid.");
+
+            Email = email;
         }
 
         private bool IsValidEmail(string email)

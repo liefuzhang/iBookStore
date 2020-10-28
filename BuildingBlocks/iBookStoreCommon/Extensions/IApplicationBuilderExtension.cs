@@ -23,7 +23,8 @@ namespace iBookStoreCommon.Extensions
     public static class IApplicationBuilderExtension
     {
         public static void UseCommonIBookStoreServices(this IApplicationBuilder app,
-            IHostingEnvironment env, IConfiguration configuration, bool useHealthCheck = false)
+            IHostingEnvironment env, IConfiguration configuration, bool useHealthCheck,
+            bool useAuthtication)
         {
 
             if (env.IsDevelopment())
@@ -67,6 +68,12 @@ namespace iBookStoreCommon.Extensions
             });
 
             app.UseCors("CorsPolicy");
+
+            if (useAuthtication)
+            {
+                app.UseAuthentication();
+            }
+
             app.UseMvc();
 
             RegisterService(app, configuration);

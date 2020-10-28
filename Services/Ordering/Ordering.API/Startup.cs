@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using EventBus;
 using iBookStoreCommon;
+using iBookStoreCommon.Extensions;
 using iBookStoreCommon.Infrastructure;
 using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using iBookStoreCommon.ServiceRegistry;
@@ -39,15 +40,7 @@ namespace Ordering.API
         {
             services.Configure<AppSettings>(Configuration);
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder
-                        .SetIsOriginAllowed((host) => true)
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials());
-            });
+            services.ConfigureCommonIBookStoreServices(Configuration);
 
             services.AddDbContext<OrderingContext>(options =>
                 options.UseSqlServer(Configuration["ConnectionString"],
@@ -61,17 +54,9 @@ namespace Ordering.API
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddMvc(config =>
-                {
-                    config.Filters.AddService<RequestResponseLoggingFilter>();
-                }
-            ).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
             ConfigureAuthService(services);
 
             services.AddTransient<IIdentityService, IdentityService>();
-
-            services.AddScoped<RequestResponseLoggingFilter>();
 
             services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp =>
             {
@@ -116,39 +101,9 @@ namespace Ordering.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
-            app.UseMiddleware<GlobalTraceLoggingMiddleware>();
-
-            app.UseHttpsRedirection();
-
-            app.UseCors("CorsPolicy");
-
-            app.UseAuthentication();
-
-            app.UseMvc();
+            app.UseCommonIBookStoreServices(env, Configuration, false, true);
 
             ConfigureEventBus(app);
-
-            RegisterService(app, Configuration);
-        }
-
-        private static void RegisterService(IApplicationBuilder app, IConfiguration configuration)
-        {
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var serviceRegistryRegistrationService =
-                    scope.ServiceProvider.GetRequiredService<ServiceRegistryRegistrationService>();
-                serviceRegistryRegistrationService.Initialize(configuration["ApplicationName"], new Uri(configuration["ApplicationUri"]));
-            }
         }
 
         private void ConfigureEventBus(IApplicationBuilder app)

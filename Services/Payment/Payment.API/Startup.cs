@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EventBus;
 using iBookStoreCommon;
+using iBookStoreCommon.Extensions;
 using iBookStoreCommon.Infrastructure;
 using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -33,45 +34,18 @@ namespace Payment.API
         public void ConfigureServices(IServiceCollection services) {
             services.Configure<AppSettings>(Configuration);
 
-            services.AddCors(options => {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder
-                        .SetIsOriginAllowed((host) => true)
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials());
-            });
-
-            services.AddMvc(config =>
-                {
-                    config.Filters.AddService<RequestResponseLoggingFilter>();
-                }
-            ).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.ConfigureCommonIBookStoreServices(Configuration);
 
             services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp => {
                 var queueName = Configuration["MessageQueueName"];
                 return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
             });
             services.AddScoped<OrderStatusChangedToStockConfirmedIntegrationEventHandler>();
-            services.AddScoped<RequestResponseLoggingFilter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
-            if (env.IsDevelopment()) {
-                app.UseDeveloperExceptionPage();
-            } else {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
-            app.UseMiddleware<GlobalTraceLoggingMiddleware>();
-
-            app.UseHttpsRedirection();
-
-            app.UseCors("CorsPolicy");
-
-            app.UseMvc();
+            app.UseCommonIBookStoreServices(env, Configuration, false, false);
 
             ConfigureEventBus(app);
         }

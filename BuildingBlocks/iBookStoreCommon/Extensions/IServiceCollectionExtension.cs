@@ -28,10 +28,13 @@ namespace iBookStoreCommon.Extensions
                         .AllowAnyHeader()
                         .AllowCredentials());
             });
+            
+            services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
 
             services.AddMvc(config =>
             {
                 config.Filters.AddService<RequestResponseLoggingFilter>();
+                config.Filters.AddService<HttpResponseExceptionFilter>();
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 
@@ -45,6 +48,7 @@ namespace iBookStoreCommon.Extensions
             services.AddTransient<ServiceRegistryRegistrationService>();
 
             services.AddScoped<RequestResponseLoggingFilter>();
+            services.AddScoped<HttpResponseExceptionFilter>();
 
             services.AddHttpContextAccessor();
         }

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Threading.Tasks;
 using EventBus;
-using iBookStoreCommon;
+using iBookStoreCommon.Extensions;
 using iBookStoreCommon.Infrastructure;
 using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using iBookStoreCommon.ServiceRegistry;
@@ -12,12 +9,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Recommendation.API.Infrastructure;
 using Recommendation.API.IntegrationEvents.EventHandling;
 using Recommendation.API.IntegrationEvents.Events;
@@ -39,33 +33,15 @@ namespace Recommendation.API
         {
             services.Configure<AppSettings>(Configuration);
 
-            services.AddCors(options => {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder
-                        .SetIsOriginAllowed((host) => true)
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials());
-            });
+            services.ConfigureCommonIBookStoreServices(Configuration);
 
             services.AddSingleton<ICacheService, CacheService>();
-
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
-
-            services.AddMvc(config =>
-                {
-                    config.Filters.AddService<RequestResponseLoggingFilter>();
-                }
-            ).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp => {
                 var queueName = Configuration["MessageQueueName"];
                 return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
             });
             services.AddScoped<OrderStatusChangedToPaidIntegrationEventHandler>();
-
-            services.AddScoped<RequestResponseLoggingFilter>();
 
             ConfigureAuthService(services);
 
@@ -98,41 +74,11 @@ namespace Recommendation.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
-            app.UseMiddleware<GlobalTraceLoggingMiddleware>();
-
-            app.UseHttpsRedirection();
-
-            app.UseCors("CorsPolicy");
-
-            app.UseAuthentication();
-
-            app.UseMvc();
+            app.UseCommonIBookStoreServices(env, Configuration, false, true);
 
             ConfigureEventBus(app);
-
-            RegisterService(app, Configuration);
         }
         
-        private static void RegisterService(IApplicationBuilder app, IConfiguration configuration)
-        {
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var serviceRegistryRegistrationService =
-                    scope.ServiceProvider.GetRequiredService<ServiceRegistryRegistrationService>();
-                serviceRegistryRegistrationService.Initialize(configuration["ApplicationName"], new Uri(configuration["ApplicationUri"]));
-            }
-        }
-
         private void ConfigureEventBus(IApplicationBuilder app)
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
