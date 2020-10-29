@@ -10,9 +10,9 @@ services:
       - "rabbitmq"
       - "apigateway"
     environment:
-      - IdentityUrl=identity.api
+      - IdentityUrl=http://localhost:13712
       - ApplicationName=Catalog.API
-      - ApplicationUri=catalog.api
+      - ApplicationUri=http://catalog.api
       - EventBusConnection=rabbitmq
 
 
@@ -25,24 +25,26 @@ services:
       - "rabbitmq"
       - "apigateway"
     environment:
-      - IdentityUrl=identity.api
+      - IdentityUrl=http://localhost:13712
       - ApplicationName=Basket.API
-      - ApplicationUri=basket.api
-      - ApiGatewayUrl=apigateway
+      - ApplicationUri=http://basket.api
+      - ApiGatewayUrl=http://apigateway
 
   identity.api:
     image: ${DOCKER_REGISTRY-}identityapi
     build:
       context: .
       dockerfile: Services/Identity/Identity.API/Dockerfile
+    ports:
+      - "13712:80"
     depends_on:
       - "rabbitmq"
       - "apigateway"
     environment:
       - ApplicationName=Identity.API
-      - ApplicationUri=identity.api
+      - ApplicationUri=http://localhost:13712
       - MvcClient=ibookstoremvc
-      - BasketApiClient=basket.api
+      - BasketApiClient=http://basket.api
 
 
   ordering.api:
@@ -55,9 +57,9 @@ services:
       - "apigateway"
     environment:
       - ApplicationName=Ordering.API
-      - ApplicationUri=ordering.api
-      - IdentityUrl=identity.api
-      - ApiGatewayUrl=apigateway
+      - ApplicationUri=http://ordering.api
+      - IdentityUrl=http://localhost:13712
+      - ApiGatewayUrl=http://apigateway
 
 
   ordering.backgroundtasks:
@@ -69,7 +71,7 @@ services:
       - "rabbitmq"
       - "apigateway"
     environment:
-      - IdentityUrl=ordering.api
+      - IdentityUrl=http://ordering.api
 
 
   payment.api:
@@ -82,7 +84,7 @@ services:
       - "apigateway"
     environment:
       - ApplicationName=Payment.API
-      - ApplicationUri=payment.api
+      - ApplicationUri=http://payment.api
 
 
   recommendation.api:
@@ -95,9 +97,9 @@ services:
       - "apigateway"
     environment:
       - ApplicationName=Recommendation.API
-      - ApplicationUri=recommendation.api
-      - IdentityUrl=identity.api
-      - ApiGatewayUrl=apigateway
+      - ApplicationUri=http://recommendation.api
+      - IdentityUrl=http://localhost:13712
+      - ApiGatewayUrl=http://apigateway
 
 
   usermanagement.api:
@@ -110,9 +112,9 @@ services:
       - "apigateway"
     environment:
       - ApplicationName=Usermanagement.API
-      - ApplicationUri=usermanagement.api
-      - IdentityUrl=identity.api
-      - ApiGatewayUrl=apigateway
+      - ApplicationUri=http://usermanagement.api
+      - IdentityUrl=http://localhost:13712
+      - ApiGatewayUrl=http://apigateway
 
 
   ibookstoremvc:
@@ -124,9 +126,9 @@ services:
       - "rabbitmq"
       - "apigateway"
     environment:
-      - IdentityUrl=identity.api
-      - ApiGatewayUrl=apigateway
-      - CallbackUrl=ibookstoremvc
+      - IdentityUrl=http://localhost:13712
+      - ApiGatewayUrl=http://apigateway
+      - CallbackUrl=http://ibookstoremvc
 
 
   apigateway:
