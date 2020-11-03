@@ -15,10 +15,15 @@ services:
 
 
   identity.api:
+    
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ApplicationName=Identity.API
+      - ApplicationUri=http://localhost:13712
+      - MvcClient=http://localhost:4398
+      - BasketApiClient=http://basket.api
     ports:
-      - "80"
+      - "13712:80"
 
 
   ordering.api:
@@ -59,8 +64,11 @@ services:
   ibookstoremvc:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityUrl=http://10.0.75.1:13712
+      - ApiGatewayUrl=http://apigateway
+      - CallbackUrl=http://ibookstoremvc
     ports:
-      - "80"
+      - "4398:80"
 
 
   apigateway:
