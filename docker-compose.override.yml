@@ -18,8 +18,8 @@ services:
     
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
       - ApplicationName=Identity.API
-      - ApplicationUri=http://localhost:13712
       - MvcClient=http://localhost:4398
       - BasketApiClient=http://basket.api
     ports:
@@ -66,7 +66,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - IdentityUrl=http://10.0.75.1:13712
       - ApiGatewayUrl=http://apigateway
-      - CallbackUrl=http://ibookstoremvc
+      - CallbackUrl=http://localhost:4398/
     ports:
       - "4398:80"
 

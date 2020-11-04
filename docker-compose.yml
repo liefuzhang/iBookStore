@@ -12,7 +12,6 @@ services:
     environment:
       - IdentityUrl=http://localhost:13712
       - ApplicationName=Catalog.API
-      - ApplicationUri=http://catalog.api
       - EventBusConnection=rabbitmq
 
 
@@ -27,7 +26,6 @@ services:
     environment:
       - IdentityUrl=http://localhost:13712
       - ApplicationName=Basket.API
-      - ApplicationUri=http://basket.api
       - ApiGatewayUrl=http://apigateway
 
   identity.api:
@@ -52,7 +50,6 @@ services:
       - apigateway
     environment:
       - ApplicationName=Ordering.API
-      - ApplicationUri=http://ordering.api
       - IdentityUrl=http://localhost:13712
       - ApiGatewayUrl=http://apigateway
 
@@ -79,7 +76,6 @@ services:
       - apigateway
     environment:
       - ApplicationName=Payment.API
-      - ApplicationUri=http://payment.api
 
 
   recommendation.api:
@@ -92,7 +88,6 @@ services:
       - apigateway
     environment:
       - ApplicationName=Recommendation.API
-      - ApplicationUri=http://recommendation.api
       - IdentityUrl=http://localhost:13712
       - ApiGatewayUrl=http://apigateway
 
@@ -107,7 +102,6 @@ services:
       - apigateway
     environment:
       - ApplicationName=Usermanagement.API
-      - ApplicationUri=http://usermanagement.api
       - IdentityUrl=http://localhost:13712
       - ApiGatewayUrl=http://apigateway
 
