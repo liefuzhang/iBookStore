@@ -1,27 +1,28 @@
-﻿using System;
+﻿using IdentityModel;
+using IdentityServer4.Models;
+using IdentityServer4.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.eShopOnContainers.Services.Identity.API.Models;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Identity.API.Models;
-using IdentityModel;
-using IdentityServer4.Models;
-using IdentityServer4.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 
-namespace Identity.API.Services
+namespace Microsoft.eShopOnContainers.Services.Identity.API.Services
 {
     public class ProfileService : IProfileService
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProfileService(UserManager<ApplicationUser> userManager) {
+        public ProfileService(UserManager<ApplicationUser> userManager)
+        {
             _userManager = userManager;
         }
 
-        public async Task GetProfileDataAsync(ProfileDataRequestContext context) {
+        async public Task GetProfileDataAsync(ProfileDataRequestContext context)
+        {
             var subject = context.Subject ?? throw new ArgumentNullException(nameof(context.Subject));
 
             var subjectId = subject.Claims.Where(x => x.Type == "sub").FirstOrDefault().Value;
@@ -30,11 +31,12 @@ namespace Identity.API.Services
             if (user == null)
                 throw new ArgumentException("Invalid subject identifier");
 
-            var claims = await GetClaimsFromUser(user);
+            var claims = GetClaimsFromUser(user);
             context.IssuedClaims = claims.ToList();
         }
 
-        public async Task IsActiveAsync(IsActiveContext context) {
+        async public Task IsActiveAsync(IsActiveContext context)
+        {
             var subject = context.Subject ?? throw new ArgumentNullException(nameof(context.Subject));
 
             var subjectId = subject.Claims.Where(x => x.Type == "sub").FirstOrDefault().Value;
@@ -42,10 +44,13 @@ namespace Identity.API.Services
 
             context.IsActive = false;
 
-            if (user != null) {
-                if (_userManager.SupportsUserSecurityStamp) {
+            if (user != null)
+            {
+                if (_userManager.SupportsUserSecurityStamp)
+                {
                     var security_stamp = subject.Claims.Where(c => c.Type == "security_stamp").Select(c => c.Value).SingleOrDefault();
-                    if (security_stamp != null) {
+                    if (security_stamp != null)
+                    {
                         var db_security_stamp = await _userManager.GetSecurityStampAsync(user);
                         if (db_security_stamp != security_stamp)
                             return;
@@ -55,11 +60,12 @@ namespace Identity.API.Services
                 context.IsActive =
                     !user.LockoutEnabled ||
                     !user.LockoutEnd.HasValue ||
-                    user.LockoutEnd <= DateTime.UtcNow;
+                    user.LockoutEnd <= DateTime.Now;
             }
         }
 
-        private async Task<IEnumerable<Claim>> GetClaimsFromUser(ApplicationUser user) {
+        private IEnumerable<Claim> GetClaimsFromUser(ApplicationUser user)
+        {
             var claims = new List<Claim>
             {
                 new Claim(JwtClaimTypes.Subject, user.Id),
@@ -67,14 +73,8 @@ namespace Identity.API.Services
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
             };
 
-            var userRoles = await _userManager.GetRolesAsync(user);
-            if (userRoles.Contains("Admin"))
-                claims.Add(new Claim("role", "Admin"));
-            else
-                claims.Add(new Claim("role", "Customer"));
-
-            if (!string.IsNullOrWhiteSpace(user.FirstName))
-                claims.Add(new Claim("first_name", user.FirstName));
+            if (!string.IsNullOrWhiteSpace(user.Name))
+                claims.Add(new Claim("name", user.Name));
 
             if (!string.IsNullOrWhiteSpace(user.LastName))
                 claims.Add(new Claim("last_name", user.LastName));
@@ -85,11 +85,11 @@ namespace Identity.API.Services
             if (!string.IsNullOrWhiteSpace(user.CardHolderName))
                 claims.Add(new Claim("card_holder", user.CardHolderName));
 
+            if (!string.IsNullOrWhiteSpace(user.SecurityNumber))
+                claims.Add(new Claim("card_security_number", user.SecurityNumber));
+
             if (!string.IsNullOrWhiteSpace(user.Expiration))
                 claims.Add(new Claim("card_expiration", user.Expiration));
-
-            if (!string.IsNullOrWhiteSpace(user.CardHolderName))
-                claims.Add(new Claim("card_type", user.CardType.ToString()));
 
             if (!string.IsNullOrWhiteSpace(user.City))
                 claims.Add(new Claim("address_city", user.City));
@@ -106,7 +106,8 @@ namespace Identity.API.Services
             if (!string.IsNullOrWhiteSpace(user.ZipCode))
                 claims.Add(new Claim("address_zip_code", user.ZipCode));
 
-            if (_userManager.SupportsUserEmail) {
+            if (_userManager.SupportsUserEmail)
+            {
                 claims.AddRange(new[]
                 {
                     new Claim(JwtClaimTypes.Email, user.Email),
@@ -114,7 +115,8 @@ namespace Identity.API.Services
                 });
             }
 
-            if (_userManager.SupportsUserPhoneNumber && !string.IsNullOrWhiteSpace(user.PhoneNumber)) {
+            if (_userManager.SupportsUserPhoneNumber && !string.IsNullOrWhiteSpace(user.PhoneNumber))
+            {
                 claims.AddRange(new[]
                 {
                     new Claim(JwtClaimTypes.PhoneNumber, user.PhoneNumber),

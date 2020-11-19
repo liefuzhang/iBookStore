@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 
-namespace Identity.API.Services
+namespace Microsoft.eShopOnContainers.Services.Identity.API.Services
 {
     public interface ILoginService<T>
     {

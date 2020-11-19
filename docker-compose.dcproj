@@ -3,10 +3,10 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>e475a385-6949-4b6e-9712-3592098f48cf</ProjectGuid>
+    <ProjectGuid>ce7dd614-9c53-417c-a327-1e7cc40fa233</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
-    <DockerServiceName>ibookstoremvc</DockerServiceName>
+    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/</DockerServiceUrl>
+    <DockerServiceName>identity.api</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">

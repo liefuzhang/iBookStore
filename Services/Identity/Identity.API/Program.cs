@@ -1,44 +1,95 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Identity.API.Data;
+﻿using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.eShopOnContainers.Services.Identity.API.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Serilog;
+using System;
+using System.IO;
+using iBookStoreCommon.Extensions;
 
-namespace Identity.API
+namespace Microsoft.eShopOnContainers.Services.Identity.API
 {
     public class Program
     {
-        public static void Main(string[] args) {
-            var host = CreateWebHostBuilder(args).Build();
+        public static readonly string Namespace = typeof(Program).Namespace;
+        public static readonly string AppName = Namespace.Substring(Namespace.LastIndexOf('.', Namespace.LastIndexOf('.') - 1) + 1);
 
-            using (var scope = host.Services.CreateScope()) {
-                var services = scope.ServiceProvider;
-                try {
-                    var context = services.GetRequiredService<ApplicationDbContext>();
-                    var serviceProvider = services.GetRequiredService<IServiceProvider>();
-                    var configuration = services.GetRequiredService<IConfiguration>();
-                    ApplicationDbInitializer.Initialize(context, serviceProvider, configuration).Wait();
-                } catch (Exception ex) {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred creating the DB.");
-                }
+        public static int Main(string[] args)
+        {
+            var configuration = GetConfiguration();
+
+            //Log.Logger = CreateSerilogLogger(configuration);
+
+            try
+            {
+                Log.Information("Configuring web host ({ApplicationContext})...", AppName);
+                var host = BuildWebHost(configuration, args);
+
+                Log.Information("Applying migrations ({ApplicationContext})...", AppName);
+                host.MigrateDbContext<PersistedGrantDbContext>((_, __) => { })
+                    .MigrateDbContext<ApplicationDbContext>((context, services) =>
+                    {
+                        var env = services.GetService<IHostingEnvironment>();
+                        var logger = services.GetService<ILogger<ApplicationDbContextSeed>>();
+                        var settings = services.GetService<IOptions<AppSettings>>();
+
+                        new ApplicationDbContextSeed()
+                            .SeedAsync(context, env, logger, settings)
+                            .Wait();
+                    });
+
+                Log.Information("Starting web host ({ApplicationContext})...", AppName);
+                host.Run();
+
+                return 0;
             }
-
-            host.Run();
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Program terminated unexpectedly ({ApplicationContext})!", AppName);
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        private static IWebHost BuildWebHost(IConfiguration configuration, string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureLogging((context, logging) =>
-                {
-                    logging.ClearProviders();
-                })
-                .UseStartup<Startup>();
+                .CaptureStartupErrors(false)
+                .UseStartup<Startup>()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseConfiguration(configuration)
+                .Build();
+
+        private static Serilog.ILogger CreateSerilogLogger(IConfiguration configuration)
+        {
+            var seqServerUrl = configuration["Serilog:SeqServerUrl"];
+
+            return new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .Enrich.WithProperty("ApplicationContext", AppName)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.Seq(string.IsNullOrWhiteSpace(seqServerUrl) ? "http://seq" : seqServerUrl)
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
+        }
+
+        private static IConfiguration GetConfiguration()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables();
+
+            return builder.Build();
+        }
+
     }
 }
+

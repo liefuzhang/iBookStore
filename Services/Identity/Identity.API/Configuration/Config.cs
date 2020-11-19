@@ -1,38 +1,38 @@
 ﻿using IdentityServer4;
 using IdentityServer4.Models;
-using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Identity.API.Configuration
+namespace Microsoft.eShopOnContainers.Services.Identity.API.Configuration
 {
     public class Config
     {
-        public static IEnumerable<IdentityResource> GetIdentityResources() {
+        // ApiResources define the apis in your system
+        public static IEnumerable<ApiResource> GetApiResources()
+        {
+            return new List<ApiResource>
+            {
+                new ApiResource("orders", "Orders Service"),
+                new ApiResource("basket", "Basket Service"),
+                new ApiResource("marketing", "Marketing Service"),
+                new ApiResource("locations", "Locations Service"),
+               };
+        }
+
+        // Identity resources are data like user ID, name, or email address of a user
+        // see: http://docs.identityserver.io/en/release/configuration/resources.html
+        public static IEnumerable<IdentityResource> GetIdentityResources()
+        {
             return new List<IdentityResource>
             {
                 new IdentityResources.OpenId(),
-                new IdentityResources.Profile(),
+                new IdentityResources.Profile()
             };
         }
 
-        public static IEnumerable<ApiResource> GetApiResources() {
-            return new List<ApiResource>
-            {
-                new ApiResource("basket", "Basket Service"),
-                new ApiResource("ordering", "Ordering Service"),
-            };
-        }
-
-        public static IEnumerable<Client> GetClients(Microsoft.Extensions.Configuration.IConfiguration configuration) {
-            var clientUrls = new Dictionary<string, string>();
-
-            clientUrls.Add("Mvc", configuration.GetValue<string>("MvcClient"));
-            clientUrls.Add("BasketApi", configuration.GetValue<string>("BasketApiClient"));
-
-            return new[]
+        // client want to access resources (aka scopes)
+        public static IEnumerable<Client> GetClients(Dictionary<string, string> clientsUrl)
+        {
+            return new List<Client>
             {
                 new Client
                 {
@@ -42,7 +42,7 @@ namespace Identity.API.Configuration
                     {
                         new Secret("secret".Sha256())
                     },
-                    ClientUri = $"{clientUrls["Mvc"]}",                             // public uri of the client
+                    ClientUri = $"{clientsUrl["Mvc"]}",                             // public uri of the client
                     AllowedGrantTypes = GrantTypes.Hybrid,
                     AllowAccessTokensViaBrowser = false,
                     RequireConsent = false,
@@ -50,18 +50,18 @@ namespace Identity.API.Configuration
                     AlwaysIncludeUserClaimsInIdToken = true,
                     RedirectUris = new List<string>
                     {
-                        $"{clientUrls["Mvc"]}/signin-oidc"
+                        $"{clientsUrl["Mvc"]}/signin-oidc"
                     },
                     PostLogoutRedirectUris = new List<string>
                     {
-                        $"{clientUrls["Mvc"]}/signout-callback-oidc"
+                        $"{clientsUrl["Mvc"]}/signout-callback-oidc"
                     },
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.OfflineAccess,
-                        "ordering",
+                        "orders",
                         "basket",
                         //"locations",
                         //"marketing",

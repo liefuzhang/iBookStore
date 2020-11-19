@@ -41,8 +41,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ordering.Domain", "Services
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payment.API", "Services\Payment\Payment.API\Payment.API.csproj", "{9BD77D92-F0C0-4BEA-901A-4F73551E03B4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iBookStoreMVC", "Web\iBookStoreMVC\iBookStoreMVC.csproj", "{57853BD2-0ECA-43E5-A036-568DA507A5D3}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ordering.Infrastructure", "Services\Ordering\Ordering.Infrastructure\Ordering.Infrastructure.csproj", "{1AC9D3D9-E47B-4426-8F53-D3B8B9070F15}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationEventLogEF", "BuildingBlocks\IntegrationEventLogEF\IntegrationEventLogEF.csproj", "{F3FCD8B2-9FEC-4323-9AD4-52DAF968DD85}"

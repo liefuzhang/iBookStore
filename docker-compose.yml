@@ -1,139 +1,62 @@
 version: '3.4'
 
 services:
+  seq:
+    image: datalust/seq:latest
+
+  sql.data:
+    image: microsoft/mssql-server-linux:2017-latest
+
+  nosql.data:
+    image: mongo
+
+  basket.data:
+    image: redis:alpine
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+
+  identity.api:
+    image: ${REGISTRY:-eshop}/identity.api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Identity/Identity.API/Dockerfile    
+    depends_on:
+      - sql.data
+
+  basket.api:
+    image: ${REGISTRY:-eshop}/basket.api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Basket/Basket.API/Dockerfile    
+    depends_on:
+      - basket.data
+      - identity.api
+      - rabbitmq
+
   catalog.api:
-    image: ${DOCKER_REGISTRY-}catalogapi
+    image: ${REGISTRY:-eshop}/catalog.api:${TAG:-latest}
     build:
       context: .
       dockerfile: Services/Catalog/Catalog.API/Dockerfile
     depends_on:
+      - sql.data
       - rabbitmq
-      - apigateway
-    environment:
-      - IdentityUrl=http://localhost:13712
-      - ApplicationName=Catalog.API
-      - EventBusConnection=rabbitmq
 
 
-  basket.api:
-    image: ${DOCKER_REGISTRY-}basketapi
-    build:
-      context: .
-      dockerfile: Services/Basket/Basket.API/Dockerfile
-    depends_on:
-      - rabbitmq
-      - apigateway
-    environment:
-      - IdentityUrl=http://localhost:13712
-      - ApplicationName=Basket.API
-      - ApiGatewayUrl=http://apigateway
-
-  identity.api:
-    image: ${DOCKER_REGISTRY-}identityapi
-    build:
-      context: .
-      dockerfile: Services/Identity/Identity.API/Dockerfile
-    ports:
-      - "13712:80"
-    depends_on:
-      - rabbitmq
-      - apigateway
-
-
-  ordering.api:
-    image: ${DOCKER_REGISTRY-}orderingapi
-    build:
-      context: .
-      dockerfile: Services/Ordering/Ordering.API/Dockerfile
-    depends_on:
-      - rabbitmq
-      - apigateway
-    environment:
-      - ApplicationName=Ordering.API
-      - IdentityUrl=http://localhost:13712
-      - ApiGatewayUrl=http://apigateway
-
-
-  ordering.backgroundtasks:
-    image: ${DOCKER_REGISTRY-}orderingbackgroundtasks
-    build:
-      context: .
-      dockerfile: Services/Ordering/Ordering.BackgroundTasks/Dockerfile
-    depends_on:
-      - rabbitmq
-      - apigateway
-    environment:
-      - IdentityUrl=http://ordering.api
-
-
-  payment.api:
-    image: ${DOCKER_REGISTRY-}paymentapi
-    build:
-      context: .
-      dockerfile: Services/Payment/Payment.API/Dockerfile
-    depends_on:
-      - rabbitmq
-      - apigateway
-    environment:
-      - ApplicationName=Payment.API
-
-
-  recommendation.api:
-    image: ${DOCKER_REGISTRY-}recommendationapi
-    build:
-      context: .
-      dockerfile: Services/Recommendation/Recommendation.API/Dockerfile
-    depends_on:
-      - rabbitmq
-      - apigateway
-    environment:
-      - ApplicationName=Recommendation.API
-      - IdentityUrl=http://localhost:13712
-      - ApiGatewayUrl=http://apigateway
-
-
-  usermanagement.api:
-    image: ${DOCKER_REGISTRY-}usermanagementapi
-    build:
-      context: .
-      dockerfile: Services/UserManagement/UserManagement.API/Dockerfile
-    depends_on:
-      - rabbitmq
-      - apigateway
-    environment:
-      - ApplicationName=Usermanagement.API
-      - IdentityUrl=http://localhost:13712
-      - ApiGatewayUrl=http://apigateway
-
-
-  ibookstoremvc:
-    image: ${DOCKER_REGISTRY-}ibookstoremvc
-    build:
-      context: .
-      dockerfile: Web/iBookStoreMVC/Dockerfile
-    depends_on:
-      - rabbitmq
-      - apigateway
-    
-
+  
   apigateway:
     image: ${DOCKER_REGISTRY-}apigateway
     build:
       context: .
       dockerfile: ApiGateway/Dockerfile
     depends_on:
-      - rabbitmq
+      - "rabbitmq"
+
+  webmvc:
+    image: ${REGISTRY:-eshop}/webmvc:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Web/WebMVC/Dockerfile    
 
 
-  rabbitmq: # login guest:guest
-    image: rabbitmq:3-management
-    hostname: "rabbitmq"
-    labels:
-      NAME: "rabbitmq"
-    ports:
-      - "4369:4369"
-      - "5671:5671"
-      - "5672:5672"
-      - "25672:25672"
-      - "15671:15671"
-      - "15672:15672"
