@@ -50,7 +50,7 @@ namespace iBookStoreCommon.Infrastructure
                     _logger.LogCritical(ex, "Exception - {Request:l}", request);
 
                     // rethrow for the global exception handler to transform in to a valid response
-                    throw ex;
+                    throw;
                 }
             }
         }

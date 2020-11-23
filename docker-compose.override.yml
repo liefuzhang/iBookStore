@@ -4,68 +4,95 @@ services:
   catalog.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityUrl=http://identity.api
+      - ApplicationName=Catalog.API
+      - EventBusConnection=rabbitmq
     ports:
-      - "80"
+      - "5101:80"
 
   basket.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityUrl=http://identity.api
+      - ApplicationName=Basket.API
+      - ApiGatewayUrl=http://apigateway
     ports:
-      - "80"
+      - "5103:80"
 
 
   identity.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ApplicationName=Identity.API
+      - MvcClient=http://${ESHOP_EXTERNAL_DNS_NAME_OR_IP}:5100
+      - BasketApiClient=http://${ESHOP_EXTERNAL_DNS_NAME_OR_IP}:5103
     ports:
-      - "80"
+      - "5105:80"
 
 
   ordering.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ApplicationName=Ordering.API
+      - IdentityUrl=http://localhost:13712
+      - ApiGatewayUrl=http://apigateway
     ports:
-      - "80"
+      - "5102:80"
 
 
   ordering.backgroundtasks:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityUrl=http://identity.api
     ports:
-      - "80"
+      - "5111:80"
 
 
   payment.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ApplicationName=Payment.API
     ports:
-      - "80"
+      - "5108:80"
 
 
   recommendation.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ApplicationName=Recommendation.API
+      - IdentityUrl=http://identity.api
+      - ApiGatewayUrl=http://apigateway
     ports:
-      - "80"
+      - "5109:80"
 
 
   usermanagement.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ApplicationName=Usermanagement.API
+      - IdentityUrl=http://identity.api
+      - ApiGatewayUrl=http://apigateway
     ports:
-      - "80"
+      - "5110:80"
 
 
   ibookstoremvc:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityUrl=http://${ESHOP_EXTERNAL_DNS_NAME_OR_IP}:5105
+      - ApiGatewayUrl=http://apigateway
+      - CallbackUrl=http://ibookstoremvc
     ports:
-      - "80"
+      - "5100:80"
 
 
   apigateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "80"
+      - "5202:80"
 
+  rabbitmq:
+    ports:
+      - "15672:15672"
+      - "5672:5672"
