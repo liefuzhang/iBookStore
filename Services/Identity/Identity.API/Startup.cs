@@ -24,14 +24,16 @@ namespace Identity.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration) {
+        public Startup(IConfiguration configuration)
+        {
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services) {
+        public void ConfigureServices(IServiceCollection services)
+        {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration["ConnectionString"],
                     sqlServerOptionsAction: sqlOptions => {
@@ -46,9 +48,9 @@ namespace Identity.API
                 .AddDefaultTokenProviders();
 
             services.AddMvc(config =>
-                {
-                    config.Filters.AddService<RequestResponseLoggingFilter>();
-                }
+            {
+                config.Filters.AddService<RequestResponseLoggingFilter>();
+            }
             ).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddTransient<ILoginService<ApplicationUser>, EFLoginService>();
@@ -57,7 +59,11 @@ namespace Identity.API
 
             //// Adds IdentityServer
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-            services.AddIdentityServer()
+            services.AddIdentityServer(x =>
+            {
+                x.IssuerUri = "null";
+                x.Authentication.CookieLifetime = TimeSpan.FromHours(2);
+            })
               .AddDeveloperSigningCredential()
               // this adds the operational data from DB (codes, tokens, consents)
               .AddOperationalStore(options => {
@@ -79,19 +85,25 @@ namespace Identity.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
-            if (env.IsDevelopment()) {
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
-            } else {
+            }
+            else
+            {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
 
             app.UseMiddleware<GlobalTraceLoggingMiddleware>();
 
-            app.UseIdentityServer();
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseForwardedHeaders();
+
+            app.UseIdentityServer();
+            //app.UseHttpsRedirection();
             app.UseCookiePolicy();
 
             app.UseMvc(routes => {
