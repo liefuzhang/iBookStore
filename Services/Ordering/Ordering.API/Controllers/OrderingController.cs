@@ -20,20 +20,20 @@ namespace Ordering.API.Controllers
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
-    public class OrderController : ControllerBase
+    public class OrderingController : ControllerBase
     {
         private readonly IMediator _mediator;
         private readonly IIdentityService _identityService;
         private readonly IOrderQueries _orderQueries;
         private readonly OrderingContext _orderingContext;
-        private readonly ILogger<OrderController> _logger;
+        private readonly ILogger<OrderingController> _logger;
 
-        public OrderController(
+        public OrderingController(
             IMediator mediator,
             IIdentityService identityService,
             IOrderQueries orderQueries,
             OrderingContext orderingContext,
-            ILogger<OrderController> logger)
+            ILogger<OrderingController> logger)
         {
             _mediator = mediator;
             _identityService = identityService;

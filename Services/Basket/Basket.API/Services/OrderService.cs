@@ -17,7 +17,7 @@ namespace Basket.API.Services
         }
 
         public async Task<OrderData> GetOrderDraftFromBasketAsync(CustomerBasket basket) {
-            var url = $"{_settings.Value.ApiGatewayUrl}/api/order/draft";
+            var url = $"{_settings.Value.ApiGatewayUrl}/api/ordering/draft";
 
             var content = new StringContent(JsonConvert.SerializeObject(basket), System.Text.Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(url, content);

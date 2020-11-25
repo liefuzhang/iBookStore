@@ -24,7 +24,7 @@ namespace Recommendation.API
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureLogging((context, logging) =>
                 {
-                    logging.ClearProviders();
+                    
                 })
                 .UseStartup<Startup>();
     }

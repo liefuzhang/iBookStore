@@ -21,21 +21,21 @@
             </article>
             @foreach (var item in Model)
             {
-                <article class="orders-items row">
-                    <section class="orders-item col-2">@Html.DisplayFor(modelItem => item.OrderNumber)</section>
-                    <section class="orders-item col-4">@Html.DisplayFor(modelItem => item.CreatedDate)</section>
-                    <section class="orders-item col-2">@item.Currency @Html.DisplayFor(modelItem => item.Total)</section>
-                    <section class="orders-item col-2">@Html.DisplayFor(modelItem => item.Status)</section>
-                    <section class="orders-item col-1">
-                        <a class="orders-link" asp-controller="Order" asp-action="Detail" asp-route-orderId="@item.OrderNumber">Detail</a>
-                    </section>
-                    <section class="orders-item col-1">
-                        @if (item.Status == OrderStatus.Submitted)
-                        {
-                            <a class="orders-link" asp-controller="Order" asp-action="Cancel" asp-route-orderId="@item.OrderNumber">Cancel</a>
-                        }
-                    </section>
-                </article>
+        <article class="orders-items row">
+            <section class="orders-item col-2">@Html.DisplayFor(modelItem => item.OrderNumber)</section>
+            <section class="orders-item col-4">@Html.DisplayFor(modelItem => item.CreatedDate)</section>
+            <section class="orders-item col-2">@item.Currency @Html.DisplayFor(modelItem => item.Total)</section>
+            <section class="orders-item col-2">@Html.DisplayFor(modelItem => item.Status)</section>
+            <section class="orders-item col-1">
+                <a class="orders-link" asp-controller="Order" asp-action="Detail" asp-route-orderId="@item.OrderNumber">Detail</a>
+            </section>
+            <section class="orders-item col-1">
+                @if (item.Status == OrderStatus.Submitted)
+                {
+                    <a class="orders-link" asp-controller="Order" asp-action="Cancel" asp-route-orderId="@item.OrderNumber">Cancel</a>
+                }
+            </section>
+        </article>
             }
         </div>
     </div>

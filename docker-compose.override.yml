@@ -34,7 +34,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ApplicationName=Ordering.API
-      - IdentityUrl=http://localhost:13712
+      - IdentityUrl=http://identity.api
       - ApiGatewayUrl=http://apigateway
     ports:
       - "5102:80"

@@ -22,7 +22,7 @@ namespace iBookStoreMVC.Service
             _logger = logger;
             _settings = settings;
 
-            _remoteServiceBaseUrl = $"{_settings.Value.ApiGatewayUrl}/api/wishlist";
+            _remoteServiceBaseUrl = $"{_settings.Value.ApiGatewayUrl}/api/basket/wishlist";
         }
 
         public async Task AddItemToWishlist(ApplicationUser user, int productId) {

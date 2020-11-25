@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Basket.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/basket/[controller]")]
     [Authorize]
     [ApiController]
     public class WishlistController: ControllerBase

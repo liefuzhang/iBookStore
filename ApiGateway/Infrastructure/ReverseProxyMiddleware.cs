@@ -14,7 +14,7 @@ namespace ApiGateway.Infrastructure
     public class ReverseProxyMiddleware
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger _logger;
+        private readonly ILogger<ReverseProxyMiddleware> _logger;
         private readonly ApiGatewaySettings _settings;
 
         private const string Bearer = "Bearer";
@@ -38,7 +38,7 @@ namespace ApiGateway.Infrastructure
             if (context.Request == null) throw new Exception("The HttpContext.Request was NULL, we cannot proxy an empty request.");
 
             var path = context.Request.Path.ToString();
-            var pattern = @"^/api/([a-zA-Z]+)/\S+";
+            var pattern = @"\/api\/([a-zA-Z]+)\S*";
 
             var match = Regex.Match(path, pattern, RegexOptions.IgnoreCase);
 
@@ -46,6 +46,7 @@ namespace ApiGateway.Infrastructure
                 throw new Exception("The requested path is invalid.");
 
             var serviceHost = $"{match.Groups[1].Value}.api";
+
             await ProxyRequestAsync(context, serviceHost);
         }
 
@@ -88,6 +89,8 @@ namespace ApiGateway.Infrastructure
                 requestMessage.Headers.Host = requestUri.Authority;
                 requestMessage.RequestUri = requestUri;
                 requestMessage.Method = new HttpMethod(requestMethod);
+
+                _logger.LogInformation($"ProxyRequestAsync RequestUri: {requestUri}");
 
                 var httpClient = _httpClientFactory.CreateClient(nameof(ReverseProxyMiddleware));
                 using (var responseMessage = await httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted))

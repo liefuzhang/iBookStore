@@ -15,7 +15,7 @@ namespace ApiGateway
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureLogging((context, logging) =>
                 {
-                    logging.ClearProviders();
+                    
                 })
                 .UseStartup<Startup>();
     }
