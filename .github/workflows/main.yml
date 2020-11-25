@@ -35,7 +35,7 @@ jobs:
           docker-compose build
           docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
           
-          docker tag identityapi.latest registry.heroku.com/$APP_NAME/identityapi
+          docker tag identityapi registry.heroku.com/$APP_NAME/identityapi
           docker push registry.heroku.com/$APP_NAME/identityapi
           
           heroku container:release identityapi -a $APP_NAME
