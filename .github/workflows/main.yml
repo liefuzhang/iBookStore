@@ -32,6 +32,10 @@ jobs:
           APP_NAME: ${{ 'ibookstore-nz' }}
         run: |
           cd ./Services/Identity/Identity.API
+          docker-compose build
           docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
-          heroku container:push web -a $APP_NAME
-          heroku container:release web -a $APP_NAME
+          
+          docker tag identityapi.latest registry.heroku.com/$APP_NAME/identityapi
+          docker push registry.heroku.com/$APP_NAME/identityapi
+          
+          heroku container:release identityapi -a $APP_NAME
