@@ -1,4 +1,4 @@
-docker image build -t catalog . -f .\Services\Catalog\Catalog.API\Dockerfile
-docker tag catalog registry.heroku.com/ibookstore-catalog/web
-docker push registry.heroku.com/ibookstore-catalog/web
-heroku container:release web -a ibookstore-catalog
+docker image build -t mvc . -f .\Web\iBookStoreMVC\Dockerfile
+docker tag mvc registry.heroku.com/ibookstore-mvc/web
+docker push registry.heroku.com/ibookstore-mvc/web
+heroku container:release web -a ibookstore-mvc

@@ -32,9 +32,9 @@ namespace iBookStoreCommon.ServiceRegistry
                     serviceInstance.Port,
                 }), System.Text.Encoding.UTF8, "application/json");
 
-                _logger.LogInformation($@"Register service: {apiGatewayUrl}services/{serviceInstance.ServiceName}/instances");
+                _logger.LogInformation($@"Register service: {apiGatewayUrl}/services/{serviceInstance.ServiceName}/instances");
 
-                var response = await _httpClient.PostAsync($"{apiGatewayUrl}services/{serviceInstance.ServiceName}/instances", serviceContent);
+                var response = await _httpClient.PostAsync($"{apiGatewayUrl}/services/{serviceInstance.ServiceName}/instances", serviceContent);
                 response.EnsureSuccessStatusCode();
 
                 var jsonResponse = await response.Content.ReadAsStringAsync();
@@ -57,7 +57,7 @@ namespace iBookStoreCommon.ServiceRegistry
                 var content = new StringContent(JsonConvert.SerializeObject(serviceOperationDtos), System.Text.Encoding.UTF8, "application/json");
                 var version = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 
-                await _httpClient.PostAsync($"{apiGatewayUrl}services/{serviceName}/versions/{version ?? "1.0.0"}/operations", content);
+                await _httpClient.PostAsync($"{apiGatewayUrl}/services/{serviceName}/versions/{version ?? "1.0.0"}/operations", content);
             }
             catch (Exception ex)
             {
