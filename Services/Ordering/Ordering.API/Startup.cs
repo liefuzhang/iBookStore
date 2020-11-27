@@ -98,7 +98,7 @@ namespace Ordering.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseCommonIBookStoreServices(env, Configuration, false, true);
+            app.UseCommonIBookStoreServices(env, Configuration, false, true, useForwordedHeaders: true);
 
             ConfigureEventBus(app);
         }

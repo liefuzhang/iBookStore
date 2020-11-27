@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using iBookStoreCommon.Extensions;
 using iBookStoreCommon.Infrastructure;
 using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using iBookStoreMVC.Infrastructure;
@@ -87,6 +88,8 @@ namespace iBookStoreMVC
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseForwardedHeadersCommon();
 
             app.UseMiddleware<GlobalTraceLoggingMiddleware>();
 

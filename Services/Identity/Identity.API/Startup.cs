@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using IdentityServer4.Services;
 using Identity.API.Configuration;
 using System.Reflection;
+using iBookStoreCommon.Extensions;
 using iBookStoreCommon.Infrastructure;
 using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using Identity.API.Services;
@@ -88,15 +89,7 @@ namespace Identity.API
                 app.UseHsts();
             }
 
-            var forwardOptions = new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
-                RequireHeaderSymmetry = false
-            };
-            forwardOptions.KnownNetworks.Clear();
-            forwardOptions.KnownProxies.Clear();
-            // ref: https://github.com/aspnet/Docs/issues/2384
-            app.UseForwardedHeaders(forwardOptions);
+            app.UseForwardedHeadersCommon();
 
             app.UseMiddleware<GlobalTraceLoggingMiddleware>();
 

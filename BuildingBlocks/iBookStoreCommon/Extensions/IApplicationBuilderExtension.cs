@@ -11,6 +11,7 @@ using iBookStoreCommon.ServiceRegistry;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,8 +24,8 @@ namespace iBookStoreCommon.Extensions
     public static class IApplicationBuilderExtension
     {
         public static void UseCommonIBookStoreServices(this IApplicationBuilder app,
-            IHostingEnvironment env, IConfiguration configuration, bool useHealthCheck,
-            bool useAuthtication)
+            IHostingEnvironment env, IConfiguration configuration, bool useHealthCheck = false,
+            bool useAuthtication = false, bool useForwordedHeaders = false)
         {
 
             if (env.IsDevelopment())
@@ -77,6 +78,19 @@ namespace iBookStoreCommon.Extensions
             app.UseMvc();
 
             RegisterService(app, configuration);
+        }
+
+        public static void UseForwardedHeadersCommon(this IApplicationBuilder app)
+        {
+            var forwardOptions = new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+                RequireHeaderSymmetry = false
+            };
+            forwardOptions.KnownNetworks.Clear();
+            forwardOptions.KnownProxies.Clear();
+            // ref: https://github.com/aspnet/Docs/issues/2384
+            app.UseForwardedHeaders(forwardOptions);
         }
 
         private static void RegisterService(IApplicationBuilder app, IConfiguration configuration)
