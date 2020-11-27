@@ -9,8 +9,7 @@ namespace Ordering.API.Extensions
     {
         public static DateTime ConvertToNzTimeZone(this DateTime dateTime)
         {
-            TimeZoneInfo destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById("New Zealand Standard Time");
-            return TimeZoneInfo.ConvertTime(dateTime, TimeZoneInfo.Utc, destinationTimeZone);
+            return TimeZoneInfo.ConvertTime(dateTime, TimeZoneInfo.Utc, TimeZoneInfo.Local);
         }
     }
 }

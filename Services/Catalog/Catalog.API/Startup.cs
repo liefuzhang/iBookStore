@@ -103,7 +103,7 @@ namespace Catalog.API
 
             hcBuilder
                 .AddRabbitMQ(
-                    $"amqp://{configuration["EventBusConnection"]}",
+                    configuration["MessageQueueUrl"],
                     name: "catalog-rabbitmqbus-check",
                     tags: new string[] { "rabbitmqbus" });
 
