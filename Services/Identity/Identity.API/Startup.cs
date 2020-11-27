@@ -19,6 +19,7 @@ using System.Reflection;
 using iBookStoreCommon.Infrastructure;
 using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using Identity.API.Services;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Identity.API
 {
@@ -86,6 +87,16 @@ namespace Identity.API
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            var forwardOptions = new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+                RequireHeaderSymmetry = false
+            };
+            forwardOptions.KnownNetworks.Clear();
+            forwardOptions.KnownProxies.Clear();
+            // ref: https://github.com/aspnet/Docs/issues/2384
+            app.UseForwardedHeaders(forwardOptions);
 
             app.UseMiddleware<GlobalTraceLoggingMiddleware>();
 
