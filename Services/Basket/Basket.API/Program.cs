@@ -23,7 +23,7 @@ namespace Basket.API
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureLogging((context, logging) =>
                 {
-                    logging.AddEventLog();
+                    
                 })
                 .UseStartup<Startup>();
     }
