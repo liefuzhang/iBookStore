@@ -61,7 +61,7 @@ namespace Ordering.API
             services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp =>
             {
                 var queueName = Configuration["MessageQueueName"];
-                return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
+                return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName, Configuration["MessageQueueUrl"]);
             });
             services.AddHttpClient<ICatalogService, CatalogService>();
             services.AddScoped<GracePeriodConfirmedIntegrationEventHandler>();
@@ -74,9 +74,6 @@ namespace Ordering.API
 
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-
-            services.AddTransient<ServiceRegistryRepository>();
-            services.AddTransient<ServiceRegistryRegistrationService>();
         }
 
         private void ConfigureAuthService(IServiceCollection services)

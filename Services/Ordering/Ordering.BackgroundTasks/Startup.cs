@@ -36,7 +36,7 @@ namespace Ordering.BackgroundTasks
 
             services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp => {
                 var queueName = Configuration["MessageQueueName"];
-                return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
+                return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName, Configuration["MessageQueueUrl"]);
             });
         }
 

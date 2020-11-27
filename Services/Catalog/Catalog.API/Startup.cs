@@ -36,7 +36,7 @@ namespace Catalog.API
             {
                 var queueName = Configuration["MessageQueueName"];
 
-                return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
+                return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName, Configuration["MessageQueueUrl"]);
             });
 
             services.AddDbContext<CatalogContext>(options =>

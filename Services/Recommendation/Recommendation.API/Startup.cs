@@ -39,16 +39,13 @@ namespace Recommendation.API
 
             services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp => {
                 var queueName = Configuration["MessageQueueName"];
-                return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
+                return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName, Configuration["MessageQueueUrl"]);
             });
             services.AddScoped<OrderStatusChangedToPaidIntegrationEventHandler>();
 
             ConfigureAuthService(services);
 
             services.AddTransient<IIdentityService, IdentityService>();
-
-            services.AddTransient<ServiceRegistryRepository>();
-            services.AddTransient<ServiceRegistryRegistrationService>();
 
             services.AddHttpClient<ICatalogService, CatalogService>();
         }

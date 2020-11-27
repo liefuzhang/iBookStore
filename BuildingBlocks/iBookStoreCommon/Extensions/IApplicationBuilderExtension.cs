@@ -85,7 +85,12 @@ namespace iBookStoreCommon.Extensions
             {
                 var serviceRegistryRegistrationService =
                     scope.ServiceProvider.GetRequiredService<ServiceRegistryRegistrationService>();
-                serviceRegistryRegistrationService.Initialize(configuration["ApplicationName"], new Uri(configuration["ApplicationUri"]));
+                serviceRegistryRegistrationService.Initialize(
+                        configuration["ApplicationName"],
+                        new Uri(configuration["ApplicationUrl"]),
+                        configuration["ApiGatewayUrl"])
+                    .GetAwaiter()
+                    .GetResult();
             }
         }
 

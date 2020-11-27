@@ -17,7 +17,7 @@ namespace iBookStoreCommon.ServiceRegistry
             _apiExplorer = apiExplorer;
         }
 
-        public async Task Initialize(string appName, Uri appUri)
+        public async Task Initialize(string appName, Uri appUri, string apiGatewayUrl)
         {
             if (string.IsNullOrWhiteSpace(appName) || appUri == null)
                 throw new ArgumentNullException(nameof(appName));
@@ -30,7 +30,7 @@ namespace iBookStoreCommon.ServiceRegistry
                 Port = appUri.Port
             };
 
-            _service.ServiceInstanceId = await _serviceRegistryRepository.RegisterService(_service);
+            _service.ServiceInstanceId = await _serviceRegistryRepository.RegisterService(_service, apiGatewayUrl);
 
             // Try to create ApiDescriptionServiceOperation object here so that we can make sure we have valid service operation. 
             var serviceOperations = _apiExplorer.ApiDescriptionGroups.Items
@@ -39,7 +39,7 @@ namespace iBookStoreCommon.ServiceRegistry
                 .ToList();
 
             if (serviceOperations.Any())
-                await _serviceRegistryRepository.RegisterAllOperations(_service.ServiceName, serviceOperations);
+                await _serviceRegistryRepository.RegisterAllOperations(_service.ServiceName, serviceOperations, apiGatewayUrl);
         }
     }
 }

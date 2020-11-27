@@ -47,7 +47,7 @@ namespace Basket.API
 
             services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp => {
                 var queueName = Configuration["MessageQueueName"];
-                return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName);
+                return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName, Configuration["MessageQueueUrl"]);
             });
 
             services.AddScoped<OrderStartedIntegrationEventHandler>();
@@ -65,9 +65,6 @@ namespace Basket.API
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<IBasketRepository, BasketRepository>();
             services.AddTransient<IWishlistRepository, WishlistRepository>();
-
-            services.AddTransient<ServiceRegistryRepository>();
-            services.AddTransient<ServiceRegistryRegistrationService>();
         }
 
         private void ConfigureAuthService(IServiceCollection services) {

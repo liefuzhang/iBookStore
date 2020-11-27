@@ -18,20 +18,25 @@ namespace EventBusRabbitMQ
         const string BrokerName = "ibookstore_event_bus";
         private IServiceProvider _serviceProvider;
         private string _queueName;
+        private readonly string _mesageQueueUrl;
         private IModel _consumerChannel;
         private IDictionary<string, Type> _eventTypes;
         private IDictionary<Type, Type> _subscriptions;
+        private ILogger<EventBusRabbitMQ> _logger;
 
-        public EventBusRabbitMQ(IServiceProvider serviceProvider, string queueName) {
+        public EventBusRabbitMQ(IServiceProvider serviceProvider, string queueName, string mesageQueueUrl) {
             _serviceProvider = serviceProvider;
             _queueName = queueName;
-            _consumerChannel = CreateConsumerChannel();
+            _mesageQueueUrl = mesageQueueUrl;
             _eventTypes = new Dictionary<string, Type>();
             _subscriptions = new Dictionary<Type, Type>();
+            _logger = serviceProvider.GetService<ILoggerFactory>().CreateLogger<EventBusRabbitMQ>();
+
+            _consumerChannel = CreateConsumerChannel();
         }
 
         public void Publish(IntegrationEvent @event) {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory() { Uri = new Uri(_mesageQueueUrl) };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel()) {
                 channel.ExchangeDeclare(exchange: BrokerName, type: ExchangeType.Direct);
@@ -58,7 +63,9 @@ namespace EventBusRabbitMQ
         }
 
         private IModel CreateConsumerChannel() {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            _logger.LogInformation($"CreateConsumerChannel {_mesageQueueUrl}");
+
+            var factory = new ConnectionFactory() { Uri = new Uri(_mesageQueueUrl) };
             var connection = factory.CreateConnection();
             var channel = connection.CreateModel();
             channel.ExchangeDeclare(exchange: BrokerName, type: ExchangeType.Direct);

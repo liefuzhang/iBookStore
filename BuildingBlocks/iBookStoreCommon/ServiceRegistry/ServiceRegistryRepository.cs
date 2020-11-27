@@ -12,7 +12,6 @@ namespace iBookStoreCommon.ServiceRegistry
 {
     public class ServiceRegistryRepository
     {
-        private const string ServiceRegistry = "http://localhost:10340";
         private readonly HttpClient _httpClient;
         private readonly ILogger<ServiceRegistryRepository> _logger;
 
@@ -22,7 +21,7 @@ namespace iBookStoreCommon.ServiceRegistry
             _httpClient = new HttpClient();
         }
 
-        public async Task<int?> RegisterService(ServiceInstance serviceInstance)
+        public async Task<int?> RegisterService(ServiceInstance serviceInstance, string apiGatewayUrl)
         {
             try
             {
@@ -33,7 +32,9 @@ namespace iBookStoreCommon.ServiceRegistry
                     serviceInstance.Port,
                 }), System.Text.Encoding.UTF8, "application/json");
 
-                var response = await _httpClient.PostAsync($"{ServiceRegistry}/services/{serviceInstance.ServiceName}/instances", serviceContent);
+                _logger.LogInformation($@"Register service: {apiGatewayUrl}services/{serviceInstance.ServiceName}/instances");
+
+                var response = await _httpClient.PostAsync($"{apiGatewayUrl}services/{serviceInstance.ServiceName}/instances", serviceContent);
                 response.EnsureSuccessStatusCode();
 
                 var jsonResponse = await response.Content.ReadAsStringAsync();
@@ -47,7 +48,8 @@ namespace iBookStoreCommon.ServiceRegistry
             }
         }
 
-        public async Task RegisterAllOperations(string serviceName, IEnumerable<IServiceOperation> serviceOperations)
+        public async Task RegisterAllOperations(string serviceName, IEnumerable<IServiceOperation> serviceOperations,
+            string apiGatewayUrl)
         {
             try
             {
@@ -55,7 +57,7 @@ namespace iBookStoreCommon.ServiceRegistry
                 var content = new StringContent(JsonConvert.SerializeObject(serviceOperationDtos), System.Text.Encoding.UTF8, "application/json");
                 var version = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 
-                await _httpClient.PostAsync($"{ServiceRegistry}/services/{serviceName}/versions/{version ?? "1.0.0"}/operations", content);
+                await _httpClient.PostAsync($"{apiGatewayUrl}services/{serviceName}/versions/{version ?? "1.0.0"}/operations", content);
             }
             catch (Exception ex)
             {
