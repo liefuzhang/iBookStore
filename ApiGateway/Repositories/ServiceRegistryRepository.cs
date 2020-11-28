@@ -7,13 +7,15 @@ using ApiGateway.Repositories.Dtos;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Npgsql;
+using PostgreSQLCopyHelper;
 
 namespace ApiGateway.Repositories
 {
     public class ServiceRegistryRepository : IServiceRegistryRepository
     {
         private readonly ApiGatewaySettings _settings;
-        private SqlConnection Connection => new SqlConnection(_settings.ServiceRegistryConnectionString);
+        private NpgsqlConnection Connection => new NpgsqlConnection(_settings.ServiceRegistryConnectionString);
 
         public ServiceRegistryRepository(IOptions<ApiGatewaySettings> apiGatewaySettingsOptions)
         {
@@ -24,7 +26,7 @@ namespace ApiGateway.Repositories
         {
             using (var conn = Connection)
             {
-                var serviceDto = conn.QueryFirstOrDefault<ServiceDto>("SELECT * FROM Services WHERE ServiceName = @ServiceName", new { serviceName });
+                var serviceDto = conn.QueryFirstOrDefault<ServiceDto>($"SELECT * FROM Services WHERE ServiceName = '{serviceName}'");
                 return serviceDto == null ? null : new Service(serviceDto.ServiceId, serviceDto.ServiceName);
             }
         }
@@ -33,41 +35,26 @@ namespace ApiGateway.Repositories
         {
             using (var conn = Connection)
             {
-                var serviceId = conn.ExecuteScalar<int>("INSERT INTO Services (ServiceName) VALUES (@ServiceName); " +
-                                                        "SELECT SCOPE_IDENTITY();", new { serviceName });
+                var serviceId = conn.ExecuteScalar<int>($"INSERT INTO Services (ServiceName) VALUES ('{serviceName}'); " +
+                                                        "SELECT lastval();");
                 return new Service(serviceId, serviceName);
             }
         }
 
         public void InsertInstance(IServiceInstance instance)
         {
+            var isStatic = instance.IsStatic ? "1" : "0";
             using (var conn = Connection)
                 instance.ServiceInstanceId = conn.ExecuteScalar<int>(
-                    @"MERGE INTO ServiceInstances t
-                    USING ( SELECT 
-	                    ServiceID  = @ServiceID,
-	                    Scheme     = @Scheme,
-	                    IPAddress  = @IPAddress,
-	                    [Port]     = @Port,
-                        IsStatic   = @IsStatic
-                    ) s
-	                    ON s.IPAddress = t.IPAddress
-	                    AND s.[Port] = t.[Port]
-                    WHEN MATCHED THEN UPDATE SET 
-	                    t.ServiceID = s.ServiceID,
-	                    t.Scheme = s.Scheme
-                    WHEN NOT MATCHED THEN
-	                    INSERT ( ServiceID, Scheme, IPAddress, [Port], IsStatic )
-	                    VALUES ( s.ServiceID, s.Scheme, s.IPAddress, s.[Port], s.IsStatic )
-                    OUTPUT INSERTED.ServiceInstanceID
-                    ;", new
-                    {
-                        instance.Service.ServiceId,
-                        instance.Scheme,
-                        instance.IpAddress,
-                        instance.Port,
-                        instance.IsStatic
-                    });
+                    $@"INSERT INTO ServiceInstances (
+                            ServiceID, Scheme, IPAddress, Port, IsStatic
+                          ) VALUES ('{instance.Service.ServiceId}', '{instance.Scheme}', '{instance.IpAddress}', '{instance.Port}', '{isStatic}')
+                          ON CONFLICT (IPAddress, Port)
+                          DO UPDATE SET
+                            Scheme = EXCLUDED.Scheme,
+                            IsStatic = EXCLUDED.IsStatic;
+                        SELECT lastval();"
+                    );
         }
 
         public List<IServiceInstance> SelectAllInstances()
@@ -76,7 +63,7 @@ namespace ApiGateway.Repositories
             {
                 using (var dataset = conn.QueryMultiple(
                     "SELECT * FROM Services; " +
-                    "SELECT * FROM ServiceRegistry.ServiceInstances;"))
+                    "SELECT * FROM ServiceInstances;"))
                 {
                     var serviceDtos = dataset.Read<ServiceDto>();
                     var instanceDtos = dataset.Read<InstanceDto>();
@@ -103,7 +90,7 @@ namespace ApiGateway.Repositories
             {
                 using (var dataset = conn.QueryMultiple(
                     "SELECT * FROM Services; " +
-                    "SELECT * FROM ServiceRegistry.ServiceOperations;"))
+                    "SELECT * FROM ServiceOperations;"))
                 {
                     var serviceDtos = dataset.Read<ServiceDto>();
                     var operationDtos = dataset.Read<OperationDto>();
@@ -127,38 +114,27 @@ namespace ApiGateway.Repositories
         public void DeleteAllOperations(int serviceId)
         {
             using (var conn = Connection)
-                conn.Execute("DELETE FROM ServiceOperations WHERE ServiceID = @ServiceID", new { serviceId });
+                conn.Execute($"DELETE FROM ServiceOperations WHERE ServiceID = '{serviceId}'");
         }
 
         public void DeleteAllInstances(int serviceId)
         {
             using (var conn = Connection)
-                conn.Execute("DELETE FROM ServiceInstances WHERE ServiceID = @ServiceID", new { serviceId });
+                conn.Execute($"DELETE FROM ServiceInstances WHERE ServiceID = '{serviceId}'");
         }
 
         public void BulkInsertServiceOperations(IEnumerable<IServiceOperation> serviceOperations)
         {
             using (var conn = Connection)
-            using (var copy = new SqlBulkCopy(conn))
             {
-                copy.DestinationTableName = "ServiceOperations";
-                var table = new DataTable();
-                table.Columns.Add("ServiceID", typeof(int));
-                table.Columns.Add("HttpMethod", typeof(string));
-                table.Columns.Add("Path", typeof(string));
-
-                foreach (var column in table.Columns)
-                {
-                    copy.ColumnMappings.Add(column.ToString(), column.ToString());
-                }
-
-                foreach (var operation in serviceOperations)
-                {
-                    table.Rows.Add(operation.Service.ServiceId, operation.Route.HttpMethod, operation.Route.Path);
-                }
-
                 conn.Open();
-                copy.WriteToServer(table);
+
+                var copyHelper = new PostgreSQLCopyHelper<IServiceOperation>("ServiceOperations")
+                    .MapInteger("ServiceID", x => x.Service.ServiceId)
+                    .MapVarchar("HttpMethod", x => x.Route.HttpMethod)
+                    .MapVarchar("Path", x => x.Route.Path);
+
+                copyHelper.SaveAll(conn, serviceOperations);
             }
         }
     }
