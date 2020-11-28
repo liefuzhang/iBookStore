@@ -43,13 +43,14 @@ namespace Ordering.API
             services.ConfigureCommonIBookStoreServices(Configuration);
 
             services.AddDbContext<OrderingContext>(options =>
-                options.UseSqlServer(Configuration["ConnectionString"],
-                    sqlServerOptionsAction: sqlOptions =>
+                options.UseNpgsql(Configuration["ConnectionString"],
+                    sqlOptions =>
                     {
+                        sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
                         sqlOptions.EnableRetryOnFailure(
                             maxRetryCount: 10,
                             maxRetryDelay: TimeSpan.FromSeconds(30),
-                            errorNumbersToAdd: null);
+                            null);
                     }));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

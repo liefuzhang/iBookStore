@@ -26,21 +26,24 @@ namespace Identity.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration) {
+        public Startup(IConfiguration configuration)
+        {
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services) {
+        public void ConfigureServices(IServiceCollection services)
+        {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration["ConnectionString"],
-                    sqlServerOptionsAction: sqlOptions => {
+                options.UseNpgsql(Configuration["ConnectionString"],
+                    sqlOptions =>
+                    {
                         sqlOptions.EnableRetryOnFailure(
                             maxRetryCount: 10,
                             maxRetryDelay: TimeSpan.FromSeconds(30),
-                            errorNumbersToAdd: null);
+                            null);
                     }));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -62,12 +65,14 @@ namespace Identity.API
             services.AddIdentityServer()
               .AddDeveloperSigningCredential()
               // this adds the operational data from DB (codes, tokens, consents)
-              .AddOperationalStore(options => {
-                  options.ConfigureDbContext = builder => builder.UseSqlServer(Configuration["ConnectionString"],
-                        sqlServerOptionsAction: sqlOptions => {
+              .AddOperationalStore(options =>
+              {
+                  options.ConfigureDbContext = builder => builder.UseNpgsql(Configuration["ConnectionString"],
+                        sqlOptions =>
+                        {
                             sqlOptions.MigrationsAssembly(migrationsAssembly);
                             //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
-                            sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                            sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), null);
                         });
                   // this enables automatic token cleanup. this is optional.
                   options.EnableTokenCleanup = true;
@@ -81,10 +86,14 @@ namespace Identity.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
-            if (env.IsDevelopment()) {
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
-            } else {
+            }
+            else
+            {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
@@ -98,7 +107,8 @@ namespace Identity.API
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseMvc(routes => {
+            app.UseMvc(routes =>
+            {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");

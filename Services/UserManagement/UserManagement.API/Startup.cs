@@ -43,10 +43,10 @@ namespace Recommendation.API
 
             services.AddDbContext<UserManagementContext>(options =>
             {
-                options.UseSqlServer(Configuration["ConnectionString"],
-                    sqlServerOptionsAction: sqlOptions =>
+                options.UseNpgsql(Configuration["ConnectionString"],
+                    sqlOptions =>
                     {
-                        sqlOptions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                        sqlOptions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), null);
                     });
             });
             

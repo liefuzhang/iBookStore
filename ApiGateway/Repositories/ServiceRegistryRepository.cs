@@ -24,7 +24,7 @@ namespace ApiGateway.Repositories
         {
             using (var conn = Connection)
             {
-                var serviceDto = conn.QueryFirstOrDefault<ServiceDto>("SELECT * FROM ServiceRegistry.Services WHERE ServiceName = @ServiceName", new { serviceName });
+                var serviceDto = conn.QueryFirstOrDefault<ServiceDto>("SELECT * FROM Services WHERE ServiceName = @ServiceName", new { serviceName });
                 return serviceDto == null ? null : new Service(serviceDto.ServiceId, serviceDto.ServiceName);
             }
         }
@@ -33,7 +33,7 @@ namespace ApiGateway.Repositories
         {
             using (var conn = Connection)
             {
-                var serviceId = conn.ExecuteScalar<int>("INSERT INTO ServiceRegistry.Services (ServiceName) VALUES (@ServiceName); " +
+                var serviceId = conn.ExecuteScalar<int>("INSERT INTO Services (ServiceName) VALUES (@ServiceName); " +
                                                         "SELECT SCOPE_IDENTITY();", new { serviceName });
                 return new Service(serviceId, serviceName);
             }
@@ -43,7 +43,7 @@ namespace ApiGateway.Repositories
         {
             using (var conn = Connection)
                 instance.ServiceInstanceId = conn.ExecuteScalar<int>(
-                    @"MERGE INTO ServiceRegistry.ServiceInstances t
+                    @"MERGE INTO ServiceInstances t
                     USING ( SELECT 
 	                    ServiceID  = @ServiceID,
 	                    Scheme     = @Scheme,
@@ -75,7 +75,7 @@ namespace ApiGateway.Repositories
             using (var conn = Connection)
             {
                 using (var dataset = conn.QueryMultiple(
-                    "SELECT * FROM ServiceRegistry.Services; " +
+                    "SELECT * FROM Services; " +
                     "SELECT * FROM ServiceRegistry.ServiceInstances;"))
                 {
                     var serviceDtos = dataset.Read<ServiceDto>();
@@ -102,7 +102,7 @@ namespace ApiGateway.Repositories
             using (var conn = Connection)
             {
                 using (var dataset = conn.QueryMultiple(
-                    "SELECT * FROM ServiceRegistry.Services; " +
+                    "SELECT * FROM Services; " +
                     "SELECT * FROM ServiceRegistry.ServiceOperations;"))
                 {
                     var serviceDtos = dataset.Read<ServiceDto>();
@@ -127,13 +127,13 @@ namespace ApiGateway.Repositories
         public void DeleteAllOperations(int serviceId)
         {
             using (var conn = Connection)
-                conn.Execute("DELETE FROM ServiceRegistry.ServiceOperations WHERE ServiceID = @ServiceID", new { serviceId });
+                conn.Execute("DELETE FROM ServiceOperations WHERE ServiceID = @ServiceID", new { serviceId });
         }
 
         public void DeleteAllInstances(int serviceId)
         {
             using (var conn = Connection)
-                conn.Execute("DELETE FROM ServiceRegistry.ServiceInstances WHERE ServiceID = @ServiceID", new { serviceId });
+                conn.Execute("DELETE FROM ServiceInstances WHERE ServiceID = @ServiceID", new { serviceId });
         }
 
         public void BulkInsertServiceOperations(IEnumerable<IServiceOperation> serviceOperations)
@@ -141,7 +141,7 @@ namespace ApiGateway.Repositories
             using (var conn = Connection)
             using (var copy = new SqlBulkCopy(conn))
             {
-                copy.DestinationTableName = "ServiceRegistry.ServiceOperations";
+                copy.DestinationTableName = "ServiceOperations";
                 var table = new DataTable();
                 table.Columns.Add("ServiceID", typeof(int));
                 table.Columns.Add("HttpMethod", typeof(string));

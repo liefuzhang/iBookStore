@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Npgsql;
 
 namespace Catalog.API
 {
@@ -39,24 +40,36 @@ namespace Catalog.API
                 return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName, Configuration["MessageQueueUrl"]);
             });
 
+            //var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+            //var databaseUri = new Uri(databaseUrl);
+            //var userInfo = databaseUri.UserInfo.Split(':');
+
+            //var builder = new NpgsqlConnectionStringBuilder
+            //{
+            //    Host = databaseUri.Host,
+            //    Port = databaseUri.Port,
+            //    Username = userInfo[0],
+            //    Password = userInfo[1],
+            //    Database = databaseUri.LocalPath.TrimStart('/')
+            //};
+
             services.AddDbContext<CatalogContext>(options =>
             {
-                options.UseSqlServer(Configuration["ConnectionString"],
-                    sqlServerOptionsAction: sqlOptions =>
-                    {
-                        sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
-                        sqlOptions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
-                    });
+                options.UseNpgsql(Configuration["ConnectionString"], sqlOptions =>
+                {
+                    sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+                    sqlOptions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), null);
+                });
             });
 
             services.AddDbContext<IntegrationEventLogContext>(options =>
             {
-                options.UseSqlServer(Configuration["ConnectionString"],
-                    sqlServerOptionsAction: sqlOptions =>
+                options.UseNpgsql(Configuration["ConnectionString"],
+                    sqlOptions =>
                     {
                         sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
                         //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
-                        sqlOptions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                        sqlOptions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), null);
                     });
             });
 
@@ -68,7 +81,7 @@ namespace Catalog.API
                 sp => (DbConnection c) => new IntegrationEventLogService(c));
 
             services.AddTransient<ICatalogIntegrationEventService, CatalogIntegrationEventService>();
-            
+
             services.AddHttpClient<ICatalogItemRatingService, CatalogItemRatingService>();
         }
 
@@ -76,7 +89,7 @@ namespace Catalog.API
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseCommonIBookStoreServices(env, Configuration, true, false);
-            
+
             ConfigureEventBus(app);
         }
 

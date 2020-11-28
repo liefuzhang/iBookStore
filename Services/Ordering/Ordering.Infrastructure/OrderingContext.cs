@@ -52,35 +52,4 @@ namespace Ordering.Infrastructure
             return true;
         }
     }
-
-    public class OrderingContextDesignFactory : IDesignTimeDbContextFactory<OrderingContext>
-    {
-        public OrderingContext CreateDbContext(string[] args)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<OrderingContext>()
-                .UseSqlServer("Server=.;Initial Catalog=iBookStore.Services.OrderingDb;Integrated Security=true", 
-                    x => x.MigrationsAssembly("Ordering.API"));
-
-            return new OrderingContext(optionsBuilder.Options, new NoMediator());
-        }
-
-        class NoMediator : IMediator
-        {
-            public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default(CancellationToken)) where TNotification : INotification {
-                return Task.CompletedTask;
-            }
-
-            public Task Publish(object notification, CancellationToken cancellationToken = default) {
-                throw new NotImplementedException();
-            }
-
-            public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default(CancellationToken)) {
-                return Task.FromResult<TResponse>(default(TResponse));
-            }
-
-            public Task Send(IRequest request, CancellationToken cancellationToken = default(CancellationToken)) {
-                return Task.CompletedTask;
-            }
-        }
-    }
 }
