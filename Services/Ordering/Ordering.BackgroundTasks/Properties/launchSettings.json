@@ -24,11 +24,6 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "https://localhost:6013;http://localhost:6014"
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/values",
-      "publishAllPorts": true
     }
   }
 }
