@@ -40,22 +40,31 @@ namespace Catalog.API
                 return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName, Configuration["MessageQueueUrl"]);
             });
 
-            //var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-            //var databaseUri = new Uri(databaseUrl);
-            //var userInfo = databaseUri.UserInfo.Split(':');
+            string connectionString;
+            var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+            if (string.IsNullOrEmpty(databaseUrl))
+            {
+                connectionString = Configuration["Connectionstrings:database"];
+            }
+            else
+            {
+                var databaseUri = new Uri(databaseUrl);
+                var userInfo = databaseUri.UserInfo.Split(':');
 
-            //var builder = new NpgsqlConnectionStringBuilder
-            //{
-            //    Host = databaseUri.Host,
-            //    Port = databaseUri.Port,
-            //    Username = userInfo[0],
-            //    Password = userInfo[1],
-            //    Database = databaseUri.LocalPath.TrimStart('/')
-            //};
+                var builder = new NpgsqlConnectionStringBuilder
+                {
+                    Host = databaseUri.Host,
+                    Port = databaseUri.Port,
+                    Username = userInfo[0],
+                    Password = userInfo[1],
+                    Database = databaseUri.LocalPath.TrimStart('/')
+                };
+                connectionString = builder.ToString();
+            }
 
             services.AddDbContext<CatalogContext>(options =>
             {
-                options.UseNpgsql(Configuration["ConnectionString"], sqlOptions =>
+                options.UseNpgsql(connectionString, sqlOptions =>
                 {
                     sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
                     sqlOptions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), null);
@@ -64,7 +73,7 @@ namespace Catalog.API
 
             services.AddDbContext<IntegrationEventLogContext>(options =>
             {
-                options.UseNpgsql(Configuration["ConnectionString"],
+                options.UseNpgsql(connectionString,
                     sqlOptions =>
                     {
                         sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
