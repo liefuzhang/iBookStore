@@ -8,6 +8,7 @@ using Catalog.API.IntegrationEvents.Events;
 using Catalog.API.Services;
 using EventBus;
 using iBookStoreCommon.Extensions;
+using iBookStoreCommon.Helper;
 using IntegrationEventLogEF;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,27 +41,7 @@ namespace Catalog.API
                 return new EventBusRabbitMQ.EventBusRabbitMQ(sp, queueName, Configuration["MessageQueueUrl"]);
             });
 
-            string connectionString;
-            var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-            if (string.IsNullOrEmpty(databaseUrl))
-            {
-                connectionString = Configuration["Connectionstrings:database"];
-            }
-            else
-            {
-                var databaseUri = new Uri(databaseUrl);
-                var userInfo = databaseUri.UserInfo.Split(':');
-
-                var builder = new NpgsqlConnectionStringBuilder
-                {
-                    Host = databaseUri.Host,
-                    Port = databaseUri.Port,
-                    Username = userInfo[0],
-                    Password = userInfo[1],
-                    Database = databaseUri.LocalPath.TrimStart('/')
-                };
-                connectionString = builder.ToString();
-            }
+            var connectionString = CommonHelper.GetConnectString(Configuration["ConnectionString"]);
 
             services.AddDbContext<CatalogContext>(options =>
             {
@@ -114,12 +95,13 @@ namespace Catalog.API
     {
         public static IServiceCollection AddCustomHealthCheck(this IServiceCollection services, IConfiguration configuration)
         {
+            var connectionString = CommonHelper.GetConnectString(configuration["ConnectionString"]);
             var hcBuilder = services.AddHealthChecks();
 
             hcBuilder
                 .AddCheck("self", () => HealthCheckResult.Healthy())
                 .AddSqlServer(
-                    configuration["ConnectionString"],
+                    connectionString,
                     name: "CatalogDB-check",
                     tags: new string[] { "catalogdb" });
 

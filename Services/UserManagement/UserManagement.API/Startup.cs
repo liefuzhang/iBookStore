@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using EventBus;
 using iBookStoreCommon;
 using iBookStoreCommon.Extensions;
+using iBookStoreCommon.Helper;
 using iBookStoreCommon.Infrastructure;
 using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using iBookStoreCommon.ServiceRegistry;
@@ -43,7 +44,7 @@ namespace Recommendation.API
 
             services.AddDbContext<UserManagementContext>(options =>
             {
-                options.UseNpgsql(Configuration["ConnectionString"],
+                options.UseNpgsql(CommonHelper.GetConnectString(Configuration["ConnectionString"]),
                     sqlOptions =>
                     {
                         sqlOptions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), null);

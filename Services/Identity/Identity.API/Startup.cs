@@ -17,27 +17,34 @@ using IdentityServer4.Services;
 using Identity.API.Configuration;
 using System.Reflection;
 using iBookStoreCommon.Extensions;
+using iBookStoreCommon.Helper;
 using iBookStoreCommon.Infrastructure;
 using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using Identity.API.Services;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Logging;
+using Npgsql;
 
 namespace Identity.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             Configuration = configuration;
+            _logger = logger;
         }
 
         public IConfiguration Configuration { get; }
+        private readonly ILogger<Startup> _logger;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = CommonHelper.GetConnectString(Configuration["ConnectionString"]);
+
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(Configuration["ConnectionString"],
+                options.UseNpgsql(connectionString,
                     sqlOptions =>
                     {
                         sqlOptions.EnableRetryOnFailure(
@@ -67,7 +74,7 @@ namespace Identity.API
               // this adds the operational data from DB (codes, tokens, consents)
               .AddOperationalStore(options =>
               {
-                  options.ConfigureDbContext = builder => builder.UseNpgsql(Configuration["ConnectionString"],
+                  options.ConfigureDbContext = builder => builder.UseNpgsql(connectionString,
                         sqlOptions =>
                         {
                             sqlOptions.MigrationsAssembly(migrationsAssembly);

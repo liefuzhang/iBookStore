@@ -5,6 +5,7 @@ using System.Linq;
 using ApiGateway.Models;
 using ApiGateway.Repositories.Dtos;
 using Dapper;
+using iBookStoreCommon.Helper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Npgsql;
@@ -15,7 +16,7 @@ namespace ApiGateway.Repositories
     public class ServiceRegistryRepository : IServiceRegistryRepository
     {
         private readonly ApiGatewaySettings _settings;
-        private NpgsqlConnection Connection => new NpgsqlConnection(_settings.ServiceRegistryConnectionString);
+        private NpgsqlConnection Connection => new NpgsqlConnection(CommonHelper.GetConnectString(_settings.ConnectionString));
 
         public ServiceRegistryRepository(IOptions<ApiGatewaySettings> apiGatewaySettingsOptions)
         {

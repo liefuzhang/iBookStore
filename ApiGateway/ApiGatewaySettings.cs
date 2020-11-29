@@ -10,6 +10,6 @@ namespace ApiGateway
         /// <summary>
         /// The SQL Connection string for the ServiceRegistry database.
         /// </summary>
-        public string ServiceRegistryConnectionString { get; set; }
+        public string ConnectionString { get; set; }
     }
 }

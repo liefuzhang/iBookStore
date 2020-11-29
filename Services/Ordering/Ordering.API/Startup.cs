@@ -4,6 +4,7 @@ using System.Reflection;
 using EventBus;
 using iBookStoreCommon;
 using iBookStoreCommon.Extensions;
+using iBookStoreCommon.Helper;
 using iBookStoreCommon.Infrastructure;
 using iBookStoreCommon.Infrastructure.Vocus.Common.AspNetCore.Logging.Middleware;
 using iBookStoreCommon.ServiceRegistry;
@@ -38,12 +39,14 @@ namespace Ordering.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = CommonHelper.GetConnectString(Configuration["ConnectionString"]);
+
             services.Configure<AppSettings>(Configuration);
 
             services.ConfigureCommonIBookStoreServices(Configuration);
 
             services.AddDbContext<OrderingContext>(options =>
-                options.UseNpgsql(Configuration["ConnectionString"],
+                options.UseNpgsql(connectionString,
                     sqlOptions =>
                     {
                         sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
@@ -69,7 +72,7 @@ namespace Ordering.API
             services.AddScoped<OrderPaymentFailedIntegrationEventHandler>();
             services.AddScoped<OrderPaymentSucceededIntegrationEventHandler>();
 
-            services.AddSingleton<IOrderQueries>(s => new OrderQueries(Configuration["ConnectionString"]));
+            services.AddSingleton<IOrderQueries>(s => new OrderQueries(connectionString));
 
             services.AddScoped<IRequestManager, RequestManager>();
 
