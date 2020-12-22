@@ -56,7 +56,7 @@
                 </div>
                 <form asp-controller="Cart" asp-action="AddToCart" class="pt-4">
                     <input class="btn btn-primary" disabled=@(!User.Identity.IsAuthenticated || Model.CatalogItem.AvailableStock == 0) type="submit" value="Add to cart" />
-                    <input type="hidden" asp-for="@Model.CatalogItem.Id" name="id" />
+                    <input type="hidden" asp-for="@Model.CatalogItem.Id" name="itemId" />
                 </form>
                 <form asp-controller="Wishlist" asp-action="AddToWishlist" class="pt-4">
                     <input class="btn btn-secondary" disabled=@(!User.Identity.IsAuthenticated) type="submit" value="Add to wishlist" />
